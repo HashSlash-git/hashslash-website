@@ -68,7 +68,7 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
       <div class="orbit" aria-hidden="true">
         {chips.map(([slug, label]) => (
           <div class="chip">
-            <div class="chip__in"><img alt="" src={`https://cdn.jsdelivr.net/npm/simple-icons@13.0.0/icons/${slug}.svg`} /><span>{label}</span></div>
+            <div class="chip__in" title={label}><img alt="" src={`https://cdn.jsdelivr.net/npm/simple-icons@13.0.0/icons/${slug}.svg`} /></div>
           </div>
         ))}
       </div>

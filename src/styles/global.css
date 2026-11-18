@@ -258,11 +258,10 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
   border-radius: 28%;
   background: linear-gradient(160deg, #1a1d1d, #0d0f0f);
   border: 1px solid var(--line-2);
-  display: grid; place-items: center; align-content: center; gap: 6px;
+  display: grid; place-items: center;
   box-shadow: 0 20px 40px -20px #000, inset 0 1px 0 rgba(255,255,255,.08);
 }
-.chip__in img { width: 44%; height: 44%; filter: invert(1); opacity: .95; }
-.chip__in span { font-family: var(--f-mono); font-size: clamp(8px, .62vw, 10px); letter-spacing: .04em; color: var(--muted); text-transform: uppercase; }
+.chip__in img { width: 64%; height: auto; aspect-ratio: 1; object-fit: contain; filter: invert(1); }
 .chip.is-fallback img { display: none; }
 
 .core {
@@ -620,7 +619,6 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
   .converge__title { font-size: clamp(1.9rem, min(10vw, 6.5vh), 3rem); bottom: 90px; max-width: none; }
   .converge__count { bottom: 60px; left: var(--gutter); right: auto; }
   .chip__in { --size: 54px; }
-  .chip__in span { display: none; }
 
   .trust__logos { grid-template-columns: repeat(3, 1fr); }
   .cap__link { grid-template-columns: 1fr; padding: 28px 0; }
