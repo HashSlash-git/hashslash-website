@@ -12,11 +12,11 @@ const clientLogos = [];
 const quoteCase = cases.find((c) => c.quote);
 const idx = (() => { let n = 0; return () => String(++n).padStart(2, '0'); })();
 
+// Orbit around the #/. core: same size, evenly spaced, positions computed in scripts/home.js
 const chips = [
-  ['shopify', 'Shopify', 180, .44, 1], ['instagram', 'Instagram', 205, .36, 1.1], ['react', 'React', 232, .42, .9],
-  ['wordpress', 'WordPress', 258, .38, 1.15], ['meta', 'Meta Ads', 284, .44, 1], ['googleads', 'Google Ads', 310, .38, .95],
-  ['linkedin', 'LinkedIn', 336, .44, 1.05], ['openai', 'ChatGPT', 0, .40, .9], ['hubspot', 'HubSpot', 24, .44, 1.1],
-  ['googleanalytics', 'GA4', 50, .40, .9], ['figma', 'Figma', 215, .20, .8, true], ['tiktok', 'TikTok', 330, .22, .8, true]
+  ['shopify', 'Shopify'], ['instagram', 'Instagram'], ['react', 'React'], ['wordpress', 'WordPress'],
+  ['meta', 'Meta Ads'], ['googleads', 'Google Ads'], ['linkedin', 'LinkedIn'], ['openai', 'ChatGPT'],
+  ['hubspot', 'HubSpot'], ['googleanalytics', 'GA4'], ['figma', 'Figma'], ['tiktok', 'TikTok']
 ];
 const faqs = [
   ['What does HashSlash actually do?', 'We build digital products (websites, Shopify stores, apps, CRMs and automations), market them (Meta, Google, LinkedIn and ChatGPT ads, SEO, social and content) and help you scale with strategy, CRO and analytics, all under one team.'],
@@ -53,13 +53,6 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
           <a class="btn btn--ghost btn--lg" href="#contact" data-track="cta_click" data-cta="start_project" data-loc="hero">Start a project</a>
         </div>
       </div>
-      <a class="badge" href="#contact" data-book data-track="booking_start" data-loc="hero_badge" aria-label="Book a free strategy call">
-        <svg viewBox="0 0 120 120" aria-hidden="true">
-          <defs><path id="circ" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/></defs>
-          <text><textPath href="#circ">FREE STRATEGY CALL &bull; FREE STRATEGY CALL &bull; </textPath></text>
-        </svg>
-        <span class="badge__core">#/.</span>
-      </a>
     </div>
   </section>
 
@@ -73,14 +66,14 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
         <span class="line"><span class="line__in"><em class="lime">transformation</em></span></span>
       </h2>
       <div class="orbit" aria-hidden="true">
-        {chips.map(([slug, label, a, r, s, sm]) => (
-          <div class={`chip${sm ? ' chip--sm' : ''}`} data-a={a} data-r={r} data-s={s}>
+        {chips.map(([slug, label]) => (
+          <div class="chip">
             <div class="chip__in"><img alt="" src={`https://cdn.jsdelivr.net/npm/simple-icons@13.0.0/icons/${slug}.svg`} /><span>{label}</span></div>
           </div>
         ))}
       </div>
       <div class="core" aria-hidden="true"><span class="core__mark">#/.</span><span class="core__ring"></span></div>
-      <p class="converge__count mono" aria-hidden="true"><span class="converge__num">12</span> tools &rarr; <span class="lime">1 team</span></p>
+      <p class="converge__count mono" aria-hidden="true"><span class="converge__num">{chips.length}</span> tools &rarr; <span class="lime">1 team</span></p>
     </div>
   </section>
 

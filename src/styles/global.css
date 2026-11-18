@@ -221,21 +221,6 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 .hero__lede strong { color: var(--text); font-weight: 600; }
 .hero__ctas { display: flex; gap: 12px; flex-wrap: wrap; }
 
-.badge {
-  position: absolute; right: 0; top: -2%;
-  width: clamp(92px, 9vw, 132px); aspect-ratio: 1;
-  display: grid; place-items: center;
-}
-.badge svg { position: absolute; inset: 0; width: 100%; height: 100%; animation: spin 14s linear infinite; }
-.badge text { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 2.6px; fill: var(--text); }
-.badge__core {
-  width: 46%; aspect-ratio: 1; border-radius: 50%;
-  background: var(--lime); color: var(--lime-ink);
-  display: grid; place-items: center;
-  font-family: var(--f-display); font-weight: 900; font-style: italic; font-size: clamp(12px, 1.2vw, 17px);
-  transition: transform .4s var(--ease);
-}
-.badge:hover .badge__core { transform: scale(1.12) rotate(-8deg); }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .tag { border: 1px solid var(--lime); color: var(--lime); padding: 4px 8px; font-size: .66rem; margin-left: 6px; }
@@ -267,7 +252,7 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 .orbit { position: absolute; inset: 0; z-index: 1; }
 .chip { position: absolute; left: var(--cx); top: var(--cy); width: 0; height: 0; }
 .chip__in {
-  --size: clamp(68px, 7.4vw, 116px);
+  --size: clamp(72px, 6.4vw, 104px);
   position: absolute; left: calc(var(--size) / -2); top: calc(var(--size) / -2);
   width: var(--size); height: var(--size);
   border-radius: 28%;
@@ -276,10 +261,8 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
   display: grid; place-items: center; align-content: center; gap: 6px;
   box-shadow: 0 20px 40px -20px #000, inset 0 1px 0 rgba(255,255,255,.08);
 }
-.chip--sm .chip__in { --size: clamp(48px, 4.6vw, 72px); }
 .chip__in img { width: 44%; height: 44%; filter: invert(1); opacity: .95; }
 .chip__in span { font-family: var(--f-mono); font-size: clamp(8px, .62vw, 10px); letter-spacing: .04em; color: var(--muted); text-transform: uppercase; }
-.chip--sm .chip__in span { display: none; }
 .chip.is-fallback img { display: none; }
 
 .core {
@@ -629,7 +612,6 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
   .hero__line--3 .hero__script { right: 0; }
   .hero__meta { grid-template-columns: 1fr; }
   .hero__ctas .btn { flex: 1 1 100%; justify-content: center; }
-  .badge { top: -110px; width: 88px; }
   .tag--bl { display: none; }
   .scribble--a { left: 70%; top: -6%; }
   .scribble--b { display: none; }
@@ -637,8 +619,7 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
   .converge__stage { --cx: 50%; --cy: 36%; --core: clamp(110px, 32vw, 150px); }
   .converge__title { font-size: clamp(1.9rem, min(10vw, 6.5vh), 3rem); bottom: 90px; max-width: none; }
   .converge__count { bottom: 60px; left: var(--gutter); right: auto; }
-  .chip:nth-child(n+9) { display: none; }
-  .chip__in { --size: 58px; }
+  .chip__in { --size: 54px; }
   .chip__in span { display: none; }
 
   .trust__logos { grid-template-columns: repeat(3, 1fr); }
