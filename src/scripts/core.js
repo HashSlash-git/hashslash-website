@@ -8,10 +8,10 @@ if (import.meta.env.DEV) Object.assign(window, { gsap, ScrollTrigger }); // dev-
 
 /* ---- Site config: fill these in before launch ---- */
 export const CONFIG = {
-  whatsappNumber: '',        // international format, digits only
+  whatsappNumber: '917259190306', // international format, digits only
   whatsappText: "Hi HashSlash, I'd like to talk about a project.",
-  bookingUrl: '',            // Calendly / Cal.com link
-  formEndpoint: ''           // POST endpoint for enquiries (CRM / form backend)
+  bookingUrl: '',            // Calendly / Cal.com link; empty = booking buttons open the enquiry form
+  formEndpoint: ''           // optional CRM webhook (JSON). Empty = Netlify Forms (emails set in Netlify → Forms → Notifications)
 };
 
 export const $ = (s, c = document) => c.querySelector(s);
@@ -314,11 +314,18 @@ function enquiry() {
     payload.page = location.pathname;
     submit.disabled = true; submit.textContent = 'Sending…';
     payload.event_id = track('generate_lead', { services: payload.services.join(', '), industry: payload.industry, budget: payload.budget, location: form.dataset.loc });
+    form.page.value = payload.page; form.event_id.value = payload.event_id || '';
     try {
       if (CONFIG.formEndpoint) {
         const res = await fetch(CONFIG.formEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         if (!res.ok) throw new Error(String(res.status));
-      } else console.info('[HashSlash] No formEndpoint configured. Enquiry payload:', payload);
+      } else if (!import.meta.env.DEV) {
+        // Netlify Forms: url-encoded POST to the site root; multiple services joined so the email shows them all
+        const body = new URLSearchParams(new FormData(form));
+        body.set('services', payload.services.join(', '));
+        const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString() });
+        if (!res.ok) throw new Error(String(res.status));
+      } else console.info('[HashSlash] Dev mode: enquiry not sent.', payload);
       form.classList.add('is-done');
       $('.enquiry__done', form).hidden = false;
       if (!prefersReduced()) gsap.from('.enquiry__done > *', { y: 20, opacity: 0, stagger: .08, duration: .7, ease: 'expo.out' });

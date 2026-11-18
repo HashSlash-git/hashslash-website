@@ -121,7 +121,7 @@ final class HS_Headless {
 				'hs_faqs'           => array( 'FAQs: one per line as  Question || Answer', 'textarea' ),
 			),
 			'hs_industry'   => array(
-				'hs_letter'   => array( 'Index letter (A, B, Câ€¦)', 'text' ),
+				'hs_letter'   => array( 'Index letter (A, B, C...)', 'text' ),
 				'hs_tagline'  => array( 'Tagline', 'textarea' ),
 				'hs_pains'    => array( 'Problems this industry faces (one per line)', 'lines' ),
 				'hs_services' => array( 'Recommended service slugs (comma separated)', 'text' ),
@@ -314,7 +314,7 @@ final class HS_Headless {
 					<tr><th scope="row"><label for="hs_front">Front-end URL</label></th>
 						<td><input class="regular-text" id="hs_front" name="<?php echo esc_attr( self::OPT ); ?>[frontend_url]" value="<?php echo esc_attr( self::opt( 'frontend_url' ) ); ?>" placeholder="https://www.hashslash.example" /></td></tr>
 					<tr><th scope="row"><label for="hs_hook">Deploy hook URL</label></th>
-						<td><input class="large-text" id="hs_hook" name="<?php echo esc_attr( self::OPT ); ?>[deploy_hook]" value="<?php echo esc_attr( self::opt( 'deploy_hook' ) ); ?>" placeholder="https://api.netlify.com/build_hooks/â€¦" />
+						<td><input class="large-text" id="hs_hook" name="<?php echo esc_attr( self::OPT ); ?>[deploy_hook]" value="<?php echo esc_attr( self::opt( 'deploy_hook' ) ); ?>" placeholder="https://api.netlify.com/build_hooks/..." />
 						<p class="description">From your host (Netlify, Vercel or Cloudflare Pages). Called about a minute after content is published, updated or unpublished.</p></td></tr>
 					<tr><th scope="row">Redirect old theme</th>
 						<td><label><input type="checkbox" name="<?php echo esc_attr( self::OPT ); ?>[redirect]" value="1" <?php checked( (bool) self::opt( 'redirect' ) ); ?> /> Send front-end visitors of this WordPress site to the front-end URL (wp-admin and the API keep working)</label></td></tr>

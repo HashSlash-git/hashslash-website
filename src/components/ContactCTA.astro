@@ -28,7 +28,12 @@ const [l2a, ...l2rest] = line2.split(' ');
       </div>
     </div>
 
-    <form class="enquiry" id="enquiry" novalidate data-loc={loc}>
+    <form class="enquiry" id="enquiry" name="enquiry" method="POST" data-netlify="true" netlify-honeypot="company_website" novalidate data-loc={loc}>
+      <!-- Netlify Forms: form-name routes the submission; company_website is a spam honeypot; page/event_id are filled by core.js -->
+      <input type="hidden" name="form-name" value="enquiry" />
+      <input type="hidden" name="page" value="" />
+      <input type="hidden" name="event_id" value="" />
+      <p hidden><label>Leave this empty <input name="company_website" tabindex="-1" autocomplete="off" /></label></p>
       <div class="enquiry__top">
         <p class="mono">Project enquiry</p>
         <p class="mono enquiry__step-label"><span data-step-now>1</span> / 3</p>
