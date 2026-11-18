@@ -594,7 +594,7 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
    FLOATING CTAs
    ========================================================== */
 .wa-float {
-  position: fixed; right: 20px; bottom: 20px; z-index: 40;
+  position: fixed; right: 20px; bottom: 84px; z-index: 40; /* sits above the "Powered by Netlify" badge (free plan) */
   width: 54px; height: 54px; border-radius: 50%;
   background: #25d366; color: #fff; display: grid; place-items: center;
   box-shadow: 0 10px 30px -8px rgba(37,211,102,.6);
