@@ -4,4 +4,4 @@
 
 [build.environment]
   NODE_VERSION = "20"
-  WP_URL = "https://hash-slash.com"
+  WP_URL = "https://cms.hash-slash.com"

@@ -3,7 +3,7 @@
 WordPress is where you **edit** content. The public site is a fast static Astro build that pulls that content in and rebuilds automatically about a minute after you publish.
 
 ```
- wp-admin (cms.yourdomain.com)  ──publish──▶  deploy hook  ──▶  host rebuilds Astro  ──▶  www.yourdomain.com
+ wp-admin (cms.hash-slash.com)  ──publish──▶  deploy hook  ──▶  host rebuilds Astro  ──▶  www.yourdomain.com
             ▲                                                          │
             └──────────────── REST API (read-only, at build time) ─────┘
 ```
@@ -14,7 +14,7 @@ WordPress is where you **edit** content. The public site is a fast static Astro 
 - Users → remove any admin account you don't recognise. Change every password.
 - Turn on two-factor login (e.g. the *Two Factor* plugin) for all admins.
 - Ask your host for a malware scan and fresh salts in `wp-config.php`.
-- Ideally move WordPress to a subdomain such as `cms.yourdomain.com`.
+- Ideally move WordPress to a subdomain such as `cms.hash-slash.com`.
 
 ## 2. Install the plugin
 
@@ -33,7 +33,7 @@ Netlify, Vercel or Cloudflare Pages all work:
 | Build command | `npm run build` |
 | Output directory | `dist` |
 | Node version | 20 or newer |
-| Environment variable | `WP_URL=https://cms.yourdomain.com` |
+| Environment variable | `WP_URL=https://cms.hash-slash.com` |
 
 Then create a **deploy hook / build hook** in the host and paste its URL into Settings → HashSlash Headless → *Deploy hook URL*. Set *Front-end URL* to the live site and tick **Redirect old theme** so visitors never land on the WordPress theme.
 
