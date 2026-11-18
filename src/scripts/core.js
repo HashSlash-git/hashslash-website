@@ -51,8 +51,10 @@ export function initCore() {
 
   window.__hsReady = true;
   ScrollTrigger.sort();
-  ScrollTrigger.refresh();
-  if (document.fonts?.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
+  // One measuring pass instead of three, run once the page has loaded (keeps it out of the startup task);
+  // refresh again only if web fonts finish after that, since they change text heights.
+  const refreshOnce = () => { ScrollTrigger.refresh(); if (document.fonts?.status === 'loading') document.fonts.ready.then(() => ScrollTrigger.refresh()); };
+  if (document.readyState === 'complete') refreshOnce(); else addEventListener('load', refreshOnce, { once: true });
 }
 
 /* ---------- conversion links ---------- */
