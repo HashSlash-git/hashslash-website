@@ -1,8 +1,13 @@
 ---
 import { disciplines } from '../data/services.js';
-import { getServices } from '../lib/content.js';
+import { getServices, getPages, getCaseStudies } from '../lib/content.js';
 const services = await getServices();
 const servicesIn = (d) => services.filter((s) => s.d === d);
+// Legal links appear only once those pages are published in WordPress
+const pages = await getPages();
+const hasWork = (await getCaseStudies()).length > 0;
+const privacy = pages.find((p) => /privacy/.test(p.slug));
+const terms = pages.find((p) => /terms/.test(p.slug));
 const year = new Date().getFullYear();
 ---
 <footer class="footer">
@@ -19,16 +24,15 @@ const year = new Date().getFullYear();
     ))}
     <div class="footer__col">
       <p class="mono">Contact</p>
-      <a href="mailto:hello@example.com" data-email>Email (to confirm)</a>
+      <a href="mailto:tech@hash-slash.com" data-email>tech@hash-slash.com</a>
       <a href="#" data-whatsapp data-track="whatsapp_click" data-loc="footer">WhatsApp</a>
-      <span class="muted">Address (to confirm)</span>
       <p class="mono" style="margin-top:14px">Company</p>
-      <a href="/#work">Work</a><a href="/#industries">Industries</a><a href="/#faq">FAQ</a>
+      {hasWork && <a href="/#work">Work</a>}<a href="/#industries">Industries</a><a href="/#faq">FAQ</a>
     </div>
   </div>
   <p class="footer__word display" aria-hidden="true">{'HASHSLASH'.split('').map((l) => <span>{l}</span>)}</p>
   <div class="footer__base mono">
     <span>&copy; {year} HashSlash</span>
-    <span><a href="#">Privacy</a> &nbsp;·&nbsp; <a href="#">Terms</a></span>
+    {(privacy || terms) && <span>{privacy && <a href={`/${privacy.slug}/`}>Privacy</a>}{privacy && terms && <> &nbsp;·&nbsp; </>}{terms && <a href={`/${terms.slug}/`}>Terms</a>}</span>}
   </div>
 </footer>

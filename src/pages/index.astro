@@ -7,6 +7,10 @@ const industries = await getIndustries();
 const cases = (await getCaseStudies()).slice(0, 6);
 const services = await getServices();
 const servicesIn = (d) => services.filter((s) => s.d === d);
+// Approved client logos only, e.g. { name: 'Acme', src: '/logos/acme.svg' } (files in public/logos/)
+const clientLogos = [];
+const quoteCase = cases.find((c) => c.quote);
+const idx = (() => { let n = 0; return () => String(++n).padStart(2, '0'); })();
 
 const chips = [
   ['shopify', 'Shopify', 180, .44, 1], ['instagram', 'Instagram', 205, .36, 1.1], ['react', 'React', 232, .42, .9],
@@ -94,20 +98,22 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
   </section>
 
   <!-- ============ TRUST ============ -->
-  <section class="trust" aria-labelledby="trust-h">
-    <div class="trust__head">
-      <h2 class="trust__title" id="trust-h">Brands we build, market &amp; scale</h2>
-      <span class="ph mono">Placeholder: approved client logos only</span>
-    </div>
-    <ul class="trust__logos">
-      {Array.from({ length: 6 }).map(() => <li>Client logo</li>)}
-    </ul>
-  </section>
+  {/* Hidden until real, client-approved logos are added: put them in clientLogos as { name, src } */}
+  {clientLogos.length > 0 && (
+    <section class="trust" aria-labelledby="trust-h">
+      <div class="trust__head">
+        <h2 class="trust__title" id="trust-h">Brands we build, market &amp; scale</h2>
+      </div>
+      <ul class="trust__logos">
+        {clientLogos.map((l) => <li><img src={l.src} alt={l.name} loading="lazy" /></li>)}
+      </ul>
+    </section>
+  )}
 
   <!-- ============ SERVICES ============ -->
   <section class="services" id="services" aria-labelledby="services-h">
     <header class="sec-head">
-      <p class="mono sec-head__idx">01 / Capabilities</p>
+      <p class="mono sec-head__idx">{idx()} / Capabilities</p>
       <h2 class="sec-head__title display reveal" id="services-h">Three disciplines.<br /><span class="outline">Zero hand-offs.</span></h2>
     </header>
     <div class="caps">
@@ -133,16 +139,17 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
     <div class="band band--dark"><div class="band__track"><span>Velocity is the only metric <i>✦</i> build <i>✦</i> market <i>✦</i> scale <i>✦</i>&nbsp;</span><span>Velocity is the only metric <i>✦</i> build <i>✦</i> market <i>✦</i> scale <i>✦</i>&nbsp;</span></div></div>
   </section>
 
-  <!-- ============ WORK ============ -->
+  <!-- ============ WORK (shown once a client-approved case study exists) ============ -->
+  {cases.length > 0 && (
   <section class="work" id="work" aria-labelledby="work-h">
     <div class="work__pin">
       <header class="work__head">
-        <p class="mono sec-head__idx">02 / Selected work</p>
+        <p class="mono sec-head__idx">{idx()} / Selected work</p>
         <h2 class="display work__title" id="work-h">Proof,<br />not promises.</h2>
         <p class="work__note mono">Drag / scroll &rarr;</p>
       </header>
       <div class="work__track">
-        {cases.length > 0 ? cases.map((c, i) => (
+        {cases.map((c, i) => (
           <a class="case" data-hue={(i % 4) + 1} href={`/work/${c.slug}/`}>
             <div class="case__media">{c.image ? <img class="case__img" src={c.image} alt={c.imageAlt || ''} loading="lazy" /> : <span class="case__big display">0{i + 1}</span>}</div>
             <div class="case__body">
@@ -151,15 +158,6 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
               {c.results[0] && <p class="case__res"><span class="mono">Result</span> {c.results[0].value} {c.results[0].label}</p>}
             </div>
           </a>
-        )) : industries.slice(0, 4).map((ind, i) => (
-          <article class="case" data-hue={i + 1}>
-            <div class="case__media"><span class="case__big display">0{i + 1}</span><span class="ph mono">Placeholder: project visual</span></div>
-            <div class="case__body">
-              <p class="case__meta mono">{ind.name}</p>
-              <h3 class="case__title">Client name: project headline</h3>
-              <p class="case__res"><span class="mono">Result</span> Verified figure pending approval</p>
-            </div>
-          </article>
         ))}
         <a class="case case--cta" href="#contact" data-track="cta_click" data-cta="start_project" data-loc="work">
           <span class="script">yours next?</span>
@@ -168,11 +166,12 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
       </div>
     </div>
   </section>
+  )}
 
   <!-- ============ INDUSTRIES ============ -->
   <section class="industries" id="industries" aria-labelledby="ind-h">
     <header class="sec-head">
-      <p class="mono sec-head__idx">03 / Industries</p>
+      <p class="mono sec-head__idx">{idx()} / Industries</p>
       <h2 class="sec-head__title display reveal" id="ind-h">Built for<br /><span class="outline">your market.</span></h2>
     </header>
     <div class="inds">
@@ -190,7 +189,7 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
   <!-- ============ PROCESS ============ -->
   <section class="process" id="process" aria-labelledby="process-h">
     <div class="process__side">
-      <p class="mono sec-head__idx">04 / Process</p>
+      <p class="mono sec-head__idx">{idx()} / Process</p>
       <h2 class="display process__title" id="process-h">From audit<br />to <span class="lime">autopilot.</span></h2>
       <a class="btn btn--lime magnetic" href="#contact" data-book data-track="booking_start" data-loc="process">Start with a free audit <span class="arr">&rarr;</span></a>
     </div>
@@ -211,18 +210,21 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
   </section>
 
   <!-- ============ TESTIMONIAL ============ -->
-  <section class="quote" aria-label="Client testimonial">
-    <span class="quote__mark display" aria-hidden="true">&ldquo;</span>
-    <blockquote>
-      <p class="quote__text">Client testimonial goes here: one specific, outcome-led sentence from a real client, approved for use.</p>
-      <footer class="mono">Name &nbsp;·&nbsp; Role, Company <span class="ph">Placeholder</span></footer>
-    </blockquote>
-  </section>
+  {/* Shown only when an approved case study has a client quote */}
+  {quoteCase && (
+    <section class="quote" aria-label="Client testimonial">
+      <span class="quote__mark display" aria-hidden="true">&ldquo;</span>
+      <blockquote>
+        <p class="quote__text">{quoteCase.quote}</p>
+        {quoteCase.quoteAuthor && <footer class="mono">{quoteCase.quoteAuthor}</footer>}
+      </blockquote>
+    </section>
+  )}
 
   <!-- ============ FAQ ============ -->
   <section class="faq" id="faq" aria-labelledby="faq-h">
     <header class="sec-head">
-      <p class="mono sec-head__idx">05 / FAQ</p>
+      <p class="mono sec-head__idx">{idx()} / FAQ</p>
       <h2 class="sec-head__title display reveal" id="faq-h">Straight<br /><span class="outline">answers.</span></h2>
     </header>
     <div class="faq__list">
@@ -230,7 +232,7 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
     </div>
   </section>
 
-  <ContactCTA idx="06 / Let's go" />
+  <ContactCTA idx={`${idx()} / Let's go`} />
 </Base>
 
 <script>

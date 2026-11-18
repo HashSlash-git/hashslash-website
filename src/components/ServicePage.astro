@@ -156,10 +156,10 @@ const longest = Math.max(...words.map((w) => w.length)); // drives hero font-siz
       <span class="mono lime">Read the case study &rarr;</span>
     </a>
   ) : (
-    <a class="stack__proof" href="/#work">
-      <span class="ph mono">Placeholder: {s.name} case study</span>
-      <span class="stack__proof-t">Client, challenge and verified results go here once approved.</span>
-      <span class="mono lime">See all work &rarr;</span>
+    <a class="stack__proof" href="#contact" data-track="cta_click" data-cta={`proof_${s.slug}`} data-loc="service_stack">
+      <span class="mono muted">Not sure where to start?</span>
+      <span class="stack__proof-t">{s.audit ? `Get a ${s.audit}: we'll show you what's working, what isn't, and what we'd fix first.` : `Tell us about your project and we'll show you what we'd fix first.`}</span>
+      <span class="mono lime">Start here &rarr;</span>
     </a>
   )}
 </section>

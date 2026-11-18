@@ -112,7 +112,7 @@ export function initHome() {
     gsap.from('.manifesto__script', { scale: 0, rotate: -30, duration: .9, ease: 'back.out(2.2)', scrollTrigger: { trigger: '.manifesto__foot', start: 'top 85%' } });
 
     /* ---------- horizontal work (desktop) ---------- */
-    if (desktop) {
+    if (desktop && $('.work')) { // the work section only renders once a case study is approved
       const head = $('.work__head'), track = $('.work__track');
       const dist = () => head.offsetWidth + track.scrollWidth - innerWidth;
       gsap.to([head, track], { x: () => -dist(), ease: 'none', scrollTrigger: { trigger: '.work', start: 'top top', end: () => '+=' + dist(), pin: true, scrub: 1, invalidateOnRefresh: true, anticipatePin: 1 } });

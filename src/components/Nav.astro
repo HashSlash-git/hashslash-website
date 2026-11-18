@@ -1,8 +1,9 @@
 ---
 import { disciplines } from '../data/services.js';
-import { getServices } from '../lib/content.js';
+import { getServices, getCaseStudies } from '../lib/content.js';
 const services = await getServices();
 const servicesIn = (d) => services.filter((s) => s.d === d);
+const hasWork = (await getCaseStudies()).length > 0;
 ---
 <header class="nav" id="nav">
   <a class="nav__logo" href="/" aria-label="HashSlash home">
@@ -35,7 +36,7 @@ const servicesIn = (d) => services.filter((s) => s.d === d);
         </div>
       </div>
     </div>
-    <a href="/#work">Work</a>
+    {hasWork && <a href="/#work">Work</a>}
     <a href="/#industries">Industries</a>
     <a href="/#process">Process</a>
     <a href="/#faq">FAQ</a>
@@ -58,7 +59,7 @@ const servicesIn = (d) => services.filter((s) => s.d === d);
         </div>
       ))}
     </details>
-    <a href="/#work">Work</a>
+    {hasWork && <a href="/#work">Work</a>}
     <a href="/#industries">Industries</a>
     <a href="/#process">Process</a>
     <a href="/#faq">FAQ</a>
