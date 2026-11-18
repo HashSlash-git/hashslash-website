@@ -111,14 +111,7 @@ export function initHome() {
       return () => removeEventListener('resize', onR);
     }
 
-    /* ---------- hero intro ---------- */
-    $$('.scribble path').forEach((p) => { const len = p.getTotalLength(); gsap.set(p, { strokeDasharray: len, strokeDashoffset: len }); });
-    gsap.timeline({ defaults: { ease: 'expo.out' }, delay: document.documentElement.classList.contains('pt-in') ? .55 : .15 })
-      .to('.hero .line__in', { yPercent: 0, y: 0, duration: 1.25, stagger: .12 })
-      .to('.hero__eyebrow', { opacity: 1, y: 0, duration: .8 }, .1)
-      .fromTo('.hero__script', { opacity: 0, y: 14, rotate: -14 }, { opacity: 1, y: 0, rotate: -6, duration: .9, stagger: .12, ease: 'back.out(2)' }, '-=.85')
-      .to('.scribble path', { strokeDashoffset: 0, duration: 1, ease: 'power2.inOut', stagger: .2 }, '-=.8')
-      .to('.hero__meta > *', { opacity: 1, y: 0, duration: .9, stagger: .1 }, '-=1');
+    /* hero intro runs in CSS (global.css, 'Homepage hero intro') so it starts at first paint */
 
     const heroST = { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true };
     gsap.to('.hero__line--1', { xPercent: -6, ease: 'none', scrollTrigger: heroST });

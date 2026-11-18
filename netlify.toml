@@ -5,3 +5,13 @@
 [build.environment]
   NODE_VERSION = "20"
   WP_URL = "https://cms.hash-slash.com"
+
+# long-lived caching for fingerprinted assets and fonts
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

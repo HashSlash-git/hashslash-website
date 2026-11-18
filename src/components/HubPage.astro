@@ -13,7 +13,7 @@ const longest = Math.max(...d.headline.join(' ').split(' ').map((w) => w.length)
   <div class="hero__grid" aria-hidden="true"></div>
   <span class="hub-hero__no display" aria-hidden="true">{d.no}</span>
   <nav class="crumbs mono" aria-label="Breadcrumb"><a href="/services/">Services</a> / <span aria-current="page">{d.name}</span></nav>
-  <p class="mono svc-hero__eye"><span class="dot"></span> {d.no} / {d.name} &nbsp;·&nbsp; {list.length} services</p>
+  <p class="mono svc-hero__eye">{d.name} &nbsp;·&nbsp; {list.length} services</p>
   <h1 class="display hub-hero__title" style={`--w:${longest}`}>
     <span class="line"><span class="line__in">{d.headline[0]}</span></span>
     <span class="line"><span class="line__in"><span class="lime">{d.headline[1]}</span></span></span>
@@ -83,4 +83,4 @@ const longest = Math.max(...d.headline.join(' ').split(' ').map((w) => w.length)
   </div>
 </section>
 
-<ContactCTA idx={`${d.name} / Let's go`} line1="Let's build" line2="your stack." loc={`hub_${d.slug}`} />
+<ContactCTA idx="Let's talk" line1="Let's build" line2="your stack." loc={`hub_${d.slug}`} />

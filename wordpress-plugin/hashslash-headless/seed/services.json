@@ -19,7 +19,7 @@
       "hs_calc": "cro",
       "hs_pairs": "meta-ads, conversion-rate-optimisation",
       "hs_tools": "shopify, meta, googleanalytics, klaviyo, figma",
-      "hs_faqs": "Can you migrate us from WooCommerce or another platform? || Yes. We migrate products, customers, orders and URLs with redirects so you keep your SEO equity.\nDo you use themes or build custom? || Both. We recommend based on budget and how unique your buying experience needs to be, and tell you why.\nWill our ad tracking survive the rebuild? || Tracking is part of the build, not an afterthought: Meta CAPI, Google and GA4 events are tested before launch."
+      "hs_faqs": "Can you migrate us from WooCommerce or another platform? || Yes. We migrate products, customers, orders and URLs with redirects so you keep your SEO equity.\nDo you use themes or build custom? || Both. We recommend based on budget and how unique your buying experience needs to be, and tell you why.\nWill our ad tracking survive the rebuild? || Tracking is built in from day one: Meta CAPI, Google and GA4 events are tested before launch."
     }
   },
   {
@@ -157,7 +157,7 @@
       "hs_calc": "leads",
       "hs_pairs": "business-automation, linkedin-ads",
       "hs_tools": "hubspot, zoho, whatsapp, zapier, googlesheets",
-      "hs_faqs": "Which CRM should we use? || It depends on team size, budget and workflow. We recommend after the audit, not before.\nCan you migrate our existing data? || Yes: contacts, deals and history, cleaned and de-duplicated.\nWill this connect to our ads? || Yes. Sending qualified leads and closed deals back to Meta and Google is one of the biggest wins."
+      "hs_faqs": "Which CRM should we use? || It depends on team size, budget and workflow. We recommend one after the audit.\nCan you migrate our existing data? || Yes: contacts, deals and history, cleaned and de-duplicated.\nWill this connect to our ads? || Yes. Sending qualified leads and closed deals back to Meta and Google is one of the biggest wins."
     }
   },
   {
@@ -272,7 +272,7 @@
       "hs_calc": "leads",
       "hs_pairs": "crm-development, funnels-lead-generation",
       "hs_tools": "linkedin, hubspot, googleanalytics, zapier",
-      "hs_faqs": "Isn't LinkedIn too expensive? || The cost per click is higher, but so is the deal value. We judge it on cost per qualified meeting, not per click.\nLead Gen Forms or landing pages? || Often both: forms for volume, landing pages for intent. We test and keep what qualifies better.\nCan you target specific companies? || Yes. Account-based campaigns using your target list are one of LinkedIn's strengths."
+      "hs_faqs": "Isn't LinkedIn too expensive? || The cost per click is higher, but so is the deal value. We judge it on cost per qualified meeting.\nLead Gen Forms or landing pages? || Often both: forms for volume, landing pages for intent. We test and keep what qualifies better.\nCan you target specific companies? || Yes. Account-based campaigns using your target list are one of LinkedIn's strengths."
     }
   },
   {
@@ -331,10 +331,10 @@
       "hs_audit": "free social profile review",
       "hs_form_value": "Social & content",
       "hs_for_who": "Consumer brands\nHospitality\nFounder-led businesses",
-      "hs_signs": "You post, but engagement is flat\nContent looks like ads, not like the platform\nThere's no plan beyond \"post 3x a week\"\nDMs and comments go unanswered",
+      "hs_signs": "You post, but engagement is flat\nYour content looks like ads\nThere's no plan beyond \"post 3x a week\"\nDMs and comments go unanswered",
       "hs_deliverables": "Social strategy & content pillars\nMonthly content calendar\nReels, carousels & stories\nCommunity management\nInfluencer & creator partnerships\nMonthly insights report",
       "hs_moment": "ads",
-      "hs_moment_label": "Content made for the feed, not the boardroom",
+      "hs_moment_label": "Content made for the feed",
       "hs_moment_query": "",
       "hs_moment_items": "",
       "hs_moment_variant": "feed",
@@ -462,10 +462,10 @@
   {
     "slug": "funnels-lead-generation",
     "title": "Funnels & Lead Generation",
-    "excerpt": "Lead systems that fill the pipeline with people ready to talk, not just form fills.",
+    "excerpt": "Lead systems that fill the pipeline with people ready to talk.",
     "meta": {
       "hs_discipline": "growth",
-      "hs_tagline": "Lead systems that fill the pipeline with people ready to talk, not just form fills.",
+      "hs_tagline": "Lead systems that fill the pipeline with people ready to talk.",
       "hs_audit": "free funnel audit",
       "hs_form_value": "Growth strategy / CRO",
       "hs_for_who": "Real estate\nHealthcare & clinics\nB2B services",

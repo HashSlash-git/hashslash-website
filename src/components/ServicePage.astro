@@ -29,7 +29,7 @@ const longest = Math.max(...words.map((w) => w.length)); // drives hero font-siz
   <nav class="crumbs mono" aria-label="Breadcrumb"><a href="/services/">Services</a> / <a href={`/services/${d.slug}/`}>{d.name}</a> / <span aria-current="page">{s.name}</span></nav>
   <div class="svc-hero__grid">
     <div class="svc-hero__copy">
-      <p class="mono svc-hero__eye"><span class="dot"></span> {d.no} / {d.name}</p>
+      <p class="mono svc-hero__eye">{d.name}</p>
       <h1 class="display svc-hero__title" style={`--w:${longest}`}>{words.map((w) => <span class="line"><span class="line__in">{w}</span></span>)}</h1>
       <p class="svc-hero__lede">{s.tagline}</p>
       {s.forWho.length > 0 && <div class="svc-hero__for"><span class="mono">Built for</span>{s.forWho.map((f) => <span class="pill">{f}</span>)}</div>}
@@ -175,4 +175,4 @@ const longest = Math.max(...words.map((w) => w.length)); // drives hero font-siz
   </div>
 </section>}
 
-<ContactCTA idx={`${s.name} / ${s.audit}`} line1="Start with" line2="a free audit." sub={`Start with a ${s.audit}. You'll get a clear list of what's working, what's leaking and what we'd do first. No obligation.`} preselect={s.formValue} loc={`service_${s.slug}`} />
+<ContactCTA idx="Free audit" line1="Start with" line2="a free audit." sub={`Start with a ${s.audit}. You'll get a clear list of what's working, what's leaking and what we'd do first. No obligation.`} preselect={s.formValue} loc={`service_${s.slug}`} />

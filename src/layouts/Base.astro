@@ -1,4 +1,5 @@
 ---
+import '../styles/fonts.css';
 import '../styles/global.css';
 import '../styles/pages.css';
 import Nav from '../components/Nav.astro';
@@ -20,14 +21,13 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <!-- fonts are self-hosted (src/styles/fonts.css); preload the one every page paints first -->
+  <link rel="preload" href="/fonts/archivo-400-latin.woff2" as="font" type="font/woff2" crossorigin />
   <script is:inline>
     (function () {
       var d = document.documentElement;
       if (!matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('motion');
-      try { if (sessionStorage.getItem('hs-pt')) d.classList.add('pt-in'); } catch (e) {}
+      try { if (sessionStorage.getItem('hs-pt')) { d.classList.add('pt-in'); d.classList.add('pt-arrive'); } } catch (e) {}
       setTimeout(function () { if (!window.__hsReady) { d.classList.remove('motion'); d.classList.remove('pt-in'); } }, 4000);
     })();
   </script>

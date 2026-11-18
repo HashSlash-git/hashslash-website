@@ -16,7 +16,7 @@ const ind = (await getIndustries()).find((i) => i.slug === c.industry);
   <section class="case-hero">
     <div class="hero__grid" aria-hidden="true"></div>
     <nav class="crumbs mono" aria-label="Breadcrumb"><a href="/#work">Work</a> / <span aria-current="page">{c.client}</span></nav>
-    <p class="mono svc-hero__eye"><span class="dot"></span> {c.client}{ind && <> &nbsp;·&nbsp; <a href={`/industries/${ind.slug}/`}>{ind.name}</a></>}</p>
+    <p class="mono svc-hero__eye">{c.client}{ind && <> &nbsp;·&nbsp; <a href={`/industries/${ind.slug}/`}>{ind.name}</a></>}</p>
     <h1 class="display case-hero__title">{c.title}</h1>
     {c.summary && <p class="svc-hero__lede">{c.summary}</p>}
     <div class="case-hero__media">

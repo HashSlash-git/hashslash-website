@@ -39,7 +39,7 @@ export const disciplines = [
     process: [
       { t: 'Audit & tracking', d: 'Account and funnel audit. Pixels, conversions API and GA4 verified before budget scales.', w: 'Week 1' },
       { t: 'Strategy & creative', d: 'Audience map, offer angles and a first batch of creatives built to be tested.', w: 'Week 2' },
-      { t: 'Launch & learn', d: 'Structured tests, not guesswork. Clear read on what is and isn\'t working.', w: 'Weeks 3–4' },
+      { t: 'Launch & learn', d: 'Structured tests with a clear read on what is and isn\'t working.', w: 'Weeks 3–4' },
       { t: 'Optimise & scale', d: 'Kill losers, scale winners, refresh creative and report against revenue.', w: 'Monthly' }
     ],
     packages: [
@@ -54,7 +54,7 @@ export const disciplines = [
     short: 'Scale',
     no: '03',
     headline: ['We scale', 'what works.'],
-    lede: 'Strategy, CRO, funnels and retention that turn traffic into revenue you can forecast, not just report on.',
+    lede: 'Strategy, CRO, funnels and retention that turn traffic into revenue you can forecast.',
     process: [
       { t: 'Diagnose', d: 'Data, funnel and customer research to find the real constraint on growth.', w: 'Weeks 1–2' },
       { t: 'Prioritise', d: 'An impact-vs-effort roadmap so the team works on what moves revenue first.', w: 'Week 2' },
@@ -84,7 +84,7 @@ export const services = [
     faqs: [
       { q: 'Can you migrate us from WooCommerce or another platform?', a: 'Yes. We migrate products, customers, orders and URLs with redirects so you keep your SEO equity.' },
       { q: 'Do you use themes or build custom?', a: 'Both. We recommend based on budget and how unique your buying experience needs to be, and tell you why.' },
-      { q: 'Will our ad tracking survive the rebuild?', a: 'Tracking is part of the build, not an afterthought: Meta CAPI, Google and GA4 events are tested before launch.' }
+      { q: 'Will our ad tracking survive the rebuild?', a: 'Tracking is built in from day one: Meta CAPI, Google and GA4 events are tested before launch.' }
     ]
   },
   {
@@ -178,7 +178,7 @@ export const services = [
     calc: 'leads', pairs: ['business-automation', 'linkedin-ads'],
     tools: ['hubspot', 'zoho', 'whatsapp', 'zapier', 'googlesheets'],
     faqs: [
-      { q: 'Which CRM should we use?', a: 'It depends on team size, budget and workflow. We recommend after the audit, not before.' },
+      { q: 'Which CRM should we use?', a: 'It depends on team size, budget and workflow. We recommend one after the audit.' },
       { q: 'Can you migrate our existing data?', a: 'Yes: contacts, deals and history, cleaned and de-duplicated.' },
       { q: 'Will this connect to our ads?', a: 'Yes. Sending qualified leads and closed deals back to Meta and Google is one of the biggest wins.' }
     ]
@@ -260,7 +260,7 @@ export const services = [
     calc: 'leads', pairs: ['crm-development', 'funnels-lead-generation'],
     tools: ['linkedin', 'hubspot', 'googleanalytics', 'zapier'],
     faqs: [
-      { q: 'Isn\'t LinkedIn too expensive?', a: 'The cost per click is higher, but so is the deal value. We judge it on cost per qualified meeting, not per click.' },
+      { q: 'Isn\'t LinkedIn too expensive?', a: 'The cost per click is higher, but so is the deal value. We judge it on cost per qualified meeting.' },
       { q: 'Lead Gen Forms or landing pages?', a: 'Often both: forms for volume, landing pages for intent. We test and keep what qualifies better.' },
       { q: 'Can you target specific companies?', a: 'Yes. Account-based campaigns using your target list are one of LinkedIn\'s strengths.' }
     ]
@@ -302,9 +302,9 @@ export const services = [
     tagline: 'Social that builds a brand people follow: platform-native content, community and consistency.',
     audit: 'free social profile review',
     forWho: ['Consumer brands', 'Hospitality', 'Founder-led businesses'],
-    signs: ['You post, but engagement is flat', 'Content looks like ads, not like the platform', 'There\'s no plan beyond "post 3x a week"', 'DMs and comments go unanswered'],
+    signs: ['You post, but engagement is flat', 'Your content looks like ads', 'There\'s no plan beyond "post 3x a week"', 'DMs and comments go unanswered'],
     deliverables: ['Social strategy & content pillars', 'Monthly content calendar', 'Reels, carousels & stories', 'Community management', 'Influencer & creator partnerships', 'Monthly insights report'],
-    moment: { type: 'ads', variant: 'feed', label: 'Content made for the feed, not the boardroom' },
+    moment: { type: 'ads', variant: 'feed', label: 'Content made for the feed' },
     pairs: ['content-video', 'meta-ads'],
     tools: ['instagram', 'tiktok', 'youtube', 'linkedin', 'canva'],
     faqs: [
@@ -397,7 +397,7 @@ export const services = [
   },
   {
     slug: 'funnels-lead-generation', d: 'growth', name: 'Funnels & Lead Generation', formValue: 'Growth strategy / CRO',
-    tagline: 'Lead systems that fill the pipeline with people ready to talk, not just form fills.',
+    tagline: 'Lead systems that fill the pipeline with people ready to talk.',
     audit: 'free funnel audit',
     forWho: ['Real estate', 'Healthcare & clinics', 'B2B services'],
     signs: ['Plenty of leads, few qualified ones', 'Leads go cold before sales calls', 'One channel brings almost all your leads', 'You can\'t see cost per qualified lead'],

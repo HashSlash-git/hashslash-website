@@ -21,7 +21,7 @@ const faqLd = ind.faqs.length ? { '@context': 'https://schema.org', '@type': 'FA
     <div class="hero__grid" aria-hidden="true"></div>
     {ind.no && <span class="hub-hero__no display" aria-hidden="true">{ind.no}</span>}
     <nav class="crumbs mono" aria-label="Breadcrumb"><a href="/#industries">Industries</a> / <span aria-current="page">{ind.name}</span></nav>
-    <p class="mono svc-hero__eye"><span class="dot"></span> Industry playbook</p>
+    <p class="mono svc-hero__eye">Industry playbook</p>
     <h1 class="display hub-hero__title" style={`--w:${longest}`}>
       {words.map((w, i) => <span class="line"><span class="line__in">{i === words.length - 1 ? <span class="lime">{w}</span> : w}</span></span>)}
     </h1>
@@ -91,7 +91,7 @@ const faqLd = ind.faqs.length ? { '@context': 'https://schema.org', '@type': 'FA
     </section>
   )}
 
-  <ContactCTA idx={`${ind.name} / Let's go`} line1="Let's grow" line2="your business." loc={`industry_${ind.slug}`} />
+  <ContactCTA idx="Let's talk" line1="Let's grow" line2="your business." loc={`industry_${ind.slug}`} />
 </Base>
 
 <script>

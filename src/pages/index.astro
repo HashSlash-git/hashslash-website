@@ -10,7 +10,6 @@ const servicesIn = (d) => services.filter((s) => s.d === d);
 // Approved client logos only, e.g. { name: 'Acme', src: '/logos/acme.svg' } (files in public/logos/)
 const clientLogos = [];
 const quoteCase = cases.find((c) => c.quote);
-const idx = (() => { let n = 0; return () => String(++n).padStart(2, '0'); })();
 
 // Orbit around the #/. core: same size, evenly spaced, positions computed in scripts/home.js
 const chips = [
@@ -24,7 +23,7 @@ const faqs = [
   ['Which platforms do you work with?', "Shopify, WordPress, custom React/Next.js builds, Meta, Google Ads, LinkedIn, ChatGPT ads, GA4, HubSpot and other major CRMs, plus AI and automation tooling."],
   ['How long does a project take?', "It depends on scope, and we'll give you a dated plan after the discovery call. We work in weekly sprints, so you see progress from week one."],
   ['How do you report on results?', 'We set up and verify conversion tracking first, then report against the metrics agreed in your audit: leads, sales, cost per acquisition and revenue.'],
-  ['How do we get started?', "Book a free strategy call or send a project enquiry below. You'll hear back from a strategist, not a sales script."]
+  ['How do we get started?', "Book a free strategy call or send a project enquiry below. A strategist will get back to you to plan the next step."]
 ];
 const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) };
 ---
@@ -38,14 +37,14 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
       <div class="hero__glow"></div>
     </div>
     <div class="hero__inner">
-      <p class="hero__eyebrow mono"><span class="dot"></span> Digital growth partner &nbsp;/&nbsp; Tech &middot; Marketing &middot; Growth <span class="tag mono">#WeCodeIt</span></p>
+      <p class="hero__eyebrow mono">Digital growth partner &nbsp;/&nbsp; Tech &middot; Marketing &middot; Growth <span class="tag mono">#WeCodeIt</span></p>
       <h1 class="hero__title display" aria-label="We build. We market. We scale.">
         <span class="hero__line hero__line--1"><span class="script hero__script">tech</span><span class="line"><span class="line__in">We build.</span></span></span>
         <span class="hero__line hero__line--2"><span class="script hero__script">marketing</span><span class="line"><span class="line__in">We market.</span></span></span>
         <span class="hero__line hero__line--3"><span class="script hero__script">growth</span><span class="line"><span class="line__in">We scale<span class="lime">.</span></span></span></span>
       </h1>
-      <svg class="scribble scribble--a" viewBox="0 0 120 60" aria-hidden="true"><path d="M4 50 C 30 30, 60 18, 116 6 M10 56 C 40 40, 70 28, 112 18"/></svg>
-      <svg class="scribble scribble--b" viewBox="0 0 300 30" aria-hidden="true"><path d="M3 20 C 60 8, 140 26, 200 12 S 280 10, 297 16"/></svg>
+      <svg class="scribble scribble--a" viewBox="0 0 120 60" aria-hidden="true"><path pathLength="1" d="M4 50 C 30 30, 60 18, 116 6 M10 56 C 40 40, 70 28, 112 18"/></svg>
+      <svg class="scribble scribble--b" viewBox="0 0 300 30" aria-hidden="true"><path pathLength="1" d="M3 20 C 60 8, 140 26, 200 12 S 280 10, 297 16"/></svg>
       <div class="hero__meta">
         <p class="hero__lede">One team for the website, the ads and the growth plan, so nothing gets lost between agencies. Built for brands that want <strong>tech, marketing and growth all connected.</strong></p>
         <div class="hero__ctas">
@@ -106,7 +105,7 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
   <!-- ============ SERVICES ============ -->
   <section class="services" id="services" aria-labelledby="services-h">
     <header class="sec-head">
-      <p class="mono sec-head__idx">{idx()} / Capabilities</p>
+      <p class="mono sec-head__idx">Capabilities</p>
       <h2 class="sec-head__title display reveal" id="services-h">Three disciplines.<br /><span class="outline">Zero hand-offs.</span></h2>
     </header>
     <div class="caps">
@@ -128,8 +127,8 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
 
   <!-- ============ CROSSING BANDS ============ -->
   <section class="bands" aria-hidden="true">
-    <div class="band band--lime"><div class="band__track"><span>We don't predict the future <i>//</i> we code it <i>//</i> growth infrastructure <i>//</i> market dominance <i>//</i>&nbsp;</span><span>We don't predict the future <i>//</i> we code it <i>//</i> growth infrastructure <i>//</i> market dominance <i>//</i>&nbsp;</span></div></div>
-    <div class="band band--dark"><div class="band__track"><span>Velocity is the only metric <i>✦</i> build <i>✦</i> market <i>✦</i> scale <i>✦</i>&nbsp;</span><span>Velocity is the only metric <i>✦</i> build <i>✦</i> market <i>✦</i> scale <i>✦</i>&nbsp;</span></div></div>
+    <div class="band band--lime"><div class="band__track"><span>Shopify stores <i>/</i> Custom websites <i>/</i> Meta Ads <i>/</i> Google Ads <i>/</i> SEO <i>/</i> CRM &amp; automation <i>/</i>&nbsp;</span><span>Shopify stores <i>/</i> Custom websites <i>/</i> Meta Ads <i>/</i> Google Ads <i>/</i> SEO <i>/</i> CRM &amp; automation <i>/</i>&nbsp;</span></div></div>
+    <div class="band band--dark"><div class="band__track"><span>LinkedIn Ads <i>/</i> ChatGPT Ads <i>/</i> Social &amp; content <i>/</i> Conversion optimisation <i>/</i> Analytics <i>/</i> Retention <i>/</i>&nbsp;</span><span>LinkedIn Ads <i>/</i> ChatGPT Ads <i>/</i> Social &amp; content <i>/</i> Conversion optimisation <i>/</i> Analytics <i>/</i> Retention <i>/</i>&nbsp;</span></div></div>
   </section>
 
   <!-- ============ WORK (shown once a client-approved case study exists) ============ -->
@@ -137,7 +136,7 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
   <section class="work" id="work" aria-labelledby="work-h">
     <div class="work__pin">
       <header class="work__head">
-        <p class="mono sec-head__idx">{idx()} / Selected work</p>
+        <p class="mono sec-head__idx">Selected work</p>
         <h2 class="display work__title" id="work-h">Proof,<br />not promises.</h2>
         <p class="work__note mono">Drag / scroll &rarr;</p>
       </header>
@@ -164,7 +163,7 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
   <!-- ============ INDUSTRIES ============ -->
   <section class="industries" id="industries" aria-labelledby="ind-h">
     <header class="sec-head">
-      <p class="mono sec-head__idx">{idx()} / Industries</p>
+      <p class="mono sec-head__idx">Industries</p>
       <h2 class="sec-head__title display reveal" id="ind-h">Built for<br /><span class="outline">your market.</span></h2>
     </header>
     <div class="inds">
@@ -182,7 +181,7 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
   <!-- ============ PROCESS ============ -->
   <section class="process" id="process" aria-labelledby="process-h">
     <div class="process__side">
-      <p class="mono sec-head__idx">{idx()} / Process</p>
+      <p class="mono sec-head__idx">Process</p>
       <h2 class="display process__title" id="process-h">From audit<br />to <span class="lime">autopilot.</span></h2>
       <a class="btn btn--lime magnetic" href="#contact" data-book data-track="booking_start" data-loc="process">Start with a free audit <span class="arr">&rarr;</span></a>
     </div>
@@ -192,7 +191,7 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
         ['Discovery & strategic audit', 'We pull apart your site, ads, tracking and funnel to find where revenue is leaking, then agree the numbers that matter.', 'You get: audit report + growth roadmap'],
         ['Agile development & production', 'Design, build and creative ship in short sprints, so you see working pages and ads every week instead of one big reveal.', 'You get: staging links + weekly demos'],
         ['Market activation & deployment', 'Launch with tracking verified end to end: Meta, Google, LinkedIn, GA4 and CRM all reading the same conversions.', 'You get: live campaigns + verified tracking'],
-        ['Performance optimisation & scaling', 'Test, cut, double down. We scale what works and report against revenue, not vanity metrics.', 'You get: live dashboard + monthly growth review']
+        ['Performance optimisation & scaling', 'Test, cut, double down. We scale what works and report on revenue.', 'You get: live dashboard + monthly growth review']
       ].map(([t, d, g], i) => (
         <li class="step">
           <span class="step__no display">0{i + 1}</span>
@@ -217,7 +216,7 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
   <!-- ============ FAQ ============ -->
   <section class="faq" id="faq" aria-labelledby="faq-h">
     <header class="sec-head">
-      <p class="mono sec-head__idx">{idx()} / FAQ</p>
+      <p class="mono sec-head__idx">FAQ</p>
       <h2 class="sec-head__title display reveal" id="faq-h">Straight<br /><span class="outline">answers.</span></h2>
     </header>
     <div class="faq__list">
@@ -225,7 +224,7 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
     </div>
   </section>
 
-  <ContactCTA idx={`${idx()} / Let's go`} />
+  <ContactCTA idx="Let's talk" />
 </Base>
 
 <script>

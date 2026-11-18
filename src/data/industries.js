@@ -33,7 +33,7 @@ export const industries = [
   },
   {
     slug: 'real-estate', name: 'Real Estate', no: 'D',
-    tagline: 'Qualified buyer leads, not form spam: high-intent campaigns, fast landing pages and CRM-driven follow-up.',
+    tagline: 'Qualified buyer leads from high-intent campaigns, fast landing pages and CRM-driven follow-up.',
     pains: ['Plenty of leads, very few genuine buyers', 'Leads wait hours before anyone calls them back', 'Every project launch starts marketing from scratch', 'You can\'t see cost per site visit or booking'],
     services: ['funnels-lead-generation', 'meta-ads', 'google-ads', 'linkedin-ads', 'crm-development', 'chatgpt-ads'],
     faqs: [
