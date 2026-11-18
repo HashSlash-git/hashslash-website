@@ -1,0 +1,102 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactCTA from '../../components/ContactCTA.astro';
+import { getIndustries, getServices, getCaseStudies } from '../../lib/content.js';
+
+export async function getStaticPaths() {
+  return (await getIndustries()).map((i) => ({ params: { slug: i.slug }, props: { ind: i } }));
+}
+const { ind } = Astro.props;
+const all = await getServices();
+const recs = ind.services.map((slug) => all.find((s) => s.slug === slug)).filter(Boolean);
+const cases = (await getCaseStudies()).filter((c) => c.industry === ind.slug);
+const words = ind.name.split(' ');
+const longest = Math.max(...words.map((w) => w.length));
+const faqLd = ind.faqs.length ? { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: ind.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) } : null;
+---
+<Base title={`${ind.name} Marketing & Development | HashSlash`} description={ind.tagline} bodyClass="is-service is-industry">
+  {faqLd && <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqLd)} />}
+
+  <section class="hub-hero">
+    <div class="hero__grid" aria-hidden="true"></div>
+    {ind.no && <span class="hub-hero__no display" aria-hidden="true">{ind.no}</span>}
+    <nav class="crumbs mono" aria-label="Breadcrumb"><a href="/#industries">Industries</a> / <span aria-current="page">{ind.name}</span></nav>
+    <p class="mono svc-hero__eye"><span class="dot"></span> Industry playbook</p>
+    <h1 class="display hub-hero__title" style={`--w:${longest}`}>
+      {words.map((w, i) => <span class="line"><span class="line__in">{i === words.length - 1 ? <span class="lime">{w}</span> : w}</span></span>)}
+    </h1>
+    <div class="hub-hero__meta">
+      <p class="svc-hero__lede">{ind.tagline}</p>
+      <div class="hero__ctas">
+        <a class="btn btn--lime btn--lg magnetic" href="#contact" data-book data-track="booking_start" data-loc={`industry_${ind.slug}`}>Book a strategy call <span class="arr">&rarr;</span></a>
+        <a class="btn btn--ghost btn--lg" href="#playbook">See the playbook</a>
+      </div>
+    </div>
+  </section>
+
+  {ind.pains.length > 0 && (
+    <section class="signs" aria-labelledby="pains-h">
+      <div class="signs__head">
+        <p class="mono sec-head__idx">Sounds familiar?</p>
+        <h2 class="display signs__title reveal" id="pains-h">Tick what's<br /><span class="outline">true for you.</span></h2>
+      </div>
+      <div class="signs__list">
+        {ind.pains.map((t, i) => <button type="button" class="sign" aria-pressed="false"><span class="sign__box" aria-hidden="true"></span><span class="mono sign__no">0{i + 1}</span><span>{t}</span></button>)}
+        <div class="signs__verdict" aria-live="polite">
+          <p class="signs__msg">Tap the ones that sound like you.</p>
+          <a class="btn btn--lime signs__cta" href="#contact" data-track="cta_click" data-cta={`signs_${ind.slug}`} data-loc="industry_signs">Get a free growth audit <span class="arr">&rarr;</span></a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  {recs.length > 0 && (
+    <section id="playbook" class="svc-block" aria-labelledby="pb-h">
+      <header class="svc-block__head">
+        <span class="mono lime">Playbook</span>
+        <h2 class="display svc-block__title" id="pb-h">What we run for {ind.name}</h2>
+        <p class="muted">The services that move the needle in this industry, run by one team.</p>
+      </header>
+      <div class="svc-list">
+        {recs.map((s, i) => (
+          <a class="svc-row reveal" href={`/services/${s.slug}/`}>
+            <span class="mono svc-row__no">{String(i + 1).padStart(2, '0')}</span>
+            <span class="display svc-row__name">{s.name}</span>
+            <span class="svc-row__t">{s.tagline}</span>
+            <span class="svc-row__go" aria-hidden="true">&rarr;</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {cases.length > 0 && (
+    <section class="cases-grid" aria-label={`${ind.name} case studies`}>
+      {cases.map((c) => (
+        <a class="pair" href={`/work/${c.slug}/`}>
+          <span class="mono">{c.client}</span><b>{c.title}</b>
+          {c.results[0] && <span class="pair__t"><strong class="lime">{c.results[0].value}</strong> {c.results[0].label}</span>}
+          <span class="mono lime">Read the case study &rarr;</span>
+        </a>
+      ))}
+    </section>
+  )}
+
+  {ind.body && <section class="prose-wrap"><div class="prose" set:html={ind.body} /></section>}
+
+  {ind.faqs.length > 0 && (
+    <section class="faq" aria-labelledby="ifaq-h">
+      <header class="sec-head"><p class="mono sec-head__idx">FAQ</p><h2 class="sec-head__title display reveal" id="ifaq-h">Straight<br /><span class="outline">answers.</span></h2></header>
+      <div class="faq__list">{ind.faqs.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}</div>
+    </section>
+  )}
+
+  <ContactCTA idx={`${ind.name} / Let's go`} line1="Let's grow" line2="your business." loc={`industry_${ind.slug}`} />
+</Base>
+
+<script>
+  import { initService } from '../../scripts/service.js';
+  import { initCore } from '../../scripts/core.js';
+  initService();
+  initCore();
+</script>

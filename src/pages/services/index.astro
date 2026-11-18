@@ -1,0 +1,53 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactCTA from '../../components/ContactCTA.astro';
+import { disciplines } from '../../data/services.js';
+import { getServices } from '../../lib/content.js';
+const services = await getServices();
+const servicesIn = (d) => services.filter((s) => s.d === d);
+---
+<Base title="Services | HashSlash: Build, Market, Scale" description="Every HashSlash service in one place: development, performance marketing (Meta, Google, LinkedIn and ChatGPT ads), SEO, CRM, automation and growth.">
+  <section class="hub-hero hub-hero--all">
+    <div class="hero__grid" aria-hidden="true"></div>
+    <p class="mono svc-hero__eye"><span class="dot"></span> {services.length} services &nbsp;·&nbsp; 3 disciplines &nbsp;·&nbsp; 1 team</p>
+    <h1 class="display hub-hero__title" style="--w:11">
+      <span class="line"><span class="line__in">Everything.</span></span>
+      <span class="line"><span class="line__in"><span class="lime">Connected.</span></span></span>
+    </h1>
+    <div class="hub-hero__meta">
+      <p class="svc-hero__lede">Pick one service or the whole stack. Either way, the build, the campaigns and the growth plan come from the same team, working off the same data.</p>
+      <div class="hero__ctas">
+        <a class="btn btn--lime btn--lg magnetic" href="#contact" data-book data-track="booking_start" data-loc="services_index">Not sure? Book a call <span class="arr">&rarr;</span></a>
+      </div>
+    </div>
+  </section>
+
+  {disciplines.map((d) => (
+    <section class="svc-block" aria-labelledby={`b-${d.slug}`}>
+      <header class="svc-block__head">
+        <span class="mono lime">{d.no}</span>
+        <h2 class="display svc-block__title" id={`b-${d.slug}`}><a href={`/services/${d.slug}/`}>{d.name} <span class="arr">&rarr;</span></a></h2>
+        <p class="muted">{d.lede}</p>
+      </header>
+      <div class="svc-list svc-list--tight">
+        {servicesIn(d.slug).map((s, i) => (
+          <a class="svc-row reveal" href={`/services/${s.slug}/`}>
+            <span class="mono svc-row__no">{String(i + 1).padStart(2, '0')}</span>
+            <span class="display svc-row__name">{s.name}{s.slug === 'chatgpt-ads' && <span class="new mono">New</span>}</span>
+            <span class="svc-row__t">{s.tagline}</span>
+            <span class="svc-row__go" aria-hidden="true">&rarr;</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
+
+  <ContactCTA idx="Let's go" line1="One team." line2="Every channel." loc="services_index" />
+</Base>
+
+<script>
+  import { initService } from '../../scripts/service.js';
+  import { initCore } from '../../scripts/core.js';
+  initService();
+  initCore();
+</script>

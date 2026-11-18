@@ -1,0 +1,30 @@
+---
+/* Any top-level WordPress Page (About, Privacy, Terms, landing pages…) */
+import Base from '../layouts/Base.astro';
+import ContactCTA from '../components/ContactCTA.astro';
+import { getPages } from '../lib/content.js';
+
+export async function getStaticPaths() {
+  return (await getPages()).map((p) => ({ params: { slug: p.slug }, props: { p } }));
+}
+const { p } = Astro.props;
+const longest = Math.max(...p.title.split(' ').map((w) => w.length));
+---
+<Base title={`${p.title} | HashSlash`} description={p.excerpt || p.title} bodyClass="is-page">
+  <section class="hub-hero hub-hero--page">
+    <div class="hero__grid" aria-hidden="true"></div>
+    <h1 class="display hub-hero__title" style={`--w:${longest}`}>
+      {p.title.split(' ').map((w) => <span class="line"><span class="line__in">{w}</span></span>)}
+    </h1>
+    {p.excerpt && <div class="hub-hero__meta"><p class="svc-hero__lede">{p.excerpt}</p></div>}
+  </section>
+  <section class="prose-wrap"><div class="prose" set:html={p.body} /></section>
+  <ContactCTA idx="Let's talk" line1="Got a" line2="project in mind?" loc={`page_${p.slug}`} />
+</Base>
+
+<script>
+  import { initService } from '../scripts/service.js';
+  import { initCore } from '../scripts/core.js';
+  initService();
+  initCore();
+</script>

@@ -1,0 +1,34 @@
+---
+import { disciplines } from '../data/services.js';
+import { getServices } from '../lib/content.js';
+const services = await getServices();
+const servicesIn = (d) => services.filter((s) => s.d === d);
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="footer__top footer__top--wide">
+    <div>
+      <p class="footer__tag">Technology. Marketing. Growth.<br /><span class="lime">All connected.</span></p>
+      <a class="btn btn--lime" href="#contact" data-book data-track="booking_start" data-loc="footer">Book a call &rarr;</a>
+    </div>
+    {disciplines.map((d) => (
+      <nav class="footer__col" aria-label={d.name}>
+        <a class="mono footer__colhead" href={`/services/${d.slug}/`}>{d.name}</a>
+        {servicesIn(d.slug).map((s) => <a href={`/services/${s.slug}/`}>{s.name}</a>)}
+      </nav>
+    ))}
+    <div class="footer__col">
+      <p class="mono">Contact</p>
+      <a href="mailto:hello@example.com" data-email>Email (to confirm)</a>
+      <a href="#" data-whatsapp data-track="whatsapp_click" data-loc="footer">WhatsApp</a>
+      <span class="muted">Address (to confirm)</span>
+      <p class="mono" style="margin-top:14px">Company</p>
+      <a href="/#work">Work</a><a href="/#industries">Industries</a><a href="/#faq">FAQ</a>
+    </div>
+  </div>
+  <p class="footer__word display" aria-hidden="true">{'HASHSLASH'.split('').map((l) => <span>{l}</span>)}</p>
+  <div class="footer__base mono">
+    <span>&copy; {year} HashSlash</span>
+    <span><a href="#">Privacy</a> &nbsp;·&nbsp; <a href="#">Terms</a></span>
+  </div>
+</footer>

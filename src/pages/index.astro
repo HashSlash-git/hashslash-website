@@ -1,0 +1,241 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactCTA from '../components/ContactCTA.astro';
+import { disciplines } from '../data/services.js';
+import { getServices, getIndustries, getCaseStudies } from '../lib/content.js';
+const industries = await getIndustries();
+const cases = (await getCaseStudies()).slice(0, 6);
+const services = await getServices();
+const servicesIn = (d) => services.filter((s) => s.d === d);
+
+const chips = [
+  ['shopify', 'Shopify', 180, .44, 1], ['instagram', 'Instagram', 205, .36, 1.1], ['react', 'React', 232, .42, .9],
+  ['wordpress', 'WordPress', 258, .38, 1.15], ['meta', 'Meta Ads', 284, .44, 1], ['googleads', 'Google Ads', 310, .38, .95],
+  ['linkedin', 'LinkedIn', 336, .44, 1.05], ['openai', 'ChatGPT', 0, .40, .9], ['hubspot', 'HubSpot', 24, .44, 1.1],
+  ['googleanalytics', 'GA4', 50, .40, .9], ['figma', 'Figma', 215, .20, .8, true], ['tiktok', 'TikTok', 330, .22, .8, true]
+];
+const faqs = [
+  ['What does HashSlash actually do?', 'We build digital products (websites, Shopify stores, apps, CRMs and automations), market them (Meta, Google, LinkedIn and ChatGPT ads, SEO, social and content) and help you scale with strategy, CRO and analytics, all under one team.'],
+  ['Can you take over just one part, like ads or the website?', "Yes. Many clients start with a single service. Because tech, marketing and growth sit together, expanding later doesn't mean switching agencies."],
+  ['Which platforms do you work with?', "Shopify, WordPress, custom React/Next.js builds, Meta, Google Ads, LinkedIn, ChatGPT ads, GA4, HubSpot and other major CRMs, plus AI and automation tooling."],
+  ['How long does a project take?', "It depends on scope, and we'll give you a dated plan after the discovery call. We work in weekly sprints, so you see progress from week one."],
+  ['How do you report on results?', 'We set up and verify conversion tracking first, then report against the metrics agreed in your audit: leads, sales, cost per acquisition and revenue.'],
+  ['How do we get started?', "Book a free strategy call or send a project enquiry below. You'll hear back from a strategist, not a sales script."]
+];
+const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) };
+---
+<Base title="HashSlash | We Build. We Market. We Scale." description="HashSlash is a digital growth partner connecting technology, performance marketing and business growth: Shopify and custom builds, Meta, Google, LinkedIn and ChatGPT ads, SEO, CRM and automation.">
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqLd)} />
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="top" aria-label="Introduction">
+    <div class="hero__bg" aria-hidden="true">
+      <div class="hero__grid"></div>
+      <div class="hero__glow"></div>
+    </div>
+    <div class="hero__inner">
+      <p class="hero__eyebrow mono"><span class="dot"></span> Digital growth partner &nbsp;/&nbsp; Tech &middot; Marketing &middot; Growth <span class="tag mono">#WeCodeIt</span></p>
+      <h1 class="hero__title display" aria-label="We build. We market. We scale.">
+        <span class="hero__line hero__line--1"><span class="script hero__script">tech</span><span class="line"><span class="line__in">We build.</span></span></span>
+        <span class="hero__line hero__line--2"><span class="script hero__script">marketing</span><span class="line"><span class="line__in">We market.</span></span></span>
+        <span class="hero__line hero__line--3"><span class="script hero__script">growth</span><span class="line"><span class="line__in">We scale<span class="lime">.</span></span></span></span>
+      </h1>
+      <svg class="scribble scribble--a" viewBox="0 0 120 60" aria-hidden="true"><path d="M4 50 C 30 30, 60 18, 116 6 M10 56 C 40 40, 70 28, 112 18"/></svg>
+      <svg class="scribble scribble--b" viewBox="0 0 300 30" aria-hidden="true"><path d="M3 20 C 60 8, 140 26, 200 12 S 280 10, 297 16"/></svg>
+      <div class="hero__meta">
+        <p class="hero__lede">One team for the website, the ads and the growth plan, so nothing gets lost between agencies. Built for brands that want <strong>tech, marketing and growth all connected.</strong></p>
+        <div class="hero__ctas">
+          <a class="btn btn--lime btn--lg magnetic" href="#contact" data-book data-track="booking_start" data-loc="hero">Book a strategy consultation <span class="arr">&rarr;</span></a>
+          <a class="btn btn--ghost btn--lg" href="#contact" data-track="cta_click" data-cta="start_project" data-loc="hero">Start a project</a>
+        </div>
+      </div>
+      <a class="badge" href="#contact" data-book data-track="booking_start" data-loc="hero_badge" aria-label="Book a free strategy call">
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <defs><path id="circ" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/></defs>
+          <text><textPath href="#circ">FREE STRATEGY CALL &bull; FREE STRATEGY CALL &bull; </textPath></text>
+        </svg>
+        <span class="badge__core">#/.</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ SIGNATURE: CONVERGE ============ -->
+  <section class="converge" id="converge" aria-labelledby="converge-title">
+    <div class="converge__stage">
+      <p class="converge__kicker mono">Every platform. One partner.</p>
+      <h2 class="converge__title display" id="converge-title">
+        <span class="line"><span class="line__in">Your one spot</span></span>
+        <span class="line"><span class="line__in">for <em class="lime">digital</em></span></span>
+        <span class="line"><span class="line__in"><em class="lime">transformation</em></span></span>
+      </h2>
+      <div class="orbit" aria-hidden="true">
+        {chips.map(([slug, label, a, r, s, sm]) => (
+          <div class={`chip${sm ? ' chip--sm' : ''}`} data-a={a} data-r={r} data-s={s}>
+            <div class="chip__in"><img alt="" src={`https://cdn.jsdelivr.net/npm/simple-icons@13.0.0/icons/${slug}.svg`} /><span>{label}</span></div>
+          </div>
+        ))}
+      </div>
+      <div class="core" aria-hidden="true"><span class="core__mark">#/.</span><span class="core__ring"></span></div>
+      <p class="converge__count mono" aria-hidden="true"><span class="converge__num">12</span> tools &rarr; <span class="lime">1 team</span></p>
+    </div>
+  </section>
+
+  <!-- ============ MANIFESTO ============ -->
+  <section class="manifesto" aria-labelledby="manifesto-h">
+    <p class="mono manifesto__label">( Manifesto )</p>
+    <h2 class="visually-hidden" id="manifesto-h">Why HashSlash</h2>
+    <p class="manifesto__text" data-words>
+      Most brands hire one agency to build, another to advertise and a third to "strategise". None of them talk. We put the <b>code</b>, the <b>campaigns</b> and the <b>growth plan</b> in one room, so every click you pay for lands on something built to convert.
+    </p>
+    <div class="manifesto__foot">
+      <span class="manifesto__trio display">Technology. Marketing. Growth.</span>
+      <span class="script manifesto__script">all connected</span>
+    </div>
+  </section>
+
+  <!-- ============ TRUST ============ -->
+  <section class="trust" aria-labelledby="trust-h">
+    <div class="trust__head">
+      <h2 class="trust__title" id="trust-h">Brands we build, market &amp; scale</h2>
+      <span class="ph mono">Placeholder: approved client logos only</span>
+    </div>
+    <ul class="trust__logos">
+      {Array.from({ length: 6 }).map(() => <li>Client logo</li>)}
+    </ul>
+  </section>
+
+  <!-- ============ SERVICES ============ -->
+  <section class="services" id="services" aria-labelledby="services-h">
+    <header class="sec-head">
+      <p class="mono sec-head__idx">01 / Capabilities</p>
+      <h2 class="sec-head__title display reveal" id="services-h">Three disciplines.<br /><span class="outline">Zero hand-offs.</span></h2>
+    </header>
+    <div class="caps">
+      {disciplines.map((d) => (
+        <article class="cap reveal">
+          <div class="cap__link">
+            <span class="cap__no mono">{d.no}</span>
+            <h3 class="cap__title display"><a class="stretch" href={`/services/${d.slug}/`} data-track="cta_click" data-cta={`hub_${d.slug}`} data-loc="services">{d.name === 'Business Growth' ? 'Growth' : d.name}</a></h3>
+            <p class="cap__out">{d.lede}</p>
+            <ul class="cap__list">
+              {servicesIn(d.slug).map((s) => <li><a href={`/services/${s.slug}/`}>{s.name}</a></li>)}
+            </ul>
+            <span class="cap__cta">Explore {d.short.toLowerCase()} <span class="arr">&rarr;</span></span>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- ============ CROSSING BANDS ============ -->
+  <section class="bands" aria-hidden="true">
+    <div class="band band--lime"><div class="band__track"><span>We don't predict the future <i>//</i> we code it <i>//</i> growth infrastructure <i>//</i> market dominance <i>//</i>&nbsp;</span><span>We don't predict the future <i>//</i> we code it <i>//</i> growth infrastructure <i>//</i> market dominance <i>//</i>&nbsp;</span></div></div>
+    <div class="band band--dark"><div class="band__track"><span>Velocity is the only metric <i>✦</i> build <i>✦</i> market <i>✦</i> scale <i>✦</i>&nbsp;</span><span>Velocity is the only metric <i>✦</i> build <i>✦</i> market <i>✦</i> scale <i>✦</i>&nbsp;</span></div></div>
+  </section>
+
+  <!-- ============ WORK ============ -->
+  <section class="work" id="work" aria-labelledby="work-h">
+    <div class="work__pin">
+      <header class="work__head">
+        <p class="mono sec-head__idx">02 / Selected work</p>
+        <h2 class="display work__title" id="work-h">Proof,<br />not promises.</h2>
+        <p class="work__note mono">Drag / scroll &rarr;</p>
+      </header>
+      <div class="work__track">
+        {cases.length > 0 ? cases.map((c, i) => (
+          <a class="case" data-hue={(i % 4) + 1} href={`/work/${c.slug}/`}>
+            <div class="case__media">{c.image ? <img class="case__img" src={c.image} alt={c.imageAlt || ''} loading="lazy" /> : <span class="case__big display">0{i + 1}</span>}</div>
+            <div class="case__body">
+              <p class="case__meta mono">{c.client} &nbsp;·&nbsp; {(industries.find((x) => x.slug === c.industry) || {}).name || ''}</p>
+              <h3 class="case__title">{c.title}</h3>
+              {c.results[0] && <p class="case__res"><span class="mono">Result</span> {c.results[0].value} {c.results[0].label}</p>}
+            </div>
+          </a>
+        )) : industries.slice(0, 4).map((ind, i) => (
+          <article class="case" data-hue={i + 1}>
+            <div class="case__media"><span class="case__big display">0{i + 1}</span><span class="ph mono">Placeholder: project visual</span></div>
+            <div class="case__body">
+              <p class="case__meta mono">{ind.name}</p>
+              <h3 class="case__title">Client name: project headline</h3>
+              <p class="case__res"><span class="mono">Result</span> Verified figure pending approval</p>
+            </div>
+          </article>
+        ))}
+        <a class="case case--cta" href="#contact" data-track="cta_click" data-cta="start_project" data-loc="work">
+          <span class="script">yours next?</span>
+          <span class="display">Start a<br />project <span class="arr">&rarr;</span></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ INDUSTRIES ============ -->
+  <section class="industries" id="industries" aria-labelledby="ind-h">
+    <header class="sec-head">
+      <p class="mono sec-head__idx">03 / Industries</p>
+      <h2 class="sec-head__title display reveal" id="ind-h">Built for<br /><span class="outline">your market.</span></h2>
+    </header>
+    <div class="inds">
+      {industries.map((ind) => (
+        <a class="ind" href={`/industries/${ind.slug}/`} data-track="cta_click" data-cta={`industry_${ind.slug}`} data-loc="industries">
+          <span class="ind__no mono">{ind.no}</span>
+          <h3 class="ind__name display">{ind.name}</h3>
+          <p class="ind__desc">{ind.tagline}</p>
+          <span class="ind__cta mono">See the playbook &rarr;</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ============ PROCESS ============ -->
+  <section class="process" id="process" aria-labelledby="process-h">
+    <div class="process__side">
+      <p class="mono sec-head__idx">04 / Process</p>
+      <h2 class="display process__title" id="process-h">From audit<br />to <span class="lime">autopilot.</span></h2>
+      <a class="btn btn--lime magnetic" href="#contact" data-book data-track="booking_start" data-loc="process">Start with a free audit <span class="arr">&rarr;</span></a>
+    </div>
+    <ol class="steps">
+      <span class="steps__rail" aria-hidden="true"><span class="steps__fill"></span></span>
+      {[
+        ['Discovery & strategic audit', 'We pull apart your site, ads, tracking and funnel to find where revenue is leaking, then agree the numbers that matter.', 'You get: audit report + growth roadmap'],
+        ['Agile development & production', 'Design, build and creative ship in short sprints, so you see working pages and ads every week instead of one big reveal.', 'You get: staging links + weekly demos'],
+        ['Market activation & deployment', 'Launch with tracking verified end to end: Meta, Google, LinkedIn, GA4 and CRM all reading the same conversions.', 'You get: live campaigns + verified tracking'],
+        ['Performance optimisation & scaling', 'Test, cut, double down. We scale what works and report against revenue, not vanity metrics.', 'You get: live dashboard + monthly growth review']
+      ].map(([t, d, g], i) => (
+        <li class="step">
+          <span class="step__no display">0{i + 1}</span>
+          <div><h3 class="step__title">{t}</h3><p>{d}</p><p class="step__get mono">{g}</p></div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- ============ TESTIMONIAL ============ -->
+  <section class="quote" aria-label="Client testimonial">
+    <span class="quote__mark display" aria-hidden="true">&ldquo;</span>
+    <blockquote>
+      <p class="quote__text">Client testimonial goes here: one specific, outcome-led sentence from a real client, approved for use.</p>
+      <footer class="mono">Name &nbsp;·&nbsp; Role, Company <span class="ph">Placeholder</span></footer>
+    </blockquote>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="faq" id="faq" aria-labelledby="faq-h">
+    <header class="sec-head">
+      <p class="mono sec-head__idx">05 / FAQ</p>
+      <h2 class="sec-head__title display reveal" id="faq-h">Straight<br /><span class="outline">answers.</span></h2>
+    </header>
+    <div class="faq__list">
+      {faqs.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}
+    </div>
+  </section>
+
+  <ContactCTA idx="06 / Let's go" />
+</Base>
+
+<script>
+  import { initHome } from '../scripts/home.js';
+  import { initCore } from '../scripts/core.js';
+  initHome();
+  initCore();
+</script>

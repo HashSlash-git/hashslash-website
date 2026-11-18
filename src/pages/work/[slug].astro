@@ -1,0 +1,71 @@
+---
+/* Case study template. Only client-approved case studies are built (see lib/content.js). */
+import Base from '../../layouts/Base.astro';
+import ContactCTA from '../../components/ContactCTA.astro';
+import { getCaseStudies, getServices, getIndustries } from '../../lib/content.js';
+
+export async function getStaticPaths() {
+  return (await getCaseStudies()).map((c) => ({ params: { slug: c.slug }, props: { c } }));
+}
+const { c } = Astro.props;
+const all = await getServices();
+const used = c.services.map((slug) => all.find((s) => s.slug === slug)).filter(Boolean);
+const ind = (await getIndustries()).find((i) => i.slug === c.industry);
+---
+<Base title={`${c.client}: ${c.title} | HashSlash Work`} description={c.summary || c.title} bodyClass="is-service is-case">
+  <section class="case-hero">
+    <div class="hero__grid" aria-hidden="true"></div>
+    <nav class="crumbs mono" aria-label="Breadcrumb"><a href="/#work">Work</a> / <span aria-current="page">{c.client}</span></nav>
+    <p class="mono svc-hero__eye"><span class="dot"></span> {c.client}{ind && <> &nbsp;·&nbsp; <a href={`/industries/${ind.slug}/`}>{ind.name}</a></>}</p>
+    <h1 class="display case-hero__title">{c.title}</h1>
+    {c.summary && <p class="svc-hero__lede">{c.summary}</p>}
+    <div class="case-hero__media">
+      {c.image ? <img src={c.image} alt={c.imageAlt || ''} loading="eager" /> : <span class="case-hero__fallback display" aria-hidden="true">#/.</span>}
+    </div>
+  </section>
+
+  {c.results.length > 0 && (
+    <section class="results" aria-label="Verified results">
+      {c.results.map((r) => <div class="result reveal"><b class="display">{r.value}</b><span>{r.label}</span></div>)}
+    </section>
+  )}
+
+  {(c.challenge || c.approach) && (
+    <section class="ca">
+      {c.challenge && <div class="reveal"><p class="mono sec-head__idx">The challenge</p><p class="ca__t">{c.challenge}</p></div>}
+      {c.approach && <div class="reveal"><p class="mono sec-head__idx">What we did</p><p class="ca__t">{c.approach}</p></div>}
+    </section>
+  )}
+
+  {c.body && <section class="prose-wrap"><div class="prose" set:html={c.body} /></section>}
+
+  {c.quote && (
+    <section class="quote" aria-label="Client testimonial">
+      <span class="quote__mark display" aria-hidden="true">&ldquo;</span>
+      <blockquote><p class="quote__text">{c.quote}</p>{c.quoteAuthor && <footer class="mono">{c.quoteAuthor}</footer>}</blockquote>
+    </section>
+  )}
+
+  {used.length > 0 && (
+    <section class="svc-block" aria-labelledby="used-h">
+      <header class="svc-block__head"><span class="mono lime">Services</span><h2 class="display svc-block__title" id="used-h">What we used</h2><p></p></header>
+      <div class="svc-list">
+        {used.map((s, i) => (
+          <a class="svc-row reveal" href={`/services/${s.slug}/`}>
+            <span class="mono svc-row__no">{String(i + 1).padStart(2, '0')}</span>
+            <span class="display svc-row__name">{s.name}</span><span class="svc-row__t">{s.tagline}</span><span class="svc-row__go" aria-hidden="true">&rarr;</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <ContactCTA idx="Your turn" line1="Want results" line2="like these?" loc={`case_${c.slug}`} />
+</Base>
+
+<script>
+  import { initService } from '../../scripts/service.js';
+  import { initCore } from '../../scripts/core.js';
+  initService();
+  initCore();
+</script>

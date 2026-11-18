@@ -1,0 +1,50 @@
+[
+  {
+    "slug": "ecommerce-d2c",
+    "title": "E-commerce & D2C",
+    "excerpt": "Shopify builds, Meta and Google Shopping, retention flows: the full stack from first click to repeat order.",
+    "meta": {
+      "hs_letter": "A",
+      "hs_tagline": "Shopify builds, Meta and Google Shopping, retention flows: the full stack from first click to repeat order.",
+      "hs_pains": "ROAS looks fine in Meta but profit doesn't follow\nCustomers buy once and never come back\nThe store slows down every time you add an app\nAd platforms and Shopify report different numbers",
+      "hs_services": "shopify-ecommerce, meta-ads, google-ads, email-marketing, retention, conversion-rate-optimisation",
+      "hs_faqs": "Do you only work with Shopify stores? || Shopify is our main platform for D2C, but we also work with WooCommerce and custom builds when the business needs it.\nCan you handle both the store and the ads? || Yes. That's the point of one team: the store is built to convert the traffic the ads bring in."
+    }
+  },
+  {
+    "slug": "it-healthcare",
+    "title": "IT & Healthcare",
+    "excerpt": "Trust-first websites, LinkedIn campaigns, compliant lead capture and CRM automation for long, considered sales cycles.",
+    "meta": {
+      "hs_letter": "B",
+      "hs_tagline": "Trust-first websites, LinkedIn campaigns, compliant lead capture and CRM automation for long, considered sales cycles.",
+      "hs_pains": "Leads are slow to convert and easy to lose\nYour website doesn't build enough trust for a big decision\nSales and marketing work from different lists\nCompliance makes every campaign take longer",
+      "hs_services": "custom-websites, linkedin-ads, crm-development, crm-marketing-automation, seo, ai-integrations",
+      "hs_faqs": "Do you work within healthcare advertising rules? || Yes. We plan campaigns and lead capture around platform policies and your compliance team's requirements.\nCan you integrate with our existing CRM? || In most cases, yes. We audit what you have before recommending any change."
+    }
+  },
+  {
+    "slug": "hospitality",
+    "title": "Hospitality",
+    "excerpt": "Direct bookings over OTA commissions: local SEO, social-first creative and booking-engine tracking.",
+    "meta": {
+      "hs_letter": "C",
+      "hs_tagline": "Direct bookings over OTA commissions: local SEO, social-first creative and booking-engine tracking.",
+      "hs_pains": "Too many bookings come through commission-heavy OTAs\nYour property barely shows up in local search\nSocial content doesn't turn into bookings\nYou can't tell which campaigns fill rooms or tables",
+      "hs_services": "seo, social-media, google-ads, meta-ads, tracking-analytics, content-video",
+      "hs_faqs": "Can you track bookings from our booking engine? || Usually, yes. We connect booking-engine conversions to GA4 and the ad platforms wherever the engine allows it.\nDo you shoot content on-site? || Yes. We plan and produce content built for social and ads."
+    }
+  },
+  {
+    "slug": "real-estate",
+    "title": "Real Estate",
+    "excerpt": "Qualified buyer leads, not form spam: high-intent campaigns, fast landing pages and CRM-driven follow-up.",
+    "meta": {
+      "hs_letter": "D",
+      "hs_tagline": "Qualified buyer leads, not form spam: high-intent campaigns, fast landing pages and CRM-driven follow-up.",
+      "hs_pains": "Plenty of leads, very few genuine buyers\nLeads wait hours before anyone calls them back\nEvery project launch starts marketing from scratch\nYou can't see cost per site visit or booking",
+      "hs_services": "funnels-lead-generation, meta-ads, google-ads, linkedin-ads, crm-development, chatgpt-ads",
+      "hs_faqs": "How do you improve lead quality? || Better qualification on the form, instant WhatsApp follow-up, and sending quality signals back to the ad platforms.\nCan you run campaigns for individual projects? || Yes. Each project gets its own landing page, campaigns and reporting, built from a reusable launch kit."
+    }
+  }
+]

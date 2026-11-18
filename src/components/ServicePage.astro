@@ -1,0 +1,178 @@
+---
+import ContactCTA from './ContactCTA.astro';
+import Moment from './Moment.astro';
+import Calc from './Calc.astro';
+import { getDiscipline } from '../data/services.js';
+import { getServices, getCaseStudies } from '../lib/content.js';
+
+const { s } = Astro.props;
+const d = getDiscipline(s.d);
+const all = await getServices();
+const pairs = s.pairs.map((slug) => all.find((x) => x.slug === slug)).filter(Boolean);
+const proof = (await getCaseStudies()).find((c) => c.services.includes(s.slug));
+const TOOL_NAMES: Record<string, string> = {
+  shopify: 'Shopify', meta: 'Meta', googleanalytics: 'GA4', klaviyo: 'Klaviyo', figma: 'Figma', wordpress: 'WordPress', php: 'PHP',
+  cloudflare: 'Cloudflare', googlesearchconsole: 'Search Console', react: 'React', nextdotjs: 'Next.js', astro: 'Astro', vercel: 'Vercel',
+  framer: 'Framer', hotjar: 'Hotjar', miro: 'Miro', flutter: 'Flutter', firebase: 'Firebase', apple: 'App Store', googleplay: 'Google Play',
+  hubspot: 'HubSpot', zoho: 'Zoho', whatsapp: 'WhatsApp', zapier: 'Zapier', googlesheets: 'Sheets', make: 'Make', n8n: 'n8n', slack: 'Slack',
+  anthropic: 'Claude', googlegemini: 'Gemini', python: 'Python', instagram: 'Instagram', facebook: 'Facebook', canva: 'Canva',
+  googleads: 'Google Ads', google: 'Google', youtube: 'YouTube', googletagmanager: 'Tag Manager', linkedin: 'LinkedIn', openai: 'ChatGPT',
+  perplexity: 'Perplexity', semrush: 'Semrush', tiktok: 'TikTok', adobe: 'Adobe', capcut: 'CapCut', mailchimp: 'Mailchimp',
+  looker: 'Looker Studio', googlebigquery: 'BigQuery', notion: 'Notion', calendly: 'Calendly'
+};
+const words = s.name.split(' ');
+const longest = Math.max(...words.map((w) => w.length)); // drives hero font-size so the longest word fits its column
+---
+<!-- HERO -->
+<section class="svc-hero">
+  <div class="hero__grid" aria-hidden="true"></div>
+  <nav class="crumbs mono" aria-label="Breadcrumb"><a href="/services/">Services</a> / <a href={`/services/${d.slug}/`}>{d.name}</a> / <span aria-current="page">{s.name}</span></nav>
+  <div class="svc-hero__grid">
+    <div class="svc-hero__copy">
+      <p class="mono svc-hero__eye"><span class="dot"></span> {d.no} / {d.name}</p>
+      <h1 class="display svc-hero__title" style={`--w:${longest}`}>{words.map((w) => <span class="line"><span class="line__in">{w}</span></span>)}</h1>
+      <p class="svc-hero__lede">{s.tagline}</p>
+      {s.forWho.length > 0 && <div class="svc-hero__for"><span class="mono">Built for</span>{s.forWho.map((f) => <span class="pill">{f}</span>)}</div>}
+      <div class="hero__ctas">
+        <a class="btn btn--lime btn--lg magnetic" href="#contact" data-track="cta_click" data-cta={`audit_${s.slug}`} data-loc="service_hero">Get a {s.audit} <span class="arr">&rarr;</span></a>
+        <a class="btn btn--ghost btn--lg" href="#" data-whatsapp data-track="whatsapp_click" data-loc="service_hero">WhatsApp us</a>
+      </div>
+    </div>
+    <div class="svc-orb" aria-hidden="true">
+      <div class="svc-orb__ring">
+        {s.tools.slice(0, 5).map((t, i) => (
+          <span class="svc-orb__item" style={`--i:${i};--n:${Math.min(s.tools.length, 5)}`}>
+            <span class="tool tool--orb"><img alt="" src={`https://cdn.jsdelivr.net/npm/simple-icons@13.0.0/icons/${t}.svg`} loading="lazy" /><em>{TOOL_NAMES[t] || t}</em></span>
+          </span>
+        ))}
+      </div>
+      <span class="svc-orb__core">#/.</span>
+      <svg class="scribble svc-orb__scribble" viewBox="0 0 300 30"><path d="M3 20 C 60 8, 140 26, 200 12 S 280 10, 297 16"/></svg>
+      <span class="script svc-orb__script">{d.short.toLowerCase()} mode</span>
+    </div>
+  </div>
+</section>
+
+<!-- SIGNS (self-qualification) -->
+{s.signs.length > 0 && <section class="signs" aria-labelledby="signs-h">
+  <div class="signs__head">
+    <p class="mono sec-head__idx">Sounds familiar?</p>
+    <h2 class="display signs__title reveal" id="signs-h">Tick what's<br /><span class="outline">true for you.</span></h2>
+  </div>
+  <div class="signs__list">
+    {s.signs.map((t, i) => (
+      <button type="button" class="sign" aria-pressed="false"><span class="sign__box" aria-hidden="true"></span><span class="mono sign__no">0{i + 1}</span><span>{t}</span></button>
+    ))}
+    <div class="signs__verdict" aria-live="polite">
+      <p class="signs__msg">Tap the ones that sound like you.</p>
+      <a class="btn btn--lime signs__cta" href="#contact" data-track="cta_click" data-cta={`signs_${s.slug}`} data-loc="signs">Fix this with a {s.audit} <span class="arr">&rarr;</span></a>
+    </div>
+  </div>
+</section>}
+
+<Moment moment={s.moment} name={s.name} />
+
+{s.body && (
+  <section class="prose-wrap" aria-label={`More about ${s.name}`}>
+    <div class="prose" set:html={s.body} />
+  </section>
+)}
+
+<!-- WHAT'S INCLUDED -->
+{s.deliverables.length > 0 && <section class="incl" aria-labelledby="incl-h">
+  <div class="incl__side">
+    <p class="mono sec-head__idx">What's included</p>
+    <h2 class="display incl__title reveal" id="incl-h">Everything<br />you need.<br /><span class="outline">Nothing you don't.</span></h2>
+  </div>
+  <ol class="incl__list">
+    {s.deliverables.map((x, i) => <li class="reveal"><span class="mono">{String(i + 1).padStart(2, '0')}</span>{x}</li>)}
+  </ol>
+</section>}
+
+<section class="pkgs" aria-labelledby="pkgs-h">
+  <header class="pkgs__head">
+    <h2 class="pkgs__title" id="pkgs-h">Pick your pace</h2>
+    <p class="mono muted">Every package is scoped to your goals on a free call.</p>
+  </header>
+  <div class="pkgs__grid">
+    {d.packages.map((p) => (
+      <article class={`pkg reveal ${p.featured ? 'pkg--feat' : ''}`}>
+        {p.featured && <span class="pkg__badge mono">Recommended</span>}
+        <h3 class="display pkg__n">{p.n}</h3>
+        <p class="pkg__d">{p.d}</p>
+        <ul>{p.i.map((x) => <li>{x}</li>)}</ul>
+        <p class="pkg__price mono">Scoped on a call</p>
+        <a class={`btn ${p.featured ? 'btn--lime' : 'btn--ghost'}`} href="#contact" data-track="cta_click" data-cta={`pkg_${p.n.toLowerCase()}_${s.slug}`} data-loc="packages">Talk about {p.n} <span class="arr">&rarr;</span></a>
+      </article>
+    ))}
+  </div>
+</section>
+
+{s.calc && <Calc type={s.calc} service={s.slug} />}
+
+<!-- PROCESS -->
+<section class="process process--svc" aria-labelledby="sp-h">
+  <div class="process__side">
+    <p class="mono sec-head__idx">How we run it</p>
+    <h2 class="display process__title" id="sp-h">The<br /><span class="lime">{d.short.toLowerCase()}</span><br />playbook.</h2>
+  </div>
+  <ol class="steps">
+    <span class="steps__rail" aria-hidden="true"><span class="steps__fill"></span></span>
+    {d.process.map((p, i) => (
+      <li class="step">
+        <span class="step__no display">0{i + 1}</span>
+        <div><p class="step__get mono">{p.w}</p><h3 class="step__title">{p.t}</h3><p>{p.d}</p></div>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<!-- CONNECTED -->
+{pairs.length > 0 && <section class="pairs" aria-labelledby="pairs-h">
+  <p class="mono sec-head__idx">All connected</p>
+  <h2 class="display pairs__title reveal" id="pairs-h">{s.name} works<br /><span class="outline">even better with</span></h2>
+  <div class="pairs__map">
+    {pairs[0] && <a class="pair" href={`/services/${pairs[0].slug}/`}><span class="mono">{getDiscipline(pairs[0].d).name}</span><b>{pairs[0].name}</b><span class="pair__t">{pairs[0].tagline}</span><span class="mono lime">Explore &rarr;</span></a>}
+    <span class="pairs__link" aria-hidden="true"></span>
+    <div class="pairs__core"><span class="pairs__mark">#/.</span><span class="pairs__name">{s.name}</span></div>
+    <span class="pairs__link" aria-hidden="true"></span>
+    {pairs[1] && <a class="pair" href={`/services/${pairs[1].slug}/`}><span class="mono">{getDiscipline(pairs[1].d).name}</span><b>{pairs[1].name}</b><span class="pair__t">{pairs[1].tagline}</span><span class="mono lime">Explore &rarr;</span></a>}
+  </div>
+</section>}
+
+<!-- STACK + PROOF -->
+<section class="stack" aria-label="Tools and proof">
+  {s.tools.length > 0 && <div class="stack__tools">
+    <p class="mono muted">Stack we use</p>
+    <div class="stack__row">
+      {s.tools.map((t) => <span class="tool"><img alt="" src={`https://cdn.jsdelivr.net/npm/simple-icons@13.0.0/icons/${t}.svg`} loading="lazy" /><em>{TOOL_NAMES[t] || t}</em></span>)}
+    </div>
+  </div>}
+  {proof ? (
+    <a class="stack__proof stack__proof--real" href={`/work/${proof.slug}/`}>
+      <span class="mono muted">Case study · {proof.client}</span>
+      <span class="stack__proof-t">{proof.title}</span>
+      {proof.results[0] && <span class="stack__proof-res"><b class="display lime">{proof.results[0].value}</b> {proof.results[0].label}</span>}
+      <span class="mono lime">Read the case study &rarr;</span>
+    </a>
+  ) : (
+    <a class="stack__proof" href="/#work">
+      <span class="ph mono">Placeholder: {s.name} case study</span>
+      <span class="stack__proof-t">Client, challenge and verified results go here once approved.</span>
+      <span class="mono lime">See all work &rarr;</span>
+    </a>
+  )}
+</section>
+
+<!-- FAQ -->
+{s.faqs.length > 0 && <section class="faq" aria-labelledby="sfaq-h">
+  <header class="sec-head">
+    <p class="mono sec-head__idx">FAQ</p>
+    <h2 class="sec-head__title display reveal" id="sfaq-h">{s.name}<br /><span class="outline">questions.</span></h2>
+  </header>
+  <div class="faq__list">
+    {s.faqs.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}
+  </div>
+</section>}
+
+<ContactCTA idx={`${s.name} / ${s.audit}`} line1="Start with" line2="a free audit." sub={`Start with a ${s.audit}. You'll get a clear list of what's working, what's leaking and what we'd do first. No obligation.`} preselect={s.formValue} loc={`service_${s.slug}`} />

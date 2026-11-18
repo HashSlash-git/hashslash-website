@@ -1,0 +1,51 @@
+---
+import Base from '../../layouts/Base.astro';
+import ServicePage from '../../components/ServicePage.astro';
+import HubPage from '../../components/HubPage.astro';
+import { disciplines, getDiscipline } from '../../data/services.js';
+import { getServices } from '../../lib/content.js';
+
+export async function getStaticPaths() {
+  const services = await getServices();
+  const hubSlugs = new Set(disciplines.map((d) => d.slug));
+  return [
+    ...disciplines.map((d) => ({ params: { slug: d.slug }, props: { kind: 'hub', item: d } })),
+    ...services.filter((s) => !hubSlugs.has(s.slug)).map((s) => ({ params: { slug: s.slug }, props: { kind: 'service', item: s } }))
+  ];
+}
+
+const { kind, item } = Astro.props;
+const isHub = kind === 'hub';
+const title = isHub ? `${item.name} Services | HashSlash` : `${item.name} | ${getDiscipline(item.d).name} | HashSlash`;
+const description = isHub ? item.lede : item.tagline;
+const site = Astro.site?.toString().replace(/\/$/, '') || '';
+const ld = isHub ? null : [
+  {
+    '@context': 'https://schema.org', '@type': 'Service', name: item.name, description: item.tagline,
+    provider: { '@type': 'Organization', name: 'HashSlash' }, serviceType: item.name, areaServed: 'Worldwide'
+  },
+  item.faqs.length ? {
+    '@context': 'https://schema.org', '@type': 'FAQPage',
+    mainEntity: item.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } }))
+  } : null,
+  {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Services', item: `${site}/services/` },
+      { '@type': 'ListItem', position: 2, name: getDiscipline(item.d).name, item: `${site}/services/${item.d}/` },
+      { '@type': 'ListItem', position: 3, name: item.name, item: `${site}/services/${item.slug}/` }
+    ]
+  }
+].filter(Boolean);
+---
+<Base title={title} description={description} bodyClass={isHub ? 'is-hub' : 'is-service'}>
+  {ld && <script type="application/ld+json" slot="head" set:html={JSON.stringify(ld)} />}
+  {isHub ? <HubPage d={item} /> : <ServicePage s={item} />}
+</Base>
+
+<script>
+  import { initService } from '../../scripts/service.js';
+  import { initCore } from '../../scripts/core.js';
+  initService();
+  initCore();
+</script>

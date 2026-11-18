@@ -1,0 +1,71 @@
+---
+import { disciplines } from '../data/services.js';
+import { getServices } from '../lib/content.js';
+const services = await getServices();
+const servicesIn = (d) => services.filter((s) => s.d === d);
+---
+<header class="nav" id="nav">
+  <a class="nav__logo" href="/" aria-label="HashSlash home">
+    <span class="logo-mark" aria-hidden="true">#/.</span>
+    <span class="nav__word">HASHSLASH</span>
+  </a>
+  <nav class="nav__links" aria-label="Primary">
+    <div class="mega-wrap">
+      <a href="/services/" class="mega-trigger" aria-haspopup="true" aria-expanded="false">Services <span aria-hidden="true">+</span></a>
+      <div class="mega" role="menu">
+        <div class="mega__inner">
+          {disciplines.map((d) => (
+            <div class="mega__col">
+              <a class="mega__head" href={`/services/${d.slug}/`}>
+                <span class="mono">{d.no}</span>
+                <span class="mega__name">{d.name}</span>
+              </a>
+              <ul>
+                {servicesIn(d.slug).map((s) => (
+                  <li><a href={`/services/${s.slug}/`}>{s.name}{(s.slug === 'chatgpt-ads') && <span class="new mono">New</span>}</a></li>
+                ))}
+              </ul>
+            </div>
+          ))}
+          <a class="mega__cta" href="#contact" data-book data-track="booking_start" data-loc="mega_menu">
+            <span class="script">not sure?</span>
+            <span class="mega__cta-t">Book a free strategy call and we'll map it out.</span>
+            <span class="mono">Book a call &rarr;</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <a href="/#work">Work</a>
+    <a href="/#industries">Industries</a>
+    <a href="/#process">Process</a>
+    <a href="/#faq">FAQ</a>
+  </nav>
+  <div class="nav__actions">
+    <a class="btn btn--ghost btn--sm nav__project" href="#contact" data-track="cta_click" data-cta="start_project" data-loc="nav">Start a project</a>
+    <a class="btn btn--lime btn--sm magnetic" href="#contact" data-book data-track="booking_start" data-loc="nav">Book a call</a>
+    <button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="menu" id="menu" hidden>
+  <nav aria-label="Mobile">
+    <details class="menu__svc">
+      <summary>Services</summary>
+      {disciplines.map((d) => (
+        <div class="menu__group">
+          <a class="mono menu__ghead" href={`/services/${d.slug}/`}>{d.no} / {d.name} &rarr;</a>
+          {servicesIn(d.slug).map((s) => <a class="menu__sub" href={`/services/${s.slug}/`}>{s.name}</a>)}
+        </div>
+      ))}
+    </details>
+    <a href="/#work">Work</a>
+    <a href="/#industries">Industries</a>
+    <a href="/#process">Process</a>
+    <a href="/#faq">FAQ</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="menu__foot">
+    <a class="btn btn--lime" href="#contact" data-book data-track="booking_start" data-loc="menu">Book a strategy call</a>
+    <a class="btn btn--ghost" href="#" data-whatsapp data-track="whatsapp_click" data-loc="menu">WhatsApp us</a>
+  </div>
+</div>

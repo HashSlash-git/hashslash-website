@@ -1,0 +1,86 @@
+---
+import ContactCTA from './ContactCTA.astro';
+import { disciplines } from '../data/services.js';
+import { getServices } from '../lib/content.js';
+const services = await getServices();
+const servicesIn = (d) => services.filter((s) => s.d === d);
+const { d } = Astro.props;
+const list = servicesIn(d.slug);
+const others = disciplines.filter((x) => x.slug !== d.slug);
+const longest = Math.max(...d.headline.join(' ').split(' ').map((w) => w.length));
+---
+<section class="hub-hero">
+  <div class="hero__grid" aria-hidden="true"></div>
+  <span class="hub-hero__no display" aria-hidden="true">{d.no}</span>
+  <nav class="crumbs mono" aria-label="Breadcrumb"><a href="/services/">Services</a> / <span aria-current="page">{d.name}</span></nav>
+  <p class="mono svc-hero__eye"><span class="dot"></span> {d.no} / {d.name} &nbsp;·&nbsp; {list.length} services</p>
+  <h1 class="display hub-hero__title" style={`--w:${longest}`}>
+    <span class="line"><span class="line__in">{d.headline[0]}</span></span>
+    <span class="line"><span class="line__in"><span class="lime">{d.headline[1]}</span></span></span>
+  </h1>
+  <div class="hub-hero__meta">
+    <p class="svc-hero__lede">{d.lede}</p>
+    <div class="hero__ctas">
+      <a class="btn btn--lime btn--lg magnetic" href="#contact" data-book data-track="booking_start" data-loc={`hub_${d.slug}`}>Book a strategy call <span class="arr">&rarr;</span></a>
+      <a class="btn btn--ghost btn--lg" href="#list">See all {list.length} services</a>
+    </div>
+  </div>
+</section>
+
+<section class="svc-list" id="list" aria-label={`${d.name} services`}>
+  {list.map((s, i) => (
+    <a class="svc-row reveal" href={`/services/${s.slug}/`}>
+      <span class="mono svc-row__no">{String(i + 1).padStart(2, '0')}</span>
+      <span class="display svc-row__name">{s.name}{s.slug === 'chatgpt-ads' && <span class="new mono">New</span>}</span>
+      <span class="svc-row__t">{s.tagline}</span>
+      <span class="svc-row__go" aria-hidden="true">&rarr;</span>
+    </a>
+  ))}
+</section>
+
+<section class="pkgs" aria-labelledby="hp-h">
+  <header class="pkgs__head">
+    <h2 class="pkgs__title" id="hp-h">How we can work together</h2>
+    <p class="mono muted">Mix services inside any package. Scoped on a free call.</p>
+  </header>
+  <div class="pkgs__grid">
+    {d.packages.map((p) => (
+      <article class={`pkg reveal ${p.featured ? 'pkg--feat' : ''}`}>
+        {p.featured && <span class="pkg__badge mono">Recommended</span>}
+        <h3 class="display pkg__n">{p.n}</h3>
+        <p class="pkg__d">{p.d}</p>
+        <ul>{p.i.map((x) => <li>{x}</li>)}</ul>
+        <p class="pkg__price mono">Scoped on a call</p>
+        <a class={`btn ${p.featured ? 'btn--lime' : 'btn--ghost'}`} href="#contact" data-track="cta_click" data-cta={`pkg_${p.n.toLowerCase()}_${d.slug}`} data-loc="hub_packages">Talk about {p.n} <span class="arr">&rarr;</span></a>
+      </article>
+    ))}
+  </div>
+</section>
+
+<section class="process process--svc" aria-labelledby="hproc-h">
+  <div class="process__side">
+    <p class="mono sec-head__idx">How we run it</p>
+    <h2 class="display process__title" id="hproc-h">The<br /><span class="lime">{d.short.toLowerCase()}</span><br />playbook.</h2>
+  </div>
+  <ol class="steps">
+    <span class="steps__rail" aria-hidden="true"><span class="steps__fill"></span></span>
+    {d.process.map((p, i) => (
+      <li class="step"><span class="step__no display">0{i + 1}</span><div><p class="step__get mono">{p.w}</p><h3 class="step__title">{p.t}</h3><p>{p.d}</p></div></li>
+    ))}
+  </ol>
+</section>
+
+<section class="hub-others" aria-label="Other disciplines">
+  <p class="mono sec-head__idx">The rest of the #/. stack</p>
+  <div class="hub-others__grid">
+    {others.map((o) => (
+      <a class="hub-other" href={`/services/${o.slug}/`}>
+        <span class="mono">{o.no}</span>
+        <span class="display">{o.headline[0]} <span class="lime">{o.headline[1]}</span></span>
+        <span class="hub-other__go mono">{o.name} &rarr;</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<ContactCTA idx={`${d.name} / Let's go`} line1="Let's build" line2="your stack." loc={`hub_${d.slug}`} />

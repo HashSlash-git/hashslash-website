@@ -1,0 +1,164 @@
+---
+/* Signature pinned scroll moment for a service page.
+   Visuals are illustrative and labelled as such: no performance claims. */
+interface Props { moment: any; name: string; }
+const { moment, name } = Astro.props;
+const type = moment.type;
+
+const STEPS: Record<string, string[]> = {
+  ads: ['Launch a batch of creatives', 'Read the data, not opinions', 'Cut the losers fast', 'Scale the winners'],
+  serp: ['They search with intent', 'Your ad answers first', 'Shopping & PMax own the page', 'Video keeps you top of mind'],
+  seo: ['Fix the technical foundations', 'Match what people search for', 'Earn authority and links', 'Climb, then hold the spot'],
+  chat: ['A customer asks AI', 'The assistant answers', 'Your brand appears in context', 'They click through to you'],
+  targeting: ['Start with everyone', 'Filter by role and seniority', 'Narrow to companies that fit', 'Reach the people who sign'],
+  build: ['Wireframe the journey', 'Design the system', 'Build it fast', 'Measure everything'],
+  phone: ['Map the core flows', 'Design every screen', 'Ship to both stores', 'Bring users back'],
+  flow: ['Something happens', 'The system reacts instantly', 'The right follow-up fires', 'Nothing falls through'],
+  dashboard: ['Connect every source', 'Agree one version of truth', 'See what drives revenue', 'Decide faster'],
+  ab: ['Find the drop-off', 'Form a hypothesis', 'Split the traffic', 'Ship the winner']
+};
+const steps = STEPS[type] || STEPS.build;
+const winners = [1, 5, 6];
+const dots = Array.from({ length: 96 });
+const typed = moment.query || moment.prompt || '';
+---
+<section class="moment" data-moment={type} aria-label={`${name}: how it works`}>
+  <div class="moment__stage">
+    <div class="moment__copy">
+      <p class="mono sec-head__idx">How it works</p>
+      <h2 class="display moment__title">{moment.label}</h2>
+      <ol class="moment__steps">
+        {steps.map((s, i) => <li class={i === 0 ? 'is-on' : ''}><span class="mono">0{i + 1}</span>{s}</li>)}
+      </ol>
+      <div class="moment__bar" aria-hidden="true"><span></span></div>
+    </div>
+
+    <div class="moment__visual" aria-hidden="true">
+      <span class="moment__illus mono">Illustrative</span>
+
+      {type === 'ads' && (
+        <div class={`mo-ads ${moment.variant === 'feed' ? 'mo-ads--feed' : ''}`}>
+          {Array.from({ length: 9 }).map((_, i) => (
+            <div class="adcard" data-win={winners.includes(i) ? '1' : '0'}>
+              <div class="adcard__media" style={`--h:${(i * 37) % 360}`}></div>
+              <span class="adcard__tag mono">{moment.variant === 'feed' ? ['Reel', 'Carousel', 'Story'][i % 3] : ['UGC', 'Static', 'Motion'][i % 3]} {String(i + 1).padStart(2, '0')}</span>
+              <span class="adcard__line"></span><span class="adcard__line adcard__line--s"></span>
+              <span class="adcard__win mono">Winner</span>
+            </div>
+          ))}
+          <span class="mo-ads__scan"></span>
+        </div>
+      )}
+
+      {(type === 'serp' || type === 'seo') && (
+        <div class="browser">
+          <div class="browser__bar"><i></i><i></i><i></i></div>
+          <div class="mo-search"><span class="mo-search__g">G</span><span class="mo-q" data-q={typed}></span><span class="caret"></span></div>
+          {type === 'serp' ? (
+            <div class="serp">
+              <div class="r r--ad"><span class="mono r__tag">Sponsored</span><span class="r__url">yourbrand.com</span><span class="r__t">Your brand: exactly what they searched for</span><span class="r__l"></span></div>
+              <div class="r r--shop">{[0, 1, 2, 3].map((i) => <span class={`shop ${i === 0 ? 'shop--you' : ''}`}><b></b><i></i></span>)}</div>
+              <div class="r r--org"><span class="r__t"></span><span class="r__l"></span></div>
+              <div class="r r--yt"><span class="yt"></span><span class="r__l"></span></div>
+            </div>
+          ) : (
+            <div class="seo">
+              <span class="seo__rank mono">Position <b class="seo__num">28</b></span>
+              <div class="seo__list">
+                {[0, 1, 2, 3, 4].map(() => <div class="r r--org"><span class="r__t"></span><span class="r__l"></span></div>)}
+                <div class="r r--org r--you"><span class="r__url">yourbrand.com</span><span class="r__t r__t--you">Your page, matched to intent</span><span class="r__l"></span></div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {type === 'chat' && (
+        <div class="chatwin">
+          <div class="chatwin__top mono"><span class="chatwin__dot"></span> AI assistant</div>
+          <div class="bubble bubble--user"><span class="mo-q" data-q={typed}></span></div>
+          <div class="bubble bubble--ai"><span class="ln"></span><span class="ln"></span><span class="ln ln--s"></span></div>
+          <div class="sponsor">
+            <span class="mono sponsor__tag">Sponsored</span>
+            <span class="sponsor__brand">Your Brand</span>
+            <span class="sponsor__t">The answer to their question, from you.</span>
+            <span class="sponsor__btn">Learn more</span>
+          </div>
+          <div class="sources mono"><span>Sources</span><span class="src">review-site.com</span><span class="src src--you">yourbrand.com</span><span class="src">forum.com</span></div>
+        </div>
+      )}
+
+      {type === 'targeting' && (
+        <div class="tgt">
+          <div class="tgt__filters">{(moment.filters || []).map((f) => <span class="tgt__f mono">{f}</span>)}</div>
+          <div class="tgt__dots">{dots.map(() => <i></i>)}</div>
+          <div class="leadform">
+            <span class="mono leadform__tag">Lead Gen Form</span>
+            <span class="leadform__row"><b>Name</b><i>Prefilled</i></span>
+            <span class="leadform__row"><b>Job title</b><i>Prefilled</i></span>
+            <span class="leadform__row"><b>Company</b><i>Prefilled</i></span>
+            <span class="leadform__btn">Submit</span>
+          </div>
+        </div>
+      )}
+
+      {type === 'build' && (
+        <div class="browser browser--build">
+          <div class="browser__bar"><i></i><i></i><i></i></div>
+          <div class="bld">
+            <div class="blk blk--nav"><span></span><span></span></div>
+            <div class="blk blk--hero"><span class="l1"></span><span class="l2"></span><span class="btnx"></span></div>
+            <div class="blk blk--card"></div><div class="blk blk--card"></div><div class="blk blk--card"></div>
+          </div>
+          <div class="gauge">
+            <svg viewBox="0 0 120 70"><path class="gauge__track" d="M10 60 A50 50 0 0 1 110 60" /><path class="gauge__fill" d="M10 60 A50 50 0 0 1 110 60" /></svg>
+            <span class="gauge__needle"></span>
+            <span class="mono gauge__l">Speed</span>
+          </div>
+        </div>
+      )}
+
+      {type === 'phone' && (
+        <div class="phone">
+          <div class="phone__notch"></div>
+          <div class="phone__screens">
+            <div class="scr"><span class="scr__h"></span><span class="scr__card"></span><span class="scr__card"></span><span class="scr__card scr__card--s"></span></div>
+            <div class="scr"><span class="scr__img"></span><span class="scr__h"></span><span class="scr__l"></span><span class="scr__btn"></span></div>
+            <div class="scr"><span class="scr__check">✓</span><span class="scr__h"></span><span class="scr__l"></span></div>
+          </div>
+          <div class="push"><b>#/.</b><span><strong>Your app</strong> Your order is on its way</span></div>
+        </div>
+      )}
+
+      {type === 'flow' && (
+        <div class="flow">
+          <svg class="flow__svg"></svg>
+          <div class="flow__nodes">{(moment.nodes || []).map((n, i) => <span class={`node ${i === moment.nodes.length - 1 ? 'node--end' : ''}`}><span class="mono">{String(i + 1).padStart(2, '0')}</span>{n}</span>)}</div>
+        </div>
+      )}
+
+      {type === 'dashboard' && (
+        <div class="dash">
+          <div class="dash__kpis">{['Revenue', 'CAC', 'ROAS', 'LTV'].map((k) => <div class="kpi"><span class="mono">{k}</span><svg viewBox="0 0 100 30"><path d="M0 26 C 15 24, 25 18, 40 19 S 65 9, 80 8 S 95 3, 100 2" /></svg></div>)}</div>
+          <div class="dash__chart">
+            <svg viewBox="0 0 400 160" preserveAspectRatio="none"><path class="dash__area" d="M0 150 C 50 140, 80 120, 130 118 S 210 80, 260 70 S 340 30, 400 18 L 400 160 L 0 160 Z" /><path class="dash__line" d="M0 150 C 50 140, 80 120, 130 118 S 210 80, 260 70 S 340 30, 400 18" /></svg>
+          </div>
+          <div class="dash__bars">{[38, 52, 46, 64, 58, 76, 88].map((h) => <span style={`--h:${h}%`}></span>)}</div>
+        </div>
+      )}
+
+      {type === 'ab' && (
+        <div class="ab">
+          {['A', 'B'].map((v) => (
+            <div class={`ab__v ab__v--${v.toLowerCase()}`}>
+              <span class="mono ab__label">Variant {v}</span>
+              <div class="ab__page"><span class="l1"></span><span class="l2"></span><span class={`btnx ${v === 'B' ? 'btnx--b' : ''}`}></span></div>
+              <div class="ab__meter"><span></span></div>
+              {v === 'B' && <span class="ab__win mono">Ship it</span>}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,21 @@
+{
+  "name": "hashslash-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "wp:seed": "node scripts/export-wp-seed.mjs"
+  },
+  "dependencies": {
+    "astro": "5.18.2",
+    "gsap": "3.15.1",
+    "sanitize-html": "2.18.1"
+  },
+  "overrides": {
+    "@rollup/pluginutils": {
+      "estree-walker": "3.0.3"
+    }
+  }
+}

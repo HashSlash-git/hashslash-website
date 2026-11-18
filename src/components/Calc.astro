@@ -1,0 +1,81 @@
+---
+/* Interactive calculators: pure maths on the visitor's own inputs. No claims. */
+interface Props { type: 'roas' | 'leads' | 'cro'; service: string; }
+const { type, service } = Astro.props;
+
+const C = {
+  roas: {
+    title: ['Know your', 'break-even ROAS.'],
+    sub: "Before you scale ads, know the return you need just to break even, and the most you can pay for a customer.",
+    inputs: [
+      { k: 'aov', l: 'Average order value', v: 60, step: 1, suf: '' },
+      { k: 'margin', l: 'Gross margin', v: 55, step: 1, suf: '%' },
+      { k: 'profit', l: 'Target profit per order', v: 10, step: 1, suf: '%' }
+    ],
+    outputs: [
+      { k: 'be', l: 'Break-even ROAS' },
+      { k: 'target', l: 'Target ROAS' },
+      { k: 'cpa', l: 'Max cost per purchase' }
+    ],
+    cta: 'Get a plan to beat this'
+  },
+  leads: {
+    title: ['Work back from', 'your sales goal.'],
+    sub: 'How many leads, and roughly what budget, it takes to hit the number of new customers you want each month.',
+    inputs: [
+      { k: 'cust', l: 'New customers / month', v: 10, step: 1, suf: '' },
+      { k: 'close', l: 'Lead-to-customer rate', v: 10, step: .5, suf: '%' },
+      { k: 'cpl', l: 'Expected cost per lead', v: 40, step: 1, suf: '' }
+    ],
+    outputs: [
+      { k: 'leads', l: 'Leads needed / month' },
+      { k: 'budget', l: 'Ad budget / month' },
+      { k: 'cac', l: 'Cost per customer' }
+    ],
+    cta: 'Get a plan to hit this'
+  },
+  cro: {
+    title: ['What one more', 'percent is worth.'],
+    sub: 'Small conversion gains on traffic you already have can beat doubling your ad spend. Run your own numbers.',
+    inputs: [
+      { k: 'sess', l: 'Monthly sessions', v: 20000, step: 100, suf: '' },
+      { k: 'cr', l: 'Current conversion rate', v: 1.5, step: .1, suf: '%' },
+      { k: 'tcr', l: 'Target conversion rate', v: 2, step: .1, suf: '%' },
+      { k: 'aov', l: 'Average order value', v: 60, step: 1, suf: '' }
+    ],
+    outputs: [
+      { k: 'now', l: 'Revenue / month now' },
+      { k: 'next', l: 'Revenue / month at target' },
+      { k: 'year', l: 'Extra revenue / year' }
+    ],
+    cta: 'Find my conversion leaks'
+  }
+}[type];
+---
+<section class="calc reveal" data-calc={type} aria-labelledby={`calc-${type}`}>
+  <div class="calc__copy">
+    <p class="mono sec-head__idx">Calculator</p>
+    <h2 class="display calc__title" id={`calc-${type}`}>{C.title[0]}<br /><span class="lime">{C.title[1]}</span></h2>
+    <p class="calc__sub">{C.sub}</p>
+  </div>
+  <div class="calc__box">
+    <div class="calc__inputs">
+      {C.inputs.map((i) => (
+        <label class="calc__in">
+          <span class="mono">{i.l}</span>
+          <span class="calc__field"><input type="number" inputmode="decimal" min="0" step={i.step} value={i.v} data-k={i.k} />{i.suf && <em>{i.suf}</em>}</span>
+        </label>
+      ))}
+    </div>
+    <div class="calc__outs">
+      {C.outputs.map((o, n) => (
+        <div class={`calc__out ${n === 0 ? 'calc__out--main' : ''}`}>
+          <span class="mono">{o.l}</span>
+          <b data-out={o.k}>–</b>
+        </div>
+      ))}
+    </div>
+    <p class="calc__note mono">Estimates from your inputs only. Currency follows whatever you enter.</p>
+    <a class="btn btn--lime magnetic" href="#contact" data-track="cta_click" data-cta={`calc_${type}`} data-loc={service}>{C.cta} <span class="arr">&rarr;</span></a>
+  </div>
+</section>
