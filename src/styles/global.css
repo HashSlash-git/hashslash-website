@@ -288,6 +288,8 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
   line-height: 1.02; letter-spacing: -.025em;
   max-width: 20ch;
 }
+/* desktop: smaller, wider measure (phones keep the size above) */
+@media (min-width: 769px) { .manifesto__text { font-size: clamp(1.8rem, 3.1vw, 3.4rem); line-height: 1.08; max-width: 26ch; } }
 .manifesto__text b { font-style: italic; font-weight: 900; }
 .manifesto__text .w { display: inline-block; }
 .manifesto__foot { display: flex; align-items: baseline; gap: 20px; flex-wrap: wrap; margin-top: clamp(40px, 8vh, 96px); padding-top: 20px; border-top: 1.5px solid currentColor; }
