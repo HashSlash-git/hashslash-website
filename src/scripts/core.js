@@ -9,6 +9,7 @@ if (import.meta.env.DEV) Object.assign(window, { gsap, ScrollTrigger }); // dev-
 /* ---- Site config: fill these in before launch ---- */
 export const CONFIG = {
   whatsappNumber: '917259190306', // international format, digits only
+  phone: '+917259190306',          // "Book a call" dials this on phones; desktops get the call-back form
   whatsappText: "Hi HashSlash, I'd like to talk about a project.",
   bookingUrl: '',            // Calendly / Cal.com link; empty = booking buttons open the enquiry form
   formEndpoint: ''           // optional CRM webhook (JSON). Empty = Netlify Forms (emails set in Netlify → Forms → Notifications)
@@ -63,9 +64,53 @@ function wireLinks() {
     ? `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(CONFIG.whatsappText)}`
     : '#contact';
   $$('[data-whatsapp]').forEach((a) => { a.href = wa; if (CONFIG.whatsappNumber) { a.target = '_blank'; a.rel = 'noopener'; } });
+  callLinks();
+}
+
+/* ---------- "Book a call": booking page if configured, else phones dial and desktops get a call-back form ---------- */
+const canDial = () => matchMedia('(hover: none) and (pointer: coarse)').matches;
+function callLinks() {
+  const dlg = $('#callback');
   $$('[data-book], [data-book-url]').forEach((a) => {
-    if (CONFIG.bookingUrl) { a.href = CONFIG.bookingUrl; a.target = '_blank'; a.rel = 'noopener'; }
-    else if (a.hasAttribute('data-book-url')) a.href = '#enquiry';
+    if (CONFIG.bookingUrl) { a.href = CONFIG.bookingUrl; a.target = '_blank'; a.rel = 'noopener'; return; }
+    if (canDial()) { a.href = `tel:${CONFIG.phone}`; a.dataset.track = 'call_click'; return; }
+    a.href = '#callback';
+    a.addEventListener('click', (e) => { e.preventDefault(); openCallback(a.dataset.loc || ''); });
+  });
+  if (!dlg) return;
+  $('[data-cb-close]', dlg).addEventListener('click', () => dlg.close());
+  dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); }); // click outside the card
+  callbackForm(dlg);
+}
+function openCallback(loc) {
+  const dlg = $('#callback');
+  if (!dlg) { location.hash = 'contact'; return; }
+  const form = $('form', dlg);
+  form.source.value = loc; form.page.value = location.pathname;
+  dlg.showModal();
+  setTimeout(() => form.name.focus(), 50);
+  track('callback_open', { location: loc });
+}
+function callbackForm(dlg) {
+  const form = $('form', dlg), send = $('.cb__send', form), errEl = $('.ferr', form);
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = form.name.value.trim(), digits = form.phone.value.replace(/\D/g, '');
+    form.name.classList.toggle('is-invalid', !name); form.phone.classList.toggle('is-invalid', digits.length < 7);
+    if (!name) { errEl.textContent = 'Your name, please.'; return; }
+    if (digits.length < 7) { errEl.textContent = 'Add a phone number we can call.'; return; }
+    errEl.textContent = ''; send.disabled = true; send.textContent = 'Sending…';
+    track('generate_lead', { lead_type: 'callback', best_time: form.best_time.value, location: form.source.value });
+    try {
+      if (!import.meta.env.DEV) {
+        const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)).toString() });
+        if (!res.ok) throw new Error(String(res.status));
+      }
+      location.href = '/thank-you/?type=call';
+    } catch (ex) {
+      errEl.textContent = `Couldn't send that. Call us on ${CONFIG.phone.replace('+91', '+91 ')} or use WhatsApp.`;
+      send.disabled = false; send.innerHTML = 'Request my call &rarr;';
+    }
   });
 }
 
@@ -328,9 +373,7 @@ function enquiry() {
         const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString() });
         if (!res.ok) throw new Error(String(res.status));
       } else console.info('[HashSlash] Dev mode: enquiry not sent.', payload);
-      form.classList.add('is-done');
-      $('.enquiry__done', form).hidden = false;
-      if (!prefersReduced()) gsap.from('.enquiry__done > *', { y: 20, opacity: 0, stagger: .08, duration: .7, ease: 'expo.out' });
+      location.href = '/thank-you/'; // conversion page (also gives ad platforms a URL to count)
     } catch (ex) {
       err('Something went wrong sending that. Please try WhatsApp or email instead.');
       submit.disabled = false; submit.innerHTML = 'Send enquiry &rarr;';

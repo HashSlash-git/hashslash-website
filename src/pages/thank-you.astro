@@ -1,0 +1,41 @@
+---
+/* Where both forms land after a successful submit: enquiry -> /thank-you/, call-back -> /thank-you/?type=call.
+   A dedicated URL lets Google Ads / Meta count conversions; not indexed. */
+import Base from '../layouts/Base.astro';
+---
+<Base title="Thank you | HashSlash" description="Thanks for getting in touch with HashSlash." bodyClass="is-service is-thanks">
+  <meta name="robots" content="noindex" slot="head" />
+
+  <section class="thx">
+    <span class="script thx__script">got it!</span>
+    <h1 class="display thx__title">
+      <span data-msg="enquiry">Thanks. Your enquiry is <span class="lime">in.</span></span>
+      <span data-msg="call" hidden>Thanks. We'll call you <span class="lime">back.</span></span>
+    </h1>
+    <p class="thx__sub">
+      <span data-msg="enquiry">A strategist reads every brief personally. You'll hear from us within one business day.</span>
+      <span data-msg="call" hidden>A strategist will call you at the time you picked, usually the same working day.</span>
+    </p>
+
+    <ol class="thx__steps">
+      <li><span class="mono">01</span><b>We review it</b><span data-msg="enquiry">Your goals, budget and timeline, so the first call is useful.</span><span data-msg="call" hidden>We look at your business before we call, so it's useful from minute one.</span></li>
+      <li><span class="mono">02</span><b>We talk</b><span>A 30-minute call to understand what's working, what isn't, and where you want to be.</span></li>
+      <li><span class="mono">03</span><b>You get a plan</b><span>A clear, prioritised plan with scope, timeline and cost. No obligation.</span></li>
+    </ol>
+
+    <div class="thx__ctas">
+      <a class="btn btn--lime btn--lg" href="#" data-whatsapp data-track="whatsapp_click" data-loc="thank_you">Can't wait? WhatsApp us <span class="arr">&rarr;</span></a>
+      <a class="btn btn--ghost btn--lg" href="tel:+917259190306" data-track="call_click" data-loc="thank_you">Call +91 72591 90306</a>
+    </div>
+    <p class="thx__more"><a href="/services/">Explore our services</a> &nbsp;·&nbsp; <a href="/">Back to home</a></p>
+  </section>
+</Base>
+
+<script>
+  import { initCore, track } from '../scripts/core.js';
+  initCore();
+  // call-back requests get their own wording
+  const type = new URLSearchParams(location.search).get('type') === 'call' ? 'call' : 'enquiry';
+  document.querySelectorAll('[data-msg]').forEach((el) => { (el as HTMLElement).hidden = el.getAttribute('data-msg') !== type; });
+  track('thank_you_view', { lead_type: type });
+</script>

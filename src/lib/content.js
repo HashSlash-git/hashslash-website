@@ -132,7 +132,7 @@ export const getCaseStudies = () => once('cases', async () => {
   return (await fetchAll('case-studies', ORDER + '&_embed=wp:featuredmedia')).map(mapCase).filter((c) => c.approved);
 });
 
-const RESERVED = new Set(['services', 'industries', 'work', 'blog', 'index', '404']);
+const RESERVED = new Set(['services', 'industries', 'work', 'blog', 'index', '404', 'thank-you']);
 export const getPages = () => once('pages', async () => {
   if (!usingWordPress) return [];
   return (await fetchAll('pages', '&_fields=slug,title,content,excerpt,parent'))

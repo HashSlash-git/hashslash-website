@@ -20,7 +20,7 @@ const [l2a, ...l2rest] = line2.split(' ');
       <p class="contact__sub">{sub}</p>
       <div class="routes">
         <a class="route" href="#" data-book-url data-track="booking_start" data-loc={loc}>
-          <span class="route__k mono">01</span><span class="route__t">Book a strategy consultation</span><span class="route__d">30 min · free · with a strategist</span>
+          <span class="route__k mono">01</span><span class="route__t">Book a free strategy call</span><span class="route__d">30 min with a strategist · +91 72591 90306</span>
         </a>
         <a class="route" href="#" data-whatsapp data-track="whatsapp_click" data-loc={loc}>
           <span class="route__k mono">02</span><span class="route__t">Chat on WhatsApp</span><span class="route__d">Quick questions, fast replies</span>
@@ -95,11 +95,6 @@ const [l2a, ...l2rest] = line2.split(' ');
         <button type="submit" class="btn btn--lime" data-submit hidden>Send enquiry &rarr;</button>
       </div>
 
-      <div class="enquiry__done" hidden>
-        <span class="script">got it!</span>
-        <p class="display">We'll be in touch within one business day.</p>
-        <a class="btn btn--ghost" href="#" data-whatsapp data-track="whatsapp_click" data-loc="form_success">Can't wait? WhatsApp us</a>
-      </div>
     </form>
   </div>
 </section>
