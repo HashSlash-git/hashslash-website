@@ -145,16 +145,45 @@ function buildMoment(root) {
   }
 
   if (type === 'build') {
-    const blocks = $$('.blk', v), bld = $('.bld', v), fill = $('.gauge__fill', v);
-    const len = fill.getTotalLength();
-    gsap.set(fill, { strokeDasharray: len, strokeDashoffset: len });
-    tl.fromTo('.browser--build', { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: .4 }, 0)
-      .fromTo(blocks, { x: (i) => (rand(i + 3) - .5) * 260, y: (i) => (rand(i + 9) - .5) * 220, rotation: (i) => (rand(i + 5) - .5) * 50, opacity: 0, scale: .7 },
-        { x: 0, y: 0, rotation: 0, opacity: 1, scale: 1, duration: 1, stagger: .1, ease: 'back.out(1.2)' }, .2)
-      .fromTo(bld, { '--skin': 0 }, { '--skin': 1, duration: .9, ease: 'none' }, 1.8)
-      .fromTo('.gauge', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .3 }, 2.7)
-      .to(fill, { strokeDashoffset: len * .12, duration: 1, ease: 'power2.out' }, 2.8)
-      .fromTo('.gauge__needle', { rotate: -90 }, { rotate: 68, duration: 1, ease: 'back.out(1.4)' }, 2.8)
+    // Demo store: laid out at 1200px, scaled to the browser frame
+    const browser = $('.browser--build', v), fitEl = $('.store-fit', v), store = $('.store', v);
+    const k = () => fitEl.clientWidth / 1200;
+    const fit = () => { browser.style.setProperty('--k', k()); /* inherited by the store and the toast */ fitEl.style.height = Math.ceil(store.offsetHeight * k()) + 'px'; };
+    fit();
+    ScrollTrigger.addEventListener('refreshInit', fit);
+
+    const regions = $$('.sr', store), txt = $$('.st-x', store), imgs = $$('.st-img', store);
+    const btn = $('.st-card .st-btn--cart', store), cartN = $('.st-cart__n', store);
+    const cursor = $('.st-cursor', v), toast = $('.st-toast', v), speed = $('.st-speed', v), speedN = $('.st-speed__n', v);
+    // position of an element inside the scaled store, in browser-frame pixels (offset* ignores transforms)
+    const inFrame = (el, fx, fy) => {
+      let x = 0, y = 0, n = el;
+      while (n && n !== fitEl) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+      return { x: fitEl.offsetLeft + (x + el.offsetWidth * fx) * k() - 4, y: fitEl.offsetTop + (y + el.offsetHeight * fy) * k() - 3 }; // minus cursor tip
+    };
+    const cart = { v: 0 }, score = { v: 0 };
+
+    tl.fromTo(browser, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: .4 }, 0)
+      // 1 wireframe: dashed blocks assemble
+      .fromTo(store, { '--wire': 1 }, { '--wire': 1, duration: .01 }, 0)
+      .fromTo(regions, { x: (i) => (rand(i + 3) - .5) * 320, y: (i) => (rand(i + 9) - .5) * 260, rotation: (i) => (rand(i + 5) - .5) * 24, opacity: 0, scale: .82 },
+        { x: 0, y: 0, rotation: 0, opacity: 1, scale: 1, duration: .9, stagger: .05, ease: 'back.out(1.2)' }, .2)
+      .fromTo(txt, { opacity: 0, y: 14 }, { opacity: 0, y: 14, duration: .01 }, 0)
+      .fromTo(imgs, { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 100% 0 0)', duration: .01 }, 0)
+      // 2 design: outlines dissolve, real text and UI arrive
+      .to(store, { '--wire': 0, duration: .6, ease: 'none' }, 1.7)
+      .to(txt, { opacity: 1, y: 0, duration: .45, stagger: .025, ease: 'power3.out' }, 1.8)
+      // 3 build: photography wipes in
+      .to(imgs, { clipPath: 'inset(0 0% 0 0)', duration: .6, stagger: .08, ease: 'power3.inOut' }, 2.45)
+      // 4 measure: a shopper adds to cart, speed score lands
+      .fromTo(cursor, { opacity: 0, x: () => fitEl.offsetWidth * .9, y: () => fitEl.offsetTop + fitEl.offsetHeight * .98 }, { opacity: 1, duration: .15 }, 3.1)
+      .to(cursor, { x: () => inFrame(btn, .5, .6).x, y: () => inFrame(btn, .5, .6).y, duration: .45, ease: 'power2.inOut' }, 3.15)
+      .to(btn, { scale: .9, duration: .07, yoyo: true, repeat: 1, ease: 'power1.inOut' }, 3.62)
+      .fromTo(cart, { v: 0 }, { v: 1, duration: .04, onUpdate: () => { cartN.textContent = cart.v > .5 ? '3' : '2'; } }, 3.72)
+      .fromTo(cartN, { scale: 1 }, { scale: 1.7, duration: .1, yoyo: true, repeat: 1 }, 3.72)
+      .fromTo(toast, { opacity: 0, y: -8 }, { opacity: 1, y: 0, duration: .25 }, 3.76)
+      .fromTo(speed, { opacity: 0, x: 10 }, { opacity: 1, x: 0, duration: .25 }, 3.0)
+      .fromTo(score, { v: 0 }, { v: 98, duration: .8, ease: 'power2.out', onUpdate: () => { speedN.textContent = Math.round(score.v); } }, 3.05)
       .to({}, { duration: .3 });
   }
 

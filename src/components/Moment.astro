@@ -21,6 +21,33 @@ const steps = STEPS[type] || STEPS.build;
 const winners = [1, 5, 6];
 const dots = Array.from({ length: 96 });
 const typed = moment.query || moment.prompt || '';
+
+/* "build" moment: a demo store (made-up brand "Stockroom") that assembles from wireframe to live page.
+   Photos in /public/img/demo-store/. Prices and ratings are illustrative. */
+const IC: Record<string, string> = {
+  bag: 'M6 8h12l-1 12H7z M9 8V6a3 3 0 0 1 6 0v2',
+  truck: 'M2 6h12v9H2z M14 9h4l3 3v3h-7z M6 18.5a1.5 1.5 0 1 0 .01 0 M17 18.5a1.5 1.5 0 1 0 .01 0',
+  bolt: 'M13 2 4 14h7l-1 8 9-12h-7z',
+  shield: 'M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z M9 12l2 2 4-4',
+  ret: 'M4 12a8 8 0 1 0 2.3-5.7 M4 3v4h4',
+  lock: 'M5 11h14v10H5z M8 11V8a4 4 0 0 1 8 0v3',
+  help: 'M4 15v-3a8 8 0 0 1 16 0v3 M4 14h3v5H4z M17 14h3v5h-3z',
+  search: 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z M20 20l-4-4',
+  user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4 21c0-4 4-6 8-6s8 2 8 6',
+  heart: 'M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z',
+  cart: 'M3 4h2l2.5 11h10L20 8H7 M9 19.5a1 1 0 1 0 .01 0 M17 19.5a1 1 0 1 0 .01 0',
+  grid: 'M4 4h6v6H4z M14 4h6v6h-6z M4 14h6v6H4z M14 14h6v6h-6z',
+  arrow: 'M5 12h14 M13 6l6 6-6 6',
+  down: 'M6 9l6 6 6-6'
+};
+const STAR = 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z';
+const products = [
+  ['p1', 'Wave Pro Wireless Headphones', '4.8', '2,340', '2,999', '4,999', '40'],
+  ['p2', 'FitTrack Smartwatch', '4.7', '1,180', '3,499', '5,999', '42'],
+  ['p3', 'Pulse Bluetooth Speaker', '4.8', '3,920', '1,899', '2,999', '37'],
+  ['p4', 'Nordic Table Lamp', '4.9', '640', '1,299', '1,999', '35'],
+  ['p5', 'Hydro Steel Bottle (1L)', '4.8', '2,110', '899', '1,299', '31']
+];
 ---
 <section class="moment" data-moment={type} aria-label={`${name}: how it works`}>
   <div class="moment__stage">
@@ -104,17 +131,62 @@ const typed = moment.query || moment.prompt || '';
 
       {type === 'build' && (
         <div class="browser browser--build">
-          <div class="browser__bar"><i></i><i></i><i></i></div>
-          <div class="bld">
-            <div class="blk blk--nav"><span></span><span></span></div>
-            <div class="blk blk--hero"><span class="l1"></span><span class="l2"></span><span class="btnx"></span></div>
-            <div class="blk blk--card"></div><div class="blk blk--card"></div><div class="blk blk--card"></div>
+          <div class="browser__bar"><i></i><i></i><i></i><span class="browser__url"><svg viewBox="0 0 24 24"><path d={IC.lock} /></svg>stockroom.demo</span><span class="st-speed"><svg viewBox="0 0 24 24"><path d={IC.bolt} /></svg>Speed score <b class="st-speed__n">0</b></span></div>
+          <div class="store-fit">
+            <div class="store">
+              <div class="sr st-promo">
+                <span class="st-x"><svg viewBox="0 0 24 24"><path d={IC.truck} /></svg>Free shipping on orders above ₹999</span>
+                <span class="st-x"><svg viewBox="0 0 24 24"><path d={IC.bolt} /></svg>Limited time: up to 50% off</span>
+                <span class="st-x"><svg viewBox="0 0 24 24"><path d={IC.shield} /></svg>100% authentic products</span>
+                <span class="st-x"><svg viewBox="0 0 24 24"><path d={IC.ret} /></svg>Easy 7-day returns</span>
+              </div>
+              <div class="sr st-head">
+                <span class="st-x st-logo"><svg viewBox="0 0 24 24"><path d={IC.bag} /></svg>Stockroom</span>
+                <nav class="st-x st-menu"><span>All Categories <svg viewBox="0 0 24 24"><path d={IC.down} /></svg></span><span>Deals <b class="st-hot">Hot</b></span><span>New Arrivals</span><span>Bestsellers</span></nav>
+                <span class="st-x st-search"><svg viewBox="0 0 24 24"><path d={IC.search} /></svg>Search for products, brands and more…</span>
+                <span class="st-x st-icons">
+                  <svg viewBox="0 0 24 24"><path d={IC.user} /></svg>
+                  <span class="st-ic"><svg viewBox="0 0 24 24"><path d={IC.heart} /></svg><b class="st-badge st-badge--red">3</b></span>
+                  <span class="st-ic st-cart"><svg viewBox="0 0 24 24"><path d={IC.cart} /></svg><b class="st-badge st-cart__n">2</b></span>
+                </span>
+              </div>
+              <div class="st-hero">
+                <div class="sr st-hero__copy">
+                  <span class="st-x st-pill">Seasonal Sale</span>
+                  <h3 class="st-x st-h1">Everyday Essentials for a <em>Better Lifestyle</em></h3>
+                  <p class="st-x st-p">Top brands, great deals and everything you need for home, tech, fitness and more.</p>
+                  <span class="st-x st-ctas"><span class="st-btn">Shop the Sale <svg viewBox="0 0 24 24"><path d={IC.arrow} /></svg></span><span class="st-btn st-btn--ghost"><svg viewBox="0 0 24 24"><path d={IC.grid} /></svg>Explore Categories</span></span>
+                  <span class="st-x st-trust"><span class="st-stars">{[0, 1, 2, 3, 4].map(() => <svg viewBox="0 0 24 24"><path d={STAR} /></svg>)}</span>4.8/5 from 4,200+ reviews</span>
+                </div>
+                <div class="sr st-hero__media"><img class="st-img" src="/img/demo-store/hero.webp" alt="" width="840" height="372" loading="lazy" decoding="async" /></div>
+              </div>
+              <div class="sr st-feat">
+                {[['truck', 'Free Shipping', 'On orders above ₹999'], ['shield', '100% Authentic', 'Genuine products only'], ['ret', 'Easy Returns', '7-day hassle-free'], ['bolt', 'Secure Payments', 'UPI, cards & more'], ['help', '24/7 Support', "We're always here"]].map(([i, t, d]) => (
+                  <span class="st-x st-f"><svg viewBox="0 0 24 24"><path d={IC[i]} /></svg><span><b>{t}</b>{d}</span></span>
+                ))}
+              </div>
+              <div class="sr st-sec">
+                <span class="st-x st-sec__t">Bestselling Picks</span>
+                <span class="st-x st-tabs">{['All', 'Electronics', 'Home & Living', 'Fitness', 'Travel'].map((t, i) => <span class={i === 0 ? 'is-on' : ''}>{t}</span>)}</span>
+                <span class="st-x st-all">View All <svg viewBox="0 0 24 24"><path d={IC.arrow} /></svg></span>
+              </div>
+              <div class="st-cards">
+                {products.map(([img, name, r, n, price, mrp, off]) => (
+                  <div class="sr st-card">
+                    <div class="st-card__img"><img class="st-img" src={`/img/demo-store/${img}.webp`} alt="" width="258" height="156" loading="lazy" decoding="async" /></div>
+                    <div class="st-x st-card__body">
+                      <b class="st-card__name">{name}</b>
+                      <span class="st-card__rate"><svg viewBox="0 0 24 24"><path d={STAR} /></svg>{r} <i>({n})</i></span>
+                      <span class="st-card__price"><b>₹{price}</b><s>₹{mrp}</s><em>-{off}%</em></span>
+                      <span class="st-btn st-btn--cart"><svg viewBox="0 0 24 24"><path d={IC.cart} /></svg>Add to Cart</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-          <div class="gauge">
-            <svg viewBox="0 0 120 70"><path class="gauge__track" d="M10 60 A50 50 0 0 1 110 60" /><path class="gauge__fill" d="M10 60 A50 50 0 0 1 110 60" /></svg>
-            <span class="gauge__needle"></span>
-            <span class="mono gauge__l">Speed</span>
-          </div>
+          <span class="st-toast"><svg viewBox="0 0 24 24"><path d={IC.cart} /></svg>Added to cart</span>
+          <svg class="st-cursor" viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-3 6z" /></svg>
         </div>
       )}
 
