@@ -262,17 +262,41 @@ function buildMoment(root) {
   }
 
   if (type === 'dashboard') {
-    const line = $('.dash__line', v), L = line.getTotalLength();
-    const sparks = $$('.kpi path', v);
-    gsap.set(line, { strokeDasharray: L, strokeDashoffset: L });
-    sparks.forEach((p) => { const l = p.getTotalLength(); gsap.set(p, { strokeDasharray: l, strokeDashoffset: l }); });
-    tl.fromTo('.dash', { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: .5 }, 0)
-      .fromTo('.kpi', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: .4, stagger: .1 }, .3)
-      .to(sparks, { strokeDashoffset: 0, duration: .8, stagger: .1, ease: 'none' }, .8)
-      .to(line, { strokeDashoffset: 0, duration: 1.4, ease: 'none' }, 1.5)
-      .fromTo('.dash__area', { opacity: 0 }, { opacity: 1, duration: .8 }, 2.2)
-      .fromTo('.dash__bars span', { scaleY: 0 }, { scaleY: 1, duration: .5, stagger: .08, ease: 'back.out(1.4)' }, 2.8)
-      .to({}, { duration: .3 });
+    // Stockroom growth dashboard, scaled into the browser frame
+    const browser = $('.browser--dash', v), f = fitFrame(browser, $('.store-fit', v), $('.db', v), 1200);
+    const chips = $$('.db-chip', v), dots = $$('.db-dot', v), kpis = $$('.db-kpi', v), nums = $$('.db-kpi b', v), chg = $$('.db-kpi em', v);
+    const bars = $$('.db-bar__track i', v), apply = $('.db-apply', v), applied = $('.db-apply__b', v), cursor = $('.st-cursor', v);
+    const fmt = (el, x) => {
+      const d = +el.dataset.d, n = d ? x.toFixed(d) : Math.round(x).toLocaleString('en-IN');
+      el.textContent = `${el.dataset.p}${n}${el.dataset.s}`;
+    };
+    tl.fromTo(browser, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: .4 }, 0)
+      // 1 connect every source: chips appear, each dot turns green
+      .fromTo(chips, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .3, stagger: .08 }, .3)
+      .to(dots, { backgroundColor: '#2fbf4a', scale: 1.3, duration: .15, stagger: .1 }, .55)
+      .to(dots, { scale: 1, duration: .15, stagger: .1 }, .7)
+      .fromTo('.db-sync', { opacity: 0, x: -10 }, { opacity: 1, x: 0, duration: .3 }, 1.15)
+      // 2 one version of truth: KPI cards count up
+      .fromTo(kpis, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: .35, stagger: .07 }, 1.2);
+    nums.forEach((el) => {
+      const o = { x: 0 };
+      tl.to(o, { x: +el.dataset.v, duration: .8, ease: 'power2.out', onUpdate: () => fmt(el, o.x), onReverseComplete: () => fmt(el, 0) }, 1.3);
+    });
+    tl.fromTo(chg, { opacity: 0 }, { opacity: 1, duration: .25, stagger: .06 }, 2.0)
+      // 3 what drives revenue: chart draws, channels fill, peak explained
+      .fromTo('.db-main', { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: .35 }, 2.15)
+      .fromTo('.db-line', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: .8, ease: 'none' }, 2.3)
+      .fromTo('.db-prev', { opacity: 0 }, { opacity: 1, duration: .4 }, 2.4)
+      .fromTo('.db-area', { opacity: 0 }, { opacity: 1, duration: .5 }, 2.7)
+      .fromTo(bars, { scaleX: 0 }, { scaleX: 1, duration: .5, stagger: .07, ease: 'power3.out' }, 2.4)
+      .fromTo('.db-tip', { opacity: 0, scale: .8 }, { opacity: 1, scale: 1, duration: .3, ease: 'back.out(2)', transformOrigin: '0 0' }, 2.95)
+      // 4 decide faster: recommendation, click Apply, confirmation
+      .fromTo('.db-insight', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: .35 }, 3.1)
+      .fromTo(cursor, { opacity: 0, x: () => f.inFrame(apply, .5, .5).x - 120, y: () => f.inFrame(apply, .5, .5).y - 70 }, { opacity: 1, duration: .1 }, 3.3)
+      .to(cursor, { x: () => f.inFrame(apply, .5, .6).x, y: () => f.inFrame(apply, .5, .6).y, duration: .3, ease: 'power2.inOut' }, 3.35)
+      .to(apply, { scale: .9, duration: .07, yoyo: true, repeat: 1 }, 3.68)
+      .fromTo(applied, { opacity: 0 }, { opacity: 1, duration: .15 }, 3.76)
+      .to({}, { duration: .35 });
   }
 
   if (type === 'ab') {

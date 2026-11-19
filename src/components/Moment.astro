@@ -55,6 +55,22 @@ const ADS = [
   ['ad-p5', 'Cold 24h, hot 12h', '₹899', 'Reel', '0.6%', '₹590', '2.2k', '11']
 ];
 const feed = moment.variant === 'feed';
+
+/* "dashboard" moment: Stockroom growth dashboard, October. All figures illustrative.
+   KPI: [label, final value, decimals, prefix, suffix, change, change is good] */
+const SRC = [['shopify', 'Shopify'], ['meta', 'Meta Ads'], ['googleads', 'Google Ads'], ['googleanalytics', 'GA4'], ['whatsapp', 'WhatsApp'], ['razorpay', 'Razorpay']];
+const KPI = [
+  ['Revenue', 18.4, 1, '₹', 'L', '+22%', true], ['Orders', 6142, 0, '', '', '+15%', true], ['ROAS', 4.2, 1, '', 'x', '+0.6', true],
+  ['CAC', 412, 0, '₹', '', '−11%', true], ['Conversion rate', 3.1, 1, '', '%', '+0.4 pt', true]
+];
+const CH = [['Meta Ads', 38, '₹7.0L'], ['Google Ads', 27, '₹5.0L'], ['Organic search', 16, '₹2.9L'], ['Email & WhatsApp', 12, '₹2.2L'], ['Direct', 7, '₹1.3L']];
+// daily revenue in ₹ thousands for 31 days, with weekend lifts and a sale peak on the 24th
+const days = Array.from({ length: 31 }, (_, i) => Math.round(40 + i * 0.95 + [0, 0, 0, 1, 4, 10, 7][(i + 3) % 7] + Math.sin(i * 1.7) * 3.5 + (i === 23 ? 17 : 0)));
+const prev = days.map((v, i) => Math.round(v * 0.8 + Math.cos(i * 1.3) * 3));
+const cx = (i: number) => 52 + i * (576 / 30), cy = (v: number) => 196 - v * 1.8;
+const pathOf = (arr: number[]) => arr.map((v, i) => `${i ? 'L' : 'M'}${cx(i).toFixed(1)} ${cy(v).toFixed(1)}`).join(' ');
+const revLine = pathOf(days), prevLine = pathOf(prev), revArea = `${revLine} L${cx(30)} 196 L${cx(0)} 196 Z`;
+const peak = { x: cx(23), y: cy(days[23]), v: days[23] };
 const products = [
   ['p1', 'Wave Pro Wireless Headphones', '4.8', '2,340', '2,999', '4,999', '40'],
   ['p2', 'FitTrack Smartwatch', '4.7', '1,180', '3,499', '5,999', '42'],
@@ -287,12 +303,53 @@ const products = [
       )}
 
       {type === 'dashboard' && (
-        <div class="dash">
-          <div class="dash__kpis">{['Revenue', 'CAC', 'ROAS', 'LTV'].map((k) => <div class="kpi"><span class="mono">{k}</span><svg viewBox="0 0 100 30"><path d="M0 26 C 15 24, 25 18, 40 19 S 65 9, 80 8 S 95 3, 100 2" /></svg></div>)}</div>
-          <div class="dash__chart">
-            <svg viewBox="0 0 400 160" preserveAspectRatio="none"><path class="dash__area" d="M0 150 C 50 140, 80 120, 130 118 S 210 80, 260 70 S 340 30, 400 18 L 400 160 L 0 160 Z" /><path class="dash__line" d="M0 150 C 50 140, 80 120, 130 118 S 210 80, 260 70 S 340 30, 400 18" /></svg>
+        <div class="browser browser--fit browser--dash">
+          <div class="browser__bar"><i></i><i></i><i></i><span class="browser__url"><svg viewBox="0 0 24 24"><path d={IC.lock} /></svg>reports.stockroom.demo/growth</span></div>
+          <div class="store-fit">
+            <div class="db">
+              <div class="db-top">
+                <span class="db-brand"><span class="adcard__logo"><svg viewBox="0 0 24 24"><path d={IC.bag} /></svg></span><b>Stockroom</b><i>Growth dashboard</i></span>
+                <span class="db-range"><svg viewBox="0 0 24 24"><path d="M4 6h16v14H4z M4 10h16 M8 3v4 M16 3v4" /></svg>1 – 31 Oct 2026<i>vs previous period</i></span>
+                <span class="db-btn">Share</span>
+              </div>
+              <div class="db-src">
+                <span class="db-src__l">Data sources</span>
+                {SRC.map(([slug, name]) => <span class="db-chip"><img src={`https://cdn.jsdelivr.net/npm/simple-icons@13.0.0/icons/${slug}.svg`} alt="" width="16" height="16" loading="lazy" />{name}<i class="db-dot"></i></span>)}
+                <span class="db-sync"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10" /></svg>Reconciled · synced 2 min ago</span>
+              </div>
+              <div class="db-kpis">
+                {KPI.map(([label, val, dec, pre, suf, chg]) => (
+                  <div class="db-kpi"><span>{label}</span><b data-v={val} data-d={dec} data-p={pre} data-s={suf}>{pre}0{suf}</b><em>{chg} <i>vs Sep</i></em></div>
+                ))}
+              </div>
+              <div class="db-main">
+                <div class="db-card">
+                  <header><b>Revenue by day</b><span class="db-legend"><i class="db-legend__now"></i>Oct 2026<i class="db-legend__prev"></i>Sep 2026</span></header>
+                  <svg class="db-chart" viewBox="0 0 640 230">
+                    {[0, 25, 50, 75, 100].map((t) => <g><line x1="52" x2="628" y1={cy(t)} y2={cy(t)} class="db-grid" /><text x="44" y={cy(t) + 4} class="db-ax" text-anchor="end">{t ? `₹${t}k` : '₹0'}</text></g>)}
+                    {[0, 7, 14, 21, 30].map((i) => <text x={cx(i)} y="218" class="db-ax" text-anchor="middle">{i + 1} Oct</text>)}
+                    <path class="db-area" d={revArea} />
+                    <path class="db-prev" d={prevLine} pathLength="1" />
+                    <path class="db-line" d={revLine} pathLength="1" />
+                    <g class="db-tip" transform={`translate(${peak.x} ${peak.y})`}>
+                      <circle r="5" class="db-tip__dot" />
+                      <g transform="translate(-148 -18)"><rect width="132" height="50" rx="8" class="db-tip__box" /><text x="12" y="20" class="db-tip__d">24 Oct · Sale weekend</text><text x="12" y="39" class="db-tip__v">₹{peak.v},000 revenue</text></g>
+                    </g>
+                  </svg>
+                </div>
+                <div class="db-card db-chan">
+                  <header><b>Revenue by channel</b></header>
+                  {CH.map(([name, pct, val]) => <div class="db-bar"><span>{name}</span><span class="db-bar__track"><i style={`--w:${pct}`}></i></span><b>{val}</b><em>{pct}%</em></div>)}
+                </div>
+              </div>
+              <div class="db-insight">
+                <span class="db-insight__ic"><svg viewBox="0 0 24 24"><path d="M9 18h6 M10 21h4 M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z" /></svg></span>
+                <span><b>Meta Ads is returning 5.1x ROAS vs 3.2x on Google Ads.</b> Recommendation: move ₹50k/week into Meta prospecting.</span>
+                <span class="db-apply"><span class="db-apply__a">Apply</span><span class="db-apply__b"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10" /></svg>Applied</span></span>
+              </div>
+            </div>
           </div>
-          <div class="dash__bars">{[38, 52, 46, 64, 58, 76, 88].map((h) => <span style={`--h:${h}%`}></span>)}</div>
+          <svg class="st-cursor" viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-3 6z" /></svg>
         </div>
       )}
 
