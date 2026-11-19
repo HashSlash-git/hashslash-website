@@ -49,8 +49,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 
   <!-- "Book a call" on desktop: call-back request (phones dial instead, see core.js callLinks) -->
   <dialog class="cb" id="callback" aria-labelledby="cb-h">
-    <form class="cb__form" name="callback" method="POST" data-netlify="true" netlify-honeypot="company_website" novalidate>
-      <input type="hidden" name="form-name" value="callback" />
+    <form class="cb__form" name="callback" method="POST" novalidate>
       <input type="hidden" name="page" value="" />
       <input type="hidden" name="source" value="" />
       <p hidden><label>Leave this empty <input name="company_website" tabindex="-1" autocomplete="off" /></label></p>

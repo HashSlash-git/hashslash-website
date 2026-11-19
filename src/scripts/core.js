@@ -12,7 +12,8 @@ export const CONFIG = {
   phone: '+917259190306',          // "Book a call" dials this on phones; desktops get the call-back form
   whatsappText: "Hi HashSlash, I'd like to talk about a project.",
   bookingUrl: '',            // Calendly / Cal.com link; empty = booking buttons open the enquiry form
-  formEndpoint: ''           // optional CRM webhook (JSON). Empty = Netlify Forms (emails set in Netlify → Forms → Notifications)
+  // Both forms post here (HashSlash Headless plugin): saved under Leads in wp-admin and emailed.
+  leadEndpoint: 'https://cms.hash-slash.com/wp-json/hashslash/v1/lead'
 };
 
 export const $ = (s, c = document) => c.querySelector(s);
@@ -91,6 +92,19 @@ function openCallback(loc) {
   setTimeout(() => form.name.focus(), 50);
   track('callback_open', { location: loc });
 }
+/* Post a form to the WordPress lead inbox (url-encoded, so no CORS preflight). Throws with a readable message on failure. */
+async function sendLead(form, type, extra = {}) {
+  const body = new URLSearchParams(new FormData(form));
+  body.set('type', type);
+  Object.entries(extra).forEach(([k, v]) => body.set(k, v));
+  if (import.meta.env.DEV) { console.info('[HashSlash] Dev mode: lead not sent.', Object.fromEntries(body)); return; }
+  const res = await fetch(CONFIG.leadEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString() });
+  if (!res.ok) {
+    const e = new Error(String(res.status));
+    try { const j = await res.json(); if (j && j.message && res.status < 500) e.userMessage = j.message; } catch (x) { /* not JSON */ }
+    throw e;
+  }
+}
 function callbackForm(dlg) {
   const form = $('form', dlg), send = $('.cb__send', form), errEl = $('.ferr', form);
   form.addEventListener('submit', async (e) => {
@@ -102,13 +116,10 @@ function callbackForm(dlg) {
     errEl.textContent = ''; send.disabled = true; send.textContent = 'Sending…';
     track('generate_lead', { lead_type: 'callback', best_time: form.best_time.value, location: form.source.value });
     try {
-      if (!import.meta.env.DEV) {
-        const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)).toString() });
-        if (!res.ok) throw new Error(String(res.status));
-      }
+      await sendLead(form, 'callback');
       location.href = '/thank-you/?type=call';
     } catch (ex) {
-      errEl.textContent = `Couldn't send that. Call us on ${CONFIG.phone.replace('+91', '+91 ')} or use WhatsApp.`;
+      errEl.textContent = ex.userMessage || `Couldn't send that. Call us on ${CONFIG.phone.replace('+91', '+91 ')} or use WhatsApp.`;
       send.disabled = false; send.innerHTML = 'Request my call &rarr;';
     }
   });
@@ -363,19 +374,10 @@ function enquiry() {
     payload.event_id = track('generate_lead', { services: payload.services.join(', '), industry: payload.industry, budget: payload.budget, location: form.dataset.loc });
     form.page.value = payload.page; form.event_id.value = payload.event_id || '';
     try {
-      if (CONFIG.formEndpoint) {
-        const res = await fetch(CONFIG.formEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-        if (!res.ok) throw new Error(String(res.status));
-      } else if (!import.meta.env.DEV) {
-        // Netlify Forms: url-encoded POST to the site root; multiple services joined so the email shows them all
-        const body = new URLSearchParams(new FormData(form));
-        body.set('services', payload.services.join(', '));
-        const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString() });
-        if (!res.ok) throw new Error(String(res.status));
-      } else console.info('[HashSlash] Dev mode: enquiry not sent.', payload);
+      await sendLead(form, 'enquiry', { services: payload.services.join(', ') });
       location.href = '/thank-you/'; // conversion page (also gives ad platforms a URL to count)
     } catch (ex) {
-      err('Something went wrong sending that. Please try WhatsApp or email instead.');
+      err(ex.userMessage || 'Something went wrong sending that. Please try WhatsApp or email instead.');
       submit.disabled = false; submit.innerHTML = 'Send enquiry &rarr;';
     }
   });

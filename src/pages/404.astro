@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Page not found | HashSlash" description="This page doesn't exist." bodyClass="is-service is-thanks">
+  <meta name="robots" content="noindex" slot="head" />
+  <section class="thx">
+    <span class="script thx__script">oops.</span>
+    <h1 class="display thx__title">This page took <span class="lime">a day off.</span></h1>
+    <p class="thx__sub">The link may be old or mistyped. Here's where to go next.</p>
+    <div class="thx__ctas">
+      <a class="btn btn--lime btn--lg" href="/">Back to home <span class="arr">&rarr;</span></a>
+      <a class="btn btn--ghost btn--lg" href="/services/">See our services</a>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { initCore } from '../scripts/core.js';
+  initCore();
+</script>

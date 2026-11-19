@@ -1,0 +1,60 @@
+# Builds the Astro site and publishes it to the `hostinger` branch, which Hostinger pulls into public_html/site.
+# Runs on every push to main, when WordPress content is published (repository_dispatch from the
+# HashSlash Headless plugin), on demand, and once a day as a safety net.
+name: Build and deploy to Hostinger
+
+on:
+  push:
+    branches: [main]
+  repository_dispatch:
+    types: [wordpress-publish]
+  workflow_dispatch:
+  schedule:
+    - cron: '17 3 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-hostinger
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          WP_URL: https://cms.hash-slash.com
+
+      - name: Publish to the hostinger branch
+        env:
+          REPO_URL: https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --exit-code --heads "$REPO_URL" hostinger >/dev/null; then
+            git clone --quiet --depth 1 --branch hostinger "$REPO_URL" out
+          else
+            mkdir out && git -C out init --quiet -b hostinger && git -C out remote add origin "$REPO_URL"
+          fi
+          rsync -a --delete --exclude .git dist/ out/
+          cd out
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Build output unchanged, nothing to publish."
+          else
+            git commit --quiet -m "Build ${GITHUB_SHA::7} (${{ github.event_name }})"
+            git push --quiet origin hostinger
+          fi

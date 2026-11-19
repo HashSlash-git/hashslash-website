@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name:       HashSlash Headless
- * Description:       Services, Industries and Case Studies for the HashSlash Astro front end, plus an automatic site rebuild on publish and basic hardening.
- * Version:           1.0.1
+ * Description:       Services, Industries and Case Studies for the HashSlash Astro front end, an automatic site rebuild on publish, a lead inbox for the site's forms, front-end routing on Hostinger, and basic hardening.
+ * Version:           1.1.0
  * Requires at least: 6.4
  * Requires PHP:      7.4
  * Author:            HashSlash
@@ -41,6 +41,15 @@ final class HS_Headless {
 
 		// Headless: send visitors of the old theme to the new front end.
 		add_action( 'template_redirect', array( __CLASS__, 'redirect_frontend' ) );
+
+		// Lead inbox: the static site's enquiry and call-back forms post here.
+		add_action( 'init', array( __CLASS__, 'register_lead_type' ) );
+		add_action( 'rest_api_init', array( __CLASS__, 'register_routes' ) );
+
+		// Serve the built front end for the public domain from this hosting account (Hostinger).
+		add_action( 'add_option_' . self::OPT, array( __CLASS__, 'sync_htaccess' ), 10, 0 );
+		add_action( 'update_option_' . self::OPT, array( __CLASS__, 'sync_htaccess' ), 10, 0 );
+		add_action( 'admin_init', array( __CLASS__, 'maybe_resync_htaccess' ) );
 
 		// Hardening (the previous site was compromised).
 		add_filter( 'xmlrpc_enabled', '__return_false' );
@@ -257,13 +266,31 @@ final class HS_Headless {
 		}
 	}
 
+	/**
+	 * Ask the host to rebuild. Prefers GitHub Actions (repository_dispatch), falls back to a plain deploy hook URL.
+	 */
 	public static function do_rebuild() {
-		$hook = self::opt( 'deploy_hook' );
-		if ( ! $hook ) {
+		$repo  = self::opt( 'github_repo' );
+		$token = self::opt( 'github_token' );
+		if ( $repo && $token ) {
+			$res = wp_remote_post( 'https://api.github.com/repos/' . $repo . '/dispatches', array(
+				'timeout' => 15,
+				'headers' => array(
+					'Authorization'        => 'Bearer ' . $token,
+					'Accept'               => 'application/vnd.github+json',
+					'X-GitHub-Api-Version' => '2022-11-28',
+					'User-Agent'           => 'hashslash-headless',
+					'Content-Type'         => 'application/json',
+				),
+				'body'    => wp_json_encode( array( 'event_type' => 'wordpress-publish' ) ),
+			) );
+			$ok = ! is_wp_error( $res ) && 204 === (int) wp_remote_retrieve_response_code( $res );
+		} elseif ( self::opt( 'deploy_hook' ) ) {
+			$res = wp_remote_post( self::opt( 'deploy_hook' ), array( 'timeout' => 10 ) );
+			$ok  = ! is_wp_error( $res ) && wp_remote_retrieve_response_code( $res ) < 300;
+		} else {
 			return false;
 		}
-		$res = wp_remote_post( $hook, array( 'timeout' => 10 ) );
-		$ok  = ! is_wp_error( $res ) && wp_remote_retrieve_response_code( $res ) < 300;
 		update_option( 'hs_headless_last_build', array( 'time' => time(), 'ok' => $ok ), false );
 		return $ok;
 	}
@@ -290,10 +317,22 @@ final class HS_Headless {
 		register_setting( 'hs_headless', self::OPT, array(
 			'type'              => 'array',
 			'sanitize_callback' => function ( $in ) {
+				$in    = is_array( $in ) ? $in : array();
+				$token = isset( $in['github_token'] ) ? trim( sanitize_text_field( $in['github_token'] ) ) : '';
+				if ( '' === $token && empty( $in['github_token_clear'] ) ) {
+					$token = self::opt( 'github_token' ); // blank field keeps the saved token
+				}
+				$email = isset( $in['lead_email'] ) ? sanitize_email( $in['lead_email'] ) : '';
 				return array(
-					'frontend_url' => esc_url_raw( isset( $in['frontend_url'] ) ? untrailingslashit( $in['frontend_url'] ) : '' ),
-					'deploy_hook'  => esc_url_raw( isset( $in['deploy_hook'] ) ? $in['deploy_hook'] : '' ),
-					'redirect'     => ! empty( $in['redirect'] ),
+					'frontend_url'  => esc_url_raw( isset( $in['frontend_url'] ) ? untrailingslashit( $in['frontend_url'] ) : '' ),
+					'deploy_hook'   => esc_url_raw( isset( $in['deploy_hook'] ) ? $in['deploy_hook'] : '' ),
+					'redirect'      => ! empty( $in['redirect'] ),
+					'github_repo'   => isset( $in['github_repo'] ) ? preg_replace( '#[^A-Za-z0-9._/-]#', '', trim( $in['github_repo'] ) ) : '',
+					'github_token'  => $token,
+					'lead_email'    => $email ? $email : get_option( 'admin_email' ),
+					'serve_static'  => ! empty( $in['serve_static'] ),
+					'static_domain' => isset( $in['static_domain'] ) ? strtolower( preg_replace( '#[^A-Za-z0-9.-]#', '', $in['static_domain'] ) ) : '',
+					'static_dir'    => isset( $in['static_dir'] ) && '' !== trim( $in['static_dir'] ) ? sanitize_file_name( $in['static_dir'] ) : 'site',
 				);
 			},
 		) );
@@ -313,11 +352,36 @@ final class HS_Headless {
 				<table class="form-table" role="presentation">
 					<tr><th scope="row"><label for="hs_front">Front-end URL</label></th>
 						<td><input class="regular-text" id="hs_front" name="<?php echo esc_attr( self::OPT ); ?>[frontend_url]" value="<?php echo esc_attr( self::opt( 'frontend_url' ) ); ?>" placeholder="https://www.hashslash.example" /></td></tr>
-					<tr><th scope="row"><label for="hs_hook">Deploy hook URL</label></th>
-						<td><input class="large-text" id="hs_hook" name="<?php echo esc_attr( self::OPT ); ?>[deploy_hook]" value="<?php echo esc_attr( self::opt( 'deploy_hook' ) ); ?>" placeholder="https://api.netlify.com/build_hooks/..." />
-						<p class="description">From your host (Netlify, Vercel or Cloudflare Pages). Called about a minute after content is published, updated or unpublished.</p></td></tr>
 					<tr><th scope="row">Redirect old theme</th>
 						<td><label><input type="checkbox" name="<?php echo esc_attr( self::OPT ); ?>[redirect]" value="1" <?php checked( (bool) self::opt( 'redirect' ) ); ?> /> Send front-end visitors of this WordPress site to the front-end URL (wp-admin and the API keep working)</label></td></tr>
+					<tr><th scope="row"><label for="hs_lead_email">Send leads to</label></th>
+						<td><input class="regular-text" type="email" id="hs_lead_email" name="<?php echo esc_attr( self::OPT ); ?>[lead_email]" value="<?php echo esc_attr( self::opt( 'lead_email' ) ? self::opt( 'lead_email' ) : get_option( 'admin_email' ) ); ?>" />
+						<p class="description">Enquiries and call-back requests from the site are emailed here and kept under <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=hs_lead' ) ); ?>">Leads</a>.</p></td></tr>
+				</table>
+
+				<h2>Rebuild on publish</h2>
+				<table class="form-table" role="presentation">
+					<tr><th scope="row"><label for="hs_repo">GitHub repository</label></th>
+						<td><input class="regular-text" id="hs_repo" name="<?php echo esc_attr( self::OPT ); ?>[github_repo]" value="<?php echo esc_attr( self::opt( 'github_repo' ) ); ?>" placeholder="owner/repository" /></td></tr>
+					<tr><th scope="row"><label for="hs_token">GitHub token</label></th>
+						<td><input class="regular-text" type="password" autocomplete="new-password" id="hs_token" name="<?php echo esc_attr( self::OPT ); ?>[github_token]" value="" placeholder="<?php echo self::opt( 'github_token' ) ? esc_attr__( 'Saved. Leave blank to keep it.' ) : 'github_pat_...'; ?>" />
+						<?php if ( self::opt( 'github_token' ) ) : ?><label><input type="checkbox" name="<?php echo esc_attr( self::OPT ); ?>[github_token_clear]" value="1" /> Remove saved token</label><?php endif; ?>
+						<p class="description">Fine-grained token limited to this repository with <em>Contents: read and write</em>. Used only to start the site build about a minute after content is published, updated or unpublished.</p></td></tr>
+					<tr><th scope="row"><label for="hs_hook">Or a deploy hook URL</label></th>
+						<td><input class="large-text" id="hs_hook" name="<?php echo esc_attr( self::OPT ); ?>[deploy_hook]" value="<?php echo esc_attr( self::opt( 'deploy_hook' ) ); ?>" placeholder="https://api.netlify.com/build_hooks/..." />
+						<p class="description">Used only when no GitHub repository and token are set.</p></td></tr>
+				</table>
+
+				<h2>Serve the front end from this hosting</h2>
+				<table class="form-table" role="presentation">
+					<tr><th scope="row">Front-end routing</th>
+						<td><label><input type="checkbox" name="<?php echo esc_attr( self::OPT ); ?>[serve_static]" value="1" <?php checked( (bool) self::opt( 'serve_static' ) ); ?> /> Serve the built site for the domain below from the folder below (this WordPress keeps answering on its own address)</label></td></tr>
+					<tr><th scope="row"><label for="hs_sdomain">Public domain</label></th>
+						<td><input class="regular-text" id="hs_sdomain" name="<?php echo esc_attr( self::OPT ); ?>[static_domain]" value="<?php echo esc_attr( self::opt( 'static_domain' ) ); ?>" placeholder="example.com" />
+						<p class="description">Without www. Requests for www are sent to this domain.</p></td></tr>
+					<tr><th scope="row"><label for="hs_sdir">Site folder</label></th>
+						<td><code><?php echo esc_html( trailingslashit( ABSPATH ) ); ?></code><input class="small-text" id="hs_sdir" name="<?php echo esc_attr( self::OPT ); ?>[static_dir]" value="<?php echo esc_attr( self::opt( 'static_dir' ) ? self::opt( 'static_dir' ) : 'site' ); ?>" />
+						<p class="description"><?php echo esc_html( self::htaccess_status() ); ?></p></td></tr>
 				</table>
 				<?php submit_button(); ?>
 			</form>
@@ -405,6 +469,204 @@ final class HS_Headless {
 	}
 
 	/* ------------------------------------------------------------------
+	 * Lead inbox: POST /wp-json/hashslash/v1/lead (enquiry or call-back)
+	 * ---------------------------------------------------------------- */
+	public static function register_lead_type() {
+		register_post_type( 'hs_lead', array(
+			'labels'          => self::labels( 'Lead', 'Leads' ),
+			'public'          => false,
+			'show_ui'         => true,
+			'show_in_menu'    => true,
+			'show_in_rest'    => false,
+			'menu_icon'       => 'dashicons-phone',
+			'menu_position'   => 24,
+			'supports'        => array( 'title', 'editor' ),
+			'capability_type' => 'post',
+			'capabilities'    => array( 'create_posts' => 'do_not_allow' ), // leads only come from the site
+			'map_meta_cap'    => true,
+		) );
+	}
+
+	public static function register_routes() {
+		register_rest_route( 'hashslash/v1', '/lead', array(
+			'methods'             => 'POST',
+			'callback'            => array( __CLASS__, 'handle_lead' ),
+			'permission_callback' => '__return_true', // public form; protected by honeypot, origin check and rate limit
+		) );
+	}
+
+	/** Field => [label, max length]. */
+	private static function lead_fields() {
+		return array(
+			'name'        => array( 'Name', 120 ),
+			'phone'       => array( 'Phone', 40 ),
+			'email'       => array( 'Email', 160 ),
+			'company'     => array( 'Company', 160 ),
+			'industry'    => array( 'Industry', 80 ),
+			'services'    => array( 'Services', 400 ),
+			'budget'      => array( 'Budget', 60 ),
+			'best_time'   => array( 'Best time to call', 60 ),
+			'description' => array( 'Project', 4000 ),
+			'page'        => array( 'Sent from page', 200 ),
+			'source'      => array( 'Button', 80 ),
+			'event_id'    => array( 'Event ID', 80 ),
+		);
+	}
+
+	public static function handle_lead( WP_REST_Request $req ) {
+		$p = $req->get_params();
+
+		// Bots fill the hidden field: accept quietly, store nothing.
+		if ( ! empty( $p['company_website'] ) ) {
+			return new WP_REST_Response( array( 'ok' => true ), 200 );
+		}
+
+		// Only the configured front end may post (browsers always send Origin on cross-site requests).
+		$origin = untrailingslashit( (string) $req->get_header( 'origin' ) );
+		$front  = self::opt( 'frontend_url' );
+		if ( $origin && $front ) {
+			$host    = wp_parse_url( $front, PHP_URL_HOST );
+			$allowed = array( $front, 'https://' . $host, 'https://www.' . $host, home_url() );
+			if ( ! in_array( $origin, $allowed, true ) ) {
+				return new WP_Error( 'hs_origin', 'Not allowed.', array( 'status' => 403 ) );
+			}
+		}
+
+		// At most 6 leads per visitor per 10 minutes.
+		$ip  = isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ? trim( explode( ',', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) )[0] ) : ( isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '' );
+		$key = 'hs_lead_' . md5( $ip );
+		$n   = (int) get_transient( $key );
+		if ( $n >= 6 ) {
+			return new WP_Error( 'hs_rate', 'Too many requests. Please call or WhatsApp us instead.', array( 'status' => 429 ) );
+		}
+		set_transient( $key, $n + 1, 10 * MINUTE_IN_SECONDS );
+
+		$type = ( isset( $p['type'] ) && 'callback' === $p['type'] ) ? 'callback' : 'enquiry';
+		$f    = array();
+		foreach ( self::lead_fields() as $k => $def ) {
+			$v = isset( $p[ $k ] ) ? $p[ $k ] : '';
+			if ( is_array( $v ) ) {
+				$v = implode( ', ', array_map( 'strval', $v ) );
+			}
+			$v       = 'description' === $k ? sanitize_textarea_field( (string) $v ) : sanitize_text_field( (string) $v );
+			$f[ $k ] = mb_substr( 'email' === $k ? sanitize_email( $v ) : $v, 0, $def[1] );
+		}
+
+		if ( '' === $f['name'] ) {
+			return new WP_Error( 'hs_name', 'Please add your name.', array( 'status' => 400 ) );
+		}
+		if ( strlen( preg_replace( '/\D/', '', $f['phone'] ) ) < 7 ) {
+			return new WP_Error( 'hs_phone', 'Please add a phone number we can reach.', array( 'status' => 400 ) );
+		}
+		if ( 'enquiry' === $type && ! is_email( $f['email'] ) ) {
+			return new WP_Error( 'hs_email', 'Please add a valid email address.', array( 'status' => 400 ) );
+		}
+
+		$title = ( 'callback' === $type ? 'Call-back: ' : 'Enquiry: ' ) . $f['name'] . ( $f['company'] ? ' (' . $f['company'] . ')' : '' );
+		$lines = array( 'Type: ' . ( 'callback' === $type ? 'Call-back request' : 'Project enquiry' ) );
+		foreach ( self::lead_fields() as $k => $def ) {
+			if ( '' !== $f[ $k ] ) {
+				$lines[] = $def[0] . ': ' . $f[ $k ];
+			}
+		}
+
+		$id = wp_insert_post( array(
+			'post_type'    => 'hs_lead',
+			'post_status'  => 'private',
+			'post_title'   => $title,
+			'post_content' => implode( "\n", $lines ),
+		), true );
+		if ( is_wp_error( $id ) ) {
+			return new WP_Error( 'hs_save', 'Could not save your request. Please call or WhatsApp us.', array( 'status' => 500 ) );
+		}
+		update_post_meta( $id, 'hs_type', $type );
+		foreach ( $f as $k => $v ) {
+			update_post_meta( $id, 'hs_' . $k, $v );
+		}
+
+		$to      = self::opt( 'lead_email' ) ? self::opt( 'lead_email' ) : get_option( 'admin_email' );
+		$headers = $f['email'] ? array( 'Reply-To: ' . $f['name'] . ' <' . $f['email'] . '>' ) : array();
+		$sent    = wp_mail( $to, '[HashSlash] ' . $title, implode( "\n", $lines ) . "\n\nOpen in WordPress: " . admin_url( 'post.php?post=' . $id . '&action=edit' ), $headers );
+		update_post_meta( $id, 'hs_emailed', $sent ? 1 : 0 );
+
+		return new WP_REST_Response( array( 'ok' => true ), 200 );
+	}
+
+	/* ------------------------------------------------------------------
+	 * Front-end routing on this host: <domain> is served from ABSPATH/<dir>.
+	 * Written to .htaccess only when enabled AND the folder exists, so the
+	 * public domain never routes to an empty folder. Turning it off removes it.
+	 * ---------------------------------------------------------------- */
+	const HT_BEGIN = '# BEGIN HashSlash front-end';
+	const HT_END   = '# END HashSlash front-end';
+
+	public static function sync_htaccess() {
+		$file = ABSPATH . '.htaccess';
+		if ( file_exists( $file ) ? ! is_writable( $file ) : ! is_writable( ABSPATH ) ) {
+			update_option( 'hs_headless_htaccess', 'not_writable', false );
+			return;
+		}
+		$current = file_exists( $file ) ? (string) file_get_contents( $file ) : ''; // phpcs:ignore WordPress.WP.AlternativeFunctions
+		$clean   = preg_replace( '/' . preg_quote( self::HT_BEGIN, '/' ) . '.*?' . preg_quote( self::HT_END, '/' ) . '\R*/s', '', $current );
+		$domain  = self::opt( 'static_domain' );
+		$dir     = self::opt( 'static_dir' ) ? self::opt( 'static_dir' ) : 'site';
+		$on      = self::opt( 'serve_static' ) && $domain && is_dir( ABSPATH . $dir );
+		$new     = ( $on ? self::htaccess_block( $domain, $dir ) . "\n" : '' ) . $clean;
+		if ( $new !== $current ) {
+			if ( $current ) {
+				@copy( $file, $file . '.hs-backup' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
+			}
+			file_put_contents( $file, $new, LOCK_EX ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+		}
+		update_option( 'hs_headless_htaccess', $on ? 'on' : ( self::opt( 'serve_static' ) ? 'waiting' : 'off' ), false );
+	}
+
+	/** Routing was switched on before the first deploy created the folder: finish the job once it exists. */
+	public static function maybe_resync_htaccess() {
+		$dir = self::opt( 'static_dir' ) ? self::opt( 'static_dir' ) : 'site';
+		if ( 'waiting' === get_option( 'hs_headless_htaccess' ) && is_dir( ABSPATH . $dir ) && current_user_can( 'manage_options' ) ) {
+			self::sync_htaccess();
+		}
+	}
+
+	private static function htaccess_block( $domain, $dir ) {
+		$d    = preg_quote( $domain, '/' );
+		$path = trailingslashit( ABSPATH ) . $dir;
+		return implode( "\n", array(
+			self::HT_BEGIN,
+			'# Requests for ' . $domain . ' are served from /' . $dir . ' (the built front end). This WordPress keeps answering on its own address.',
+			'<IfModule mod_rewrite.c>',
+			'RewriteEngine On',
+			'RewriteCond %{HTTP_HOST} ^www\.' . $d . '$ [NC]',
+			'RewriteRule ^(.*)$ https://' . $domain . '/$1 [R=301,L]',
+			'RewriteCond %{HTTP_HOST} ^' . $d . '$ [NC]',
+			'RewriteCond ' . $path . '/$1 -d',
+			'RewriteRule ^(.*[^/])$ /$1/ [R=301,L]',
+			'RewriteCond %{HTTP_HOST} ^' . $d . '$ [NC]',
+			'RewriteCond %{REQUEST_URI} !^/' . $dir . '/',
+			'RewriteRule ^(.*)$ /' . $dir . '/$1 [L]',
+			'RewriteCond %{HTTP_HOST} !^' . $d . '$ [NC]',
+			'RewriteRule ^' . preg_quote( $dir, '/' ) . '(/|$) - [F,L]',
+			'</IfModule>',
+			self::HT_END,
+		) );
+	}
+
+	private static function htaccess_status() {
+		$dir = self::opt( 'static_dir' ) ? self::opt( 'static_dir' ) : 'site';
+		switch ( get_option( 'hs_headless_htaccess', 'off' ) ) {
+			case 'on':
+				return 'Active: requests for ' . self::opt( 'static_domain' ) . ' are served from /' . $dir . '.';
+			case 'waiting':
+				return 'Waiting: the /' . $dir . ' folder does not exist yet. Save again after the first deploy has created it.';
+			case 'not_writable':
+				return 'Could not update .htaccess (file not writable).';
+			default:
+				return 'Off: this WordPress answers for every domain pointed at this hosting.';
+		}
+	}
+
+	/* ------------------------------------------------------------------
 	 * Headless redirect + hardening
 	 * ---------------------------------------------------------------- */
 	public static function redirect_frontend() {
@@ -444,4 +706,13 @@ HS_Headless::init();
 
 register_deactivation_hook( __FILE__, function () {
 	wp_clear_scheduled_hook( HS_Headless::CRON_HOOK );
+	// Stop routing the public domain to the static folder when the plugin is switched off.
+	$file = ABSPATH . '.htaccess';
+	if ( file_exists( $file ) && is_writable( $file ) ) {
+		$current = (string) file_get_contents( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+		$clean   = preg_replace( '/' . preg_quote( HS_Headless::HT_BEGIN, '/' ) . '.*?' . preg_quote( HS_Headless::HT_END, '/' ) . '\R*/s', '', $current );
+		if ( $clean !== $current ) {
+			file_put_contents( $file, $clean, LOCK_EX ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+		}
+	}
 } );
