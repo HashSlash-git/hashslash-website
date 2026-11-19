@@ -92,13 +92,20 @@ function buildMoment(root) {
 
   if (type === 'ads') {
     const cards = $$('.adcard', v), win = cards.filter((c) => c.dataset.win === '1'), lose = cards.filter((c) => c.dataset.win !== '1');
-    tl.fromTo(cards, { y: 140, rotation: (i) => (rand(i + 1) - .5) * 40, opacity: 0, scale: .8 },
-      { y: 0, rotation: 0, opacity: 1, scale: 1, duration: .8, stagger: .05, ease: 'back.out(1.4)' }, 0)
+    const stats = cards.map((c) => $('.adcard__stats', c));
+    tl // 1 launch a batch of creatives
+      .fromTo(cards, { y: 140, rotation: (i) => (rand(i + 1) - .5) * 40, opacity: 0, scale: .8 },
+        { y: 0, rotation: 0, opacity: 1, scale: 1, duration: .8, stagger: .05, ease: 'back.out(1.4)' }, 0)
+      // 2 read the results: scan passes, each ad's numbers appear
       .fromTo($('.mo-ads__scan', v), { top: '0%', opacity: 0 }, { top: '100%', opacity: 1, duration: 1, ease: 'none' }, 1.1)
+      .fromTo(stats, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .3, stagger: .06 }, 1.2)
       .to($('.mo-ads__scan', v), { opacity: 0, duration: .2 }, 2.1)
-      .to(lose, { opacity: .16, scale: .9, filter: 'grayscale(1)', duration: .6, stagger: .04 }, 2.1)
-      .to(win, { scale: 1.07, boxShadow: '0 0 0 2px #d7ff00, 0 30px 60px -20px rgba(215,255,0,.45)', duration: .6, stagger: .08 }, 3)
-      .fromTo(win.map((w) => $('.adcard__win', w)), { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .4, stagger: .08 }, 3.2)
+      // 3 cut the losers fast
+      .to(lose, { opacity: .38, scale: .94, filter: 'grayscale(1)', duration: .6, stagger: .04 }, 2.1)
+      .fromTo(lose.map((c) => $('.adcard__flag--off', c)), { opacity: 0, scale: .8 }, { opacity: 1, scale: 1, duration: .3, stagger: .04 }, 2.2)
+      // 4 scale the winners
+      .to(win, { scale: 1.06, zIndex: 2, boxShadow: '0 0 0 2px rgba(215,255,0,1)', duration: .6, stagger: .08 }, 3)
+      .fromTo(win.map((c) => $('.adcard__flag--on', c)), { opacity: 0, scale: .8 }, { opacity: 1, scale: 1, duration: .4, stagger: .08, ease: 'back.out(2)' }, 3.15)
       .to({}, { duration: .4 });
   }
 

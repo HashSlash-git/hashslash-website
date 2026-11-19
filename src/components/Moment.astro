@@ -41,6 +41,20 @@ const IC: Record<string, string> = {
   down: 'M6 9l6 6 6-6'
 };
 const STAR = 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z';
+/* "ads" moment: nine Stockroom creatives in a test. Winners = indexes in `winners`. Figures are illustrative.
+   [image, headline, overlay on creative, format, paid metric 1, paid metric 2, organic metric 1, organic metric 2] */
+const ADS = [
+  ['ad-phones', 'Wave Pro, 40% off', 'Up to 50% off', 'Reel', '1.1%', '₹412', '4.2k', '38'],
+  ['ad-p2', 'FitTrack smartwatch', 'New', 'Static', '3.4%', '₹148', '21.6k', '640'],
+  ['ad-lamp', 'Warm light at night', '', 'Carousel', '0.9%', '₹538', '3.1k', '22'],
+  ['ad-speaker', 'Big sound, small size', '', 'Static', '0.7%', '₹610', '2.7k', '15'],
+  ['ad-p3', 'Pulse: 24h battery', '₹1,899', 'Reel', '1.0%', '₹455', '5.0k', '41'],
+  ['ad-p1', 'Bestseller: Wave Pro', 'Bestseller', 'Reel', '3.1%', '₹162', '18.9k', '512'],
+  ['ad-watch', 'Track every step', '-42%', 'Carousel', '2.9%', '₹171', '16.4k', '488'],
+  ['ad-p4', 'Nordic lamp ₹1,299', '', 'Static', '0.8%', '₹498', '2.9k', '19'],
+  ['ad-p5', 'Cold 24h, hot 12h', '₹899', 'Reel', '0.6%', '₹590', '2.2k', '11']
+];
+const feed = moment.variant === 'feed';
 const products = [
   ['p1', 'Wave Pro Wireless Headphones', '4.8', '2,340', '2,999', '4,999', '40'],
   ['p2', 'FitTrack Smartwatch', '4.7', '1,180', '3,499', '5,999', '42'],
@@ -64,13 +78,22 @@ const products = [
       <span class="moment__illus mono">Illustrative</span>
 
       {type === 'ads' && (
-        <div class={`mo-ads ${moment.variant === 'feed' ? 'mo-ads--feed' : ''}`}>
-          {Array.from({ length: 9 }).map((_, i) => (
+        <div class={`mo-ads ${feed ? 'mo-ads--feed' : ''}`}>
+          {ADS.map(([img, head, over, fmt, m1, m2, o1, o2], i) => (
             <div class="adcard" data-win={winners.includes(i) ? '1' : '0'}>
-              <div class="adcard__media" style={`--h:${(i * 37) % 360}`}></div>
-              <span class="adcard__tag mono">{moment.variant === 'feed' ? ['Reel', 'Carousel', 'Story'][i % 3] : ['UGC', 'Static', 'Motion'][i % 3]} {String(i + 1).padStart(2, '0')}</span>
-              <span class="adcard__line"></span><span class="adcard__line adcard__line--s"></span>
-              <span class="adcard__win mono">Winner</span>
+              <div class="adcard__head">
+                <span class="adcard__logo"><svg viewBox="0 0 24 24"><path d={IC.bag} /></svg></span>
+                <span class="adcard__who"><b>{feed ? 'stockroom' : 'Stockroom'}</b><i>{feed ? 'Original audio' : 'Sponsored'}</i></span>
+                <span class="adcard__flag adcard__flag--off">{feed ? 'Archived' : 'Paused'}</span>
+                <span class="adcard__flag adcard__flag--on">{feed ? 'Boosting' : 'Scaling ↑'}</span>
+              </div>
+              <div class="adcard__media">
+                <img src={`/img/demo-store/${img}.webp`} alt="" width="200" height="200" loading="lazy" decoding="async" />
+                {over && <span class="adcard__over">{over}</span>}
+                <span class="adcard__fmt">{fmt === 'Reel' && <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>}{fmt}</span>
+                <span class="adcard__stats"><span>{feed ? 'Reach' : 'CTR'} <b>{feed ? o1 : m1}</b></span><span>{feed ? 'Saves' : 'CPA'} <b>{feed ? o2 : m2}</b></span></span>
+              </div>
+              <div class="adcard__foot"><span class="adcard__t">{head}</span>{!feed && <span class="adcard__cta">Shop now</span>}</div>
             </div>
           ))}
           <span class="mo-ads__scan"></span>

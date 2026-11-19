@@ -162,14 +162,28 @@
 .moment__illus { position: absolute; right: 0; top: -6px; color: var(--muted); font-size: .62rem; border: 1px solid var(--line-2); padding: 3px 8px; border-radius: 99px; z-index: 5; }
 
 /* ---- ads wall ---- */
-.mo-ads { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(8px, 1.2vw, 16px); width: min(100%, calc(min(70vh, 620px) * .7)); }
-.adcard { position: relative; aspect-ratio: 9 / 12; border-radius: 12px; background: var(--bg-3); border: 1px solid var(--line-2); padding: 8px; display: flex; flex-direction: column; gap: 6px; overflow: hidden; }
-.adcard__media { flex: 1; border-radius: 8px; background: linear-gradient(150deg, hsl(var(--h) 30% 22%), hsl(calc(var(--h) + 40) 20% 10%)); }
-.mo-ads--feed .adcard { aspect-ratio: 4 / 5; }
-.adcard__tag { font-size: .55rem; color: var(--muted); }
-.adcard__line { height: 6px; border-radius: 3px; background: rgba(255,255,255,.12); }
-.adcard__line--s { width: 60%; }
-.adcard__win { position: absolute; top: 12px; left: 12px; background: var(--lime); color: var(--lime-ink); padding: 3px 8px; border-radius: 99px; font-size: .58rem; opacity: 0; }
+.mo-ads { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(8px, 1.1vw, 14px); width: min(100%, calc(min(70vh, 620px) * .74)); }
+/* Meta / Instagram ad cards (dark mode). Sizes use cqw so text scales with the card. */
+.adcard { position: relative; container-type: inline-size; display: flex; flex-direction: column; border-radius: 10px; background: #121212; color: #f5f5f5; border: 1px solid #262626; overflow: hidden; box-shadow: 0 0 0 0 rgba(215,255,0,0); font-family: var(--f-body); font-stretch: 100%; }
+.adcard__head { display: flex; align-items: center; gap: 3.5cqw; padding: 3.5cqw 4.5cqw; }
+.adcard__logo { flex: none; width: 11cqw; height: 11cqw; border-radius: 50%; background: var(--lime); color: #0b0d00; display: grid; place-items: center; }
+.adcard__logo svg { width: 62%; height: 62%; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linejoin: round; }
+.adcard__who { display: grid; line-height: 1.15; min-width: 0; }
+.adcard__who b { font-size: 6.6cqw; font-weight: 700; }
+.adcard__who i { font-style: normal; font-size: 5.6cqw; color: #a8a8a8; }
+.adcard__flag { position: absolute; right: 4.5cqw; top: 4.5cqw; font-size: 5.6cqw; font-weight: 700; padding: 1.4cqw 3.4cqw; border-radius: 99px; opacity: 0; white-space: nowrap; }
+.adcard__flag--off { background: #3a3a3a; color: #ddd; }
+.adcard__flag--on { background: var(--lime); color: #0b0d00; }
+.adcard__media { position: relative; aspect-ratio: 1; overflow: hidden; background: #1c1c1c; }
+.adcard__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.adcard__over { position: absolute; left: 4.5cqw; top: 4.5cqw; background: var(--lime); color: #0b0d00; font-weight: 800; font-size: 6.4cqw; padding: 1.4cqw 3.2cqw; border-radius: 2cqw; }
+.adcard__fmt { position: absolute; right: 4cqw; top: 4cqw; display: inline-flex; align-items: center; gap: 1.2cqw; background: rgba(0,0,0,.62); color: #fff; font-size: 5.4cqw; padding: 1cqw 3cqw; border-radius: 99px; }
+.adcard__fmt svg { width: 5.4cqw; height: 5.4cqw; fill: #fff; }
+.adcard__stats { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; padding: 8cqw 4.5cqw 3.5cqw; background: linear-gradient(transparent, rgba(0,0,0,.85)); font-size: 6cqw; color: #cfcfcf; opacity: 0; }
+.adcard__stats b { color: #fff; }
+.adcard__foot { display: flex; align-items: center; gap: 3cqw; padding: 3.5cqw 4.5cqw; }
+.adcard__t { flex: 1; min-width: 0; font-size: 6cqw; font-weight: 600; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.adcard__cta { flex: none; font-size: 5.6cqw; font-weight: 700; background: #262626; padding: 1.8cqw 3.2cqw; border-radius: 2cqw; }
 .mo-ads__scan { position: absolute; left: -4%; right: -4%; height: 2px; background: var(--lime); opacity: 0; top: 0; }
 
 /* ---- browser / serp / seo ---- */
@@ -671,3 +685,8 @@ a.case:hover .case__img { transform: scale(1.05); }
 .g-vid__by { font-size: 13px; color: #70757a; }
 .g-stars, .g .st-stars { display: inline-flex; gap: 1px; color: #fbbc04; }
 .g .st-stars svg { width: 14px; height: 14px; fill: currentColor; stroke: none; }
+/* phones: 6 ads in two rows so the grid clears the sticky action bar */
+@media (max-width: 768px) {
+  .mo-ads { width: 100%; }
+  .adcard:nth-child(n+7) { display: none; }
+}
