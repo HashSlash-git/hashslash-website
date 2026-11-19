@@ -70,6 +70,21 @@ function typer(el, from = 0, to) {
 }
 const rand = (seed) => { const x = Math.sin(seed * 999) * 10000; return x - Math.floor(x); };
 
+/* Scale a full-size mock page (designW px wide) into a browser frame; --k is inherited by children.
+   inFrame() maps an element inside the scaled page to frame pixels (offset* ignores transforms) for the cursor. */
+function fitFrame(browser, fitEl, page, designW) {
+  const k = () => fitEl.clientWidth / designW;
+  const fit = () => { browser.style.setProperty('--k', k()); fitEl.style.height = Math.ceil(page.offsetHeight * k()) + 'px'; };
+  fit();
+  ScrollTrigger.addEventListener('refreshInit', fit);
+  const inFrame = (el, fx, fy) => {
+    let x = 0, y = 0, n = el;
+    while (n && n !== fitEl) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+    return { x: fitEl.offsetLeft + (x + el.offsetWidth * fx) * k() - 4, y: fitEl.offsetTop + (y + el.offsetHeight * fy) * k() - 3 }; // minus cursor tip
+  };
+  return { k, inFrame };
+}
+
 function buildMoment(root) {
   const type = root.dataset.moment;
   const tl = gsap.timeline({ paused: true, defaults: { ease: 'power2.out' } });
@@ -87,19 +102,41 @@ function buildMoment(root) {
       .to({}, { duration: .4 });
   }
 
-  if (type === 'serp' || type === 'seo') {
+  if (type === 'serp') {
+    const browser = $('.browser--serp', v), f = fitFrame(browser, $('.store-fit', v), $('.g', v), 1200);
+    const q = $('.mo-q', v), caret = $('.g-search .caret', v), cursor = $('.st-cursor', v), btn = $('.g-search__btn', v);
+    const stats = $('.g-stats', v), ad = $('.g-ad', v), shop = $('.g-shop', v), cards = $$('.g-pc', v), org = $('.g-org', v), vid = $('.g-vid', v);
+    const prog = $('.g-prog i', v), play = $('.g-play', v);
+    const at = (fx, fy) => f.inFrame(btn, fx, fy);
+    tl.fromTo(browser, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: .4 }, 0)
+      .fromTo([stats, ad, shop, org, vid], { opacity: 0, y: 24 }, { opacity: 0, y: 24, duration: .01 }, 0)
+      // 1 they search: query types out, cursor hits search
+      .add(typer(q).duration(.6), .3)
+      .fromTo(cursor, { opacity: 0, x: () => at(.5, .5).x + 70, y: () => at(.5, .5).y + 60 }, { opacity: 1, duration: .1 }, .72)
+      .to(cursor, { x: () => at(.5, .55).x, y: () => at(.5, .55).y, duration: .28, ease: 'power2.inOut' }, .76)
+      .to(btn, { scale: .82, backgroundColor: 'rgba(26,115,232,.15)', duration: .06, yoyo: true, repeat: 1 }, 1.05)
+      .to(caret, { opacity: 0, duration: .05 }, 1.05)
+      .to(cursor, { opacity: 0, duration: .15 }, 1.2)
+      // 2 your ad answers first
+      .to([stats, ad], { opacity: 1, y: 0, duration: .4, stagger: .08 }, 1.15)
+      .fromTo(ad, { boxShadow: '0 0 0 0px rgba(215,255,0,0)' }, { boxShadow: '0 0 0 4px rgba(215,255,0,1), 0 0 0 5px rgba(11,13,0,.25)', duration: .3 }, 1.6)
+      // 3 Shopping & PMax own the page
+      .to(shop, { opacity: 1, y: 0, duration: .35 }, 2.0)
+      .fromTo(cards, { opacity: 0, y: 30, scale: .94 }, { opacity: 1, y: 0, scale: 1, duration: .4, stagger: .08, ease: 'back.out(1.4)' }, 2.1)
+      .to(cards, { boxShadow: '0 0 0 3px rgba(215,255,0,1)', duration: .2, stagger: .06 }, 2.6)
+      .to(org, { opacity: .45, y: 0, duration: .35 }, 2.75)
+      // 4 video keeps you top of mind
+      .to(vid, { opacity: 1, y: 0, duration: .4 }, 3.0)
+      .to(play, { scale: 0, opacity: 0, duration: .2 }, 3.35)
+      .fromTo(prog, { scaleX: 0 }, { scaleX: .72, duration: .6, ease: 'none' }, 3.4)
+      .to({}, { duration: .3 });
+  }
+
+  if (type === 'seo') {
     const q = $('.mo-q', v);
     tl.fromTo($('.browser', v), { y: 60, opacity: 0, rotateX: 18 }, { y: 0, opacity: 1, rotateX: 0, duration: .6 }, 0)
       .add(typer(q).duration(.8), .3);
-    if (type === 'serp') {
-      tl.fromTo('.serp .r--ad', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: .5 }, 1.2)
-        .to('.serp .r--ad', { borderColor: '#d7ff00', duration: .3 }, 1.6)
-        .fromTo('.serp .shop', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: .4, stagger: .08 }, 2)
-        .fromTo('.serp .r--org', { opacity: 0 }, { opacity: .5, duration: .4 }, 2.5)
-        .fromTo('.serp .r--yt', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: .5 }, 3)
-        .to('.serp .r--yt .yt', { backgroundColor: '#d7ff00', duration: .3 }, 3.4)
-        .to({}, { duration: .3 });
-    } else {
+    {
       const rows = $$('.seo .r', v), you = $('.r--you', v), others = rows.filter((r) => r !== you);
       const gap = () => parseFloat(getComputedStyle(you.parentElement).rowGap) || 0;
       const up = () => -others.reduce((h, r) => h + r.offsetHeight + gap(), 0);   // you climb past every other row
@@ -147,20 +184,11 @@ function buildMoment(root) {
   if (type === 'build') {
     // Demo store: laid out at 1200px, scaled to the browser frame
     const browser = $('.browser--build', v), fitEl = $('.store-fit', v), store = $('.store', v);
-    const k = () => fitEl.clientWidth / 1200;
-    const fit = () => { browser.style.setProperty('--k', k()); /* inherited by the store and the toast */ fitEl.style.height = Math.ceil(store.offsetHeight * k()) + 'px'; };
-    fit();
-    ScrollTrigger.addEventListener('refreshInit', fit);
+    const { k, inFrame } = fitFrame(browser, fitEl, store, 1200); // --k is inherited by the store and the toast
 
     const regions = $$('.sr', store), txt = $$('.st-x', store), imgs = $$('.st-img', store);
     const btn = $('.st-card .st-btn--cart', store), cartN = $('.st-cart__n', store);
     const cursor = $('.st-cursor', v), toast = $('.st-toast', v), speed = $('.st-speed', v), speedN = $('.st-speed__n', v);
-    // position of an element inside the scaled store, in browser-frame pixels (offset* ignores transforms)
-    const inFrame = (el, fx, fy) => {
-      let x = 0, y = 0, n = el;
-      while (n && n !== fitEl) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
-      return { x: fitEl.offsetLeft + (x + el.offsetWidth * fx) * k() - 4, y: fitEl.offsetTop + (y + el.offsetHeight * fy) * k() - 3 }; // minus cursor tip
-    };
     const cart = { v: 0 }, score = { v: 0 };
 
     tl.fromTo(browser, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: .4 }, 0)

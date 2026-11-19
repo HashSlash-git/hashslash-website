@@ -77,18 +77,72 @@ const products = [
         </div>
       )}
 
-      {(type === 'serp' || type === 'seo') && (
+      {type === 'serp' && (
+        <div class="browser browser--fit browser--serp">
+          <div class="browser__bar"><i></i><i></i><i></i><span class="browser__url"><svg viewBox="0 0 24 24"><path d={IC.lock} /></svg>google.com/search?q=tech+gifts+under+5000</span></div>
+          <div class="store-fit">
+            <div class="g">
+              <div class="g-top">
+                <span class="g-logo" aria-hidden="true"><b>G</b><b>o</b><b>o</b><b>g</b><b>l</b><b>e</b></span>
+                <div class="g-search">
+                  <svg viewBox="0 0 24 24"><path d={IC.search} /></svg>
+                  <span class="mo-q" data-q="tech gifts under 5000"></span><span class="caret"></span>
+                  <span class="g-search__btn"><svg viewBox="0 0 24 24"><path d={IC.search} /></svg></span>
+                </div>
+              </div>
+              <div class="g-tabs"><span class="is-on">All</span><span>Shopping</span><span>Images</span><span>Videos</span><span>News</span><span>More</span></div>
+              <div class="g-res">
+                <p class="gr g-stats">About 1,24,00,000 results (0.38 seconds)</p>
+                <div class="gr g-ad">
+                  <b class="g-spon">Sponsored</b>
+                  <span class="g-site"><span class="g-fav"><svg viewBox="0 0 24 24"><path d={IC.bag} /></svg></span><span><b>Stockroom</b><i>https://www.stockroom.demo › tech-gifts</i></span></span>
+                  <span class="g-title">Tech Gifts Under ₹5,000 | Up to 50% Off | Shop Stockroom</span>
+                  <span class="g-desc">Headphones, smartwatches and speakers from top brands. Free shipping over ₹999 · Easy 7-day returns · Pay with UPI.</span>
+                  <span class="g-rate"><span class="st-stars">{[0, 1, 2, 3, 4].map(() => <svg viewBox="0 0 24 24"><path d={STAR} /></svg>)}</span>Rating for stockroom.demo: 4.8 (4,200)</span>
+                  <span class="g-links"><span>Headphones</span><span>Smartwatches</span><span>Speakers</span><span>Today's Deals</span></span>
+                </div>
+                <div class="gr g-shop">
+                  <b class="g-spon">Sponsored · Products for "tech gifts under 5000"</b>
+                  <div class="g-shop__row">
+                    {products.slice(0, 4).map(([img, name, r, n, price, mrp]) => (
+                      <div class="g-pc">
+                        <div class="g-pc__img"><img src={`/img/demo-store/${img}.webp`} alt="" width="258" height="156" loading="lazy" decoding="async" /></div>
+                        <span class="g-pc__t">{name}</span>
+                        <span class="g-pc__p"><b>₹{price}</b><s>₹{mrp}</s></span>
+                        <span class="g-pc__s">Stockroom</span>
+                        <span class="g-pc__r"><svg viewBox="0 0 24 24"><path d={STAR} /></svg>{r} ({n}) · Free delivery</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div class="gr g-org">
+                  <span class="g-site"><span class="g-fav g-fav--grey">G</span><span><b>Gadget Guide</b><i>https://gadgetguide.example › gift-ideas</i></span></span>
+                  <span class="g-title g-title--org">25 Best Tech Gifts Under ₹5,000 in 2026</span>
+                  <span class="g-desc">From earbuds to smart lamps, we tested the most popular budget tech gifts so you don't have to…</span>
+                </div>
+                <div class="gr g-vid">
+                  <b class="g-h">Videos</b>
+                  <div class="g-vid__row">
+                    <div class="g-thumb"><img src="/img/demo-store/hero.webp" alt="" width="840" height="372" loading="lazy" decoding="async" /><span class="g-play"></span><span class="g-dur">0:15</span><span class="g-prog"><i></i></span></div>
+                    <div class="g-vid__meta">
+                      <span class="g-title">Stockroom Seasonal Sale: up to 50% off tech gifts</span>
+                      <span class="g-vid__by">YouTube · Stockroom · 3 days ago</span>
+                      <span class="g-desc">Headphones, smartwatches and speakers, delivered free over ₹999.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <svg class="st-cursor" viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-3 6z" /></svg>
+        </div>
+      )}
+
+      {type === 'seo' && (
         <div class="browser">
           <div class="browser__bar"><i></i><i></i><i></i></div>
           <div class="mo-search"><span class="mo-search__g">G</span><span class="mo-q" data-q={typed}></span><span class="caret"></span></div>
-          {type === 'serp' ? (
-            <div class="serp">
-              <div class="r r--ad"><span class="mono r__tag">Sponsored</span><span class="r__url">yourbrand.com</span><span class="r__t">Your brand: exactly what they searched for</span><span class="r__l"></span></div>
-              <div class="r r--shop">{[0, 1, 2, 3].map((i) => <span class={`shop ${i === 0 ? 'shop--you' : ''}`}><b></b><i></i></span>)}</div>
-              <div class="r r--org"><span class="r__t"></span><span class="r__l"></span></div>
-              <div class="r r--yt"><span class="yt"></span><span class="r__l"></span></div>
-            </div>
-          ) : (
+          {(
             <div class="seo">
               <span class="seo__rank mono">Position <b class="seo__num">28</b></span>
               <div class="seo__list">
