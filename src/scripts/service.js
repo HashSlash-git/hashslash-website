@@ -45,7 +45,7 @@ export function initService() {
       pin: true, scrub: 1, animation: tl, invalidateOnRefresh: true, anticipatePin: 1,
       onUpdate: (self) => {
         const i = Math.min(steps.length - 1, Math.floor(self.progress * steps.length * 0.999));
-        steps.forEach((s, k) => s.classList.toggle('is-on', k <= i));
+        steps.forEach((s, k) => { s.classList.toggle('is-on', k <= i); s.classList.toggle('is-current', k === i); });
         bar.style.transform = `scaleX(${self.progress})`;
       }
     });

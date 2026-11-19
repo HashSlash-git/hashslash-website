@@ -87,7 +87,7 @@
 .crumbs [aria-current] { color: var(--text); }
 .pill { display: inline-block; padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 999px; font-size: .82rem; color: #c9ccc6; }
 .tool { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px 10px 12px; border: 1px solid var(--line-2); border-radius: 999px; background: var(--bg-2); }
-.tool img { width: 18px; height: 18px; filter: invert(1); }
+.tool img { flex: none; max-width: none; width: 18px; height: 18px; filter: invert(1); } /* max-width:none: without a label the global img max-width collapsed the icon to 0 */
 .tool em { font-style: normal; font-size: .88rem; }
 .tool.is-fallback img { display: none; }
 .tool.is-fallback { padding-left: 16px; }
@@ -106,10 +106,9 @@
 .svc-hero__for { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 30px; }
 .svc-hero__for .mono { color: var(--lime); margin-right: 6px; }
 
-.svc-orb { position: relative; aspect-ratio: 1; width: min(100%, 460px); justify-self: center; display: grid; place-items: center; }
+.svc-orb { position: relative; aspect-ratio: 1; width: min(calc(100% - 170px), 460px); justify-self: center; display: grid; place-items: center; container-type: inline-size; } /* side room so labelled pills never leave the screen */
 .svc-orb__ring { position: absolute; inset: 0; border: 1px dashed var(--line-2); border-radius: 50%; animation: spin 40s linear infinite; }
-.svc-orb__item { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform: rotate(calc(360deg / var(--n) * var(--i))) translate(0, -230px); }
-@media (max-width: 1300px) { .svc-orb__item { transform: rotate(calc(360deg / var(--n) * var(--i))) translate(0, -17vw); } }
+.svc-orb__item { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform: rotate(calc(360deg / var(--n) * var(--i))) translate(0, -50cqw); } /* radius = half the orb, at every size */
 .svc-orb__item .tool--orb { transform: translate(-50%, -50%) rotate(calc(-360deg / var(--n) * var(--i))); animation: counter 40s linear infinite; display: inline-flex; white-space: nowrap; }
 @keyframes counter { from { rotate: 0deg; } to { rotate: -360deg; } }
 .svc-orb__core {
@@ -521,9 +520,11 @@
   .svc-hero__grid { grid-template-columns: 1fr; }
   .svc-hero__title { font-size: min(9vw, calc(88vw / var(--w, 8))); }
   .svc-orb { width: min(80vw, 360px); }
-  .svc-orb__item { transform: rotate(calc(360deg / var(--n) * var(--i))) translate(0, min(-40vw, -180px)); }
   .moment__stage { grid-template-columns: 1fr; grid-template-rows: auto 1fr; align-items: start; gap: 16px; }
-  .moment__steps { display: none; }
+  /* phones/tablets: show only the current step as one line, so each stage is still named */
+  .moment__steps li { display: none; padding: 6px 0; border: 0; font-size: 1rem; }
+  .moment__steps li.is-current, .moment__steps:not(:has(.is-current)) li:first-child { display: flex; }
+  .moment__bar { margin-top: 8px; }
   .moment__title { margin: 8px 0 12px; }
   .moment__visual { height: 100%; max-height: 62vh; }
 }
@@ -536,9 +537,10 @@
   .is-service .sec-head__title, .pairs__title, .incl__title, .signs__title { font-size: min(2.4rem, 8.6vw); font-stretch: 108%; overflow-wrap: anywhere; }
   .svc-hero { min-height: auto; }
   .svc-orb { width: 72vw; margin-top: 10px; }
-  .svc-orb__item { transform: rotate(calc(360deg / var(--n) * var(--i))) translate(0, -36vw); }
   .tool--orb em { display: none; }
   .tool--orb { padding: 10px; }
+  .tool--orb.is-fallback { padding: 8px 12px; }               /* no icon available (e.g. Klaviyo): show the name */
+  .tool--orb.is-fallback em { display: inline; font-size: .72rem; }
   .signs, .incl, .calc { grid-template-columns: 1fr; }
   .incl__side { position: static; }
   .pkgs__grid, .calc__outs { grid-template-columns: 1fr; }
