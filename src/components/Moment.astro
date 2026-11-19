@@ -56,6 +56,46 @@ const ADS = [
 ];
 const feed = moment.variant === 'feed';
 
+/* "flow" moment: a workflow builder running one contact through the service's five steps.
+   Step labels come from the service (WordPress); details/icons are matched by label, with a generic fallback. */
+const FLOW: Record<string, [string, string]> = {
+  'Ad / form': ['meta', 'Meta lead form submitted'], 'CRM': ['hubspot', 'Contact and deal created'], 'Auto-assign': ['@user', 'Round-robin to sales rep'],
+  'WhatsApp': ['whatsapp', 'Template sent in 4 sec'], 'Closed deal': ['@check', 'Deal stage moved to Won'],
+  'Trigger': ['shopify', 'New order on Shopify'], 'Validate': ['@shield', 'Address and GST checked'], 'Sync tools': ['googlesheets', 'Sheets, Zoho and Tally'],
+  'Notify team': ['slack', 'Posted in #orders'], 'Done': ['@check', 'Logged with 0 errors'],
+  'Question': ['whatsapp', 'Customer asks on WhatsApp'], 'AI agent': ['openai', 'Understands the intent'], 'Your knowledge': ['@book', 'Searches your docs and orders'],
+  'Answer / action': ['@bolt', 'Replies with order status'], 'Human handoff': ['@user', 'Escalates when unsure'],
+  'Sign-up': ['@form', 'Joined via site pop-up'], 'Welcome': ['gmail', 'Email 1 with 10% code'], 'Browse / cart': ['shopify', 'Viewed Wave Pro, added to cart'],
+  'Reminder': ['gmail', 'Cart email after 2 hours'], 'Purchase': ['@check', 'Order #4821 placed'],
+  'Ad': ['meta', 'Lead ad clicked'], 'Landing page': ['@form', 'Form completed'], 'Qualify': ['@filter', 'Budget and timeline check'],
+  'Instant follow-up': ['whatsapp', 'WhatsApp in 30 sec'], 'Booked call': ['googlecalendar', 'Slot confirmed for Tue 11:00'],
+  'New lead': ['@form', 'From website form'], 'Score': ['@filter', 'Lead score 72'], 'Nurture': ['gmail', '3-email sequence'],
+  'Sales-ready': ['hubspot', 'Score above 80, rep alerted'], 'Customer': ['@check', 'Deal won'],
+  '1st order': ['shopify', 'Order delivered'], 'Onboard': ['gmail', 'How-to guide and review ask'], 'Replenish': ['whatsapp', 'Reminder on day 25'],
+  'Loyalty': ['@star', 'Points and VIP tier'], 'Advocate': ['@share', 'Referral link shared']
+};
+const GLYPH: Record<string, string> = {
+  user: IC.user, check: 'M5 12l5 5 9-10', shield: IC.shield, book: 'M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z M5 17a3 3 0 0 1 3-3h11',
+  bolt: IC.bolt, form: 'M5 3h14v18H5z M8 8h8 M8 12h8 M8 16h5', filter: 'M4 5h16l-6 7v6l-4 2v-8z', star: STAR, share: 'M18 8a3 3 0 1 0 0-.01 M6 15a3 3 0 1 0 0-.01 M18 21a3 3 0 1 0 0-.01 M8.6 13.5l6.8-4 M8.6 16.5l6.8 4'
+};
+const flowNodes = (moment.nodes || []).slice(0, 5).map((label: string, i: number, all: string[]) => {
+  const [icon, detail] = FLOW[label] || ['@bolt', `Step ${i + 1}`];
+  return { label, detail, icon, kind: i === 0 ? 'Trigger' : i === all.length - 1 ? 'Outcome' : 'Action' };
+});
+const followUp = flowNodes[3] || flowNodes[flowNodes.length - 1];
+const lastNode = flowNodes[flowNodes.length - 1];
+const MSG: Record<string, string> = {
+  'WhatsApp': "Hi Priya, thanks for your enquiry. Rahul from our team will call you within 15 minutes. Prefer a time? stockroom.demo/book",
+  'Notify team': 'New order #4821 from Priya Sharma, ₹2,999, prepaid. Ready to pack.',
+  'Answer / action': 'Hi Priya, order #4821 is out for delivery and arrives today by 7 pm.',
+  'Reminder': 'Priya, you left Wave Pro in your cart. It is still 40% off today.',
+  'Instant follow-up': 'Hi Priya, thanks for your interest. Pick a 15-minute slot that suits you: stockroom.demo/call',
+  'Sales-ready': 'Priya Sharma is sales-ready (score 84). Call within the hour.',
+  'Loyalty': "Priya, you've unlocked VIP: free shipping and early access to every sale."
+};
+const followMsg = MSG[followUp?.label] || `${followUp?.label}: ${followUp?.detail}`;
+const NODE_W = 160, NODE_STEP = 196;
+
 /* "dashboard" moment: Stockroom growth dashboard, October. All figures illustrative.
    KPI: [label, final value, decimals, prefix, suffix, change, change is good] */
 const SRC = [['shopify', 'Shopify'], ['meta', 'Meta Ads'], ['googleads', 'Google Ads'], ['googleanalytics', 'GA4'], ['whatsapp', 'WhatsApp'], ['razorpay', 'Razorpay']];
@@ -296,9 +336,58 @@ const products = [
       )}
 
       {type === 'flow' && (
-        <div class="flow">
-          <svg class="flow__svg"></svg>
-          <div class="flow__nodes">{(moment.nodes || []).map((n, i) => <span class={`node ${i === moment.nodes.length - 1 ? 'node--end' : ''}`}><span class="mono">{String(i + 1).padStart(2, '0')}</span>{n}</span>)}</div>
+        <div class="browser browser--fit browser--flow">
+          <div class="browser__bar"><i></i><i></i><i></i><span class="browser__url"><svg viewBox="0 0 24 24"><path d={IC.lock} /></svg>app.stockroom.demo/workflows</span></div>
+          <div class="store-fit">
+            <div class="wf">
+              <div class="wf-top">
+                <span class="db-brand"><span class="adcard__logo"><svg viewBox="0 0 24 24"><path d={IC.bag} /></svg></span><b>Stockroom</b><i>Workflows</i></span>
+                <span class="wf-name">{moment.label}</span>
+                <span class="wf-live"><span class="wf-switch"><i></i></span><span class="wf-live__t"><b class="wf-live__off">Draft</b><b class="wf-live__on">Live</b></span></span>
+                <span class="wf-runs">Runs today <b class="wf-runs__n">1,283</b></span>
+              </div>
+              <div class="wf-canvas">
+                <svg class="wf-wires" viewBox={`0 0 ${NODE_STEP * 4 + NODE_W} 150`}>
+                  {flowNodes.slice(1).map((_, i) => (
+                    <g>
+                      <path class="wf-wire" d={`M${i * NODE_STEP + NODE_W} 75 H${(i + 1) * NODE_STEP - 6}`} />
+                      <path class="wf-wire wf-wire--lit" d={`M${i * NODE_STEP + NODE_W} 75 H${(i + 1) * NODE_STEP - 6}`} pathLength="1" />
+                      <path class="wf-arrow" d={`M${(i + 1) * NODE_STEP - 12} 69 l7 6 -7 6`} />
+                    </g>
+                  ))}
+                </svg>
+                {flowNodes.map((n, i) => (
+                  <div class="wf-node" style={`left:${i * NODE_STEP}px`}>
+                    <span class={`wf-node__ic ${n.icon.startsWith('@') ? '' : 'wf-node__ic--brand'}`}>
+                      {n.icon.startsWith('@')
+                        ? <svg viewBox="0 0 24 24"><path d={GLYPH[n.icon.slice(1)]} /></svg>
+                        : <img src={`https://cdn.jsdelivr.net/npm/simple-icons@13.0.0/icons/${n.icon}.svg`} alt="" width="18" height="18" loading="lazy" />}
+                    </span>
+                    <span class="wf-node__k">{n.kind}</span>
+                    <b class="wf-node__t">{n.label}</b>
+                    <span class="wf-node__d">{n.detail}</span>
+                    <span class="wf-node__ok"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10" /></svg>{[0, 120, 340, 410, 180][i]} ms</span>
+                  </div>
+                ))}
+                <span class="wf-token"></span>
+              </div>
+              <div class="wf-bottom">
+                <div class="wf-card wf-log">
+                  <header><b>Run log</b><span>Run #1,284</span></header>
+                  {flowNodes.map((n, i) => <div class="wf-log__row"><time>10:42:0{i + 1}.{[112, 232, 574, 984, 164][i]}</time><span class="wf-log__ok">✓</span><b>{n.label}</b><span>{n.detail}</span></div>)}
+                  <div class="wf-log__row wf-log__done">Completed in 1.4 s · 0 errors · nothing left in the queue</div>
+                </div>
+                <div class="wf-card wf-contact">
+                  <header><b>Contact</b><span class="wf-stage"><b class="wf-stage__a">New</b><b class="wf-stage__b">{lastNode?.label}</b></span></header>
+                  <div class="wf-person"><span class="wf-avatar">PS</span><span><b>Priya Sharma</b><i>Bengaluru · via {flowNodes[0]?.label}</i></span></div>
+                  <div class="wf-msg">
+                    <span class="wf-msg__h">{followUp?.label} · just now</span>
+                    <p>{followMsg}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 

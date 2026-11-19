@@ -231,34 +231,48 @@ function buildMoment(root) {
   }
 
   if (type === 'flow') {
-    const wrap = $('.flow', v), svg = $('.flow__svg', v), nodes = $$('.node', v);
-    const ns = 'http://www.w3.org/2000/svg';
-    const paths = nodes.slice(1).map(() => { const p = document.createElementNS(ns, 'path'); p.setAttribute('class', 'flow__path'); svg.appendChild(p); return p; });
-    const pulses = nodes.slice(1).map(() => { const p = document.createElementNS(ns, 'path'); p.setAttribute('class', 'flow__pulse'); svg.appendChild(p); return p; });
-    const layout = () => {
-      const b = wrap.getBoundingClientRect();
-      svg.setAttribute('viewBox', `0 0 ${b.width} ${b.height}`);
-      nodes.slice(1).forEach((n, i) => {
-        const a = nodes[i].getBoundingClientRect(), c = n.getBoundingClientRect();
-        const x1 = a.left + a.width / 2 - b.left, y1 = a.top + a.height / 2 - b.top;
-        const x2 = c.left + c.width / 2 - b.left, y2 = c.top + c.height / 2 - b.top;
-        const horiz = Math.abs(x2 - x1) > Math.abs(y2 - y1);
-        const d = horiz ? `M${x1} ${y1} C ${(x1 + x2) / 2} ${y1}, ${(x1 + x2) / 2} ${y2}, ${x2} ${y2}` : `M${x1} ${y1} C ${x1} ${(y1 + y2) / 2}, ${x2} ${(y1 + y2) / 2}, ${x2} ${y2}`;
-        paths[i].setAttribute('d', d); pulses[i].setAttribute('d', d);
-        const L = paths[i].getTotalLength();
-        paths[i].style.strokeDasharray = L;
-        paths[i].dataset.len = L;
-      });
+    // Workflow builder: one contact runs through the service's steps
+    const browser = $('.browser--flow', v);
+    fitFrame(browser, $('.store-fit', v), $('.wf', v), 1000);
+    const nodes = $$('.wf-node', v), oks = $$('.wf-node__ok', v), lit = $$('.wf-wire--lit', v), rows = $$('.wf-log__row', v);
+    const token = $('.wf-token', v), runs = $('.wf-runs__n', v), run = { n: 0 };
+    // the token rides the connectors: it enters a node at its left port and leaves from its right port
+    const portIn = (i) => nodes[i].offsetLeft - 4, portOut = (i) => nodes[i].offsetLeft + nodes[i].offsetWidth + 4;
+    const hit = (i, t) => {
+      // token arrives at node i: highlight it, tick it, write the log line
+      tl.to(token, { x: () => (i ? portIn(i) : portOut(0)), duration: i ? .32 : .01, ease: 'power1.inOut' }, t - (i ? .32 : 0));
+      if (i > 0 && i < nodes.length - 1) tl.set(token, { x: () => portOut(i) }, t + .22);
+      tl
+        .to(nodes[i], { borderColor: '#1d211c', boxShadow: '0 0 0 3px rgba(215,255,0,1)', duration: .15 }, t)
+        .to(nodes[i], { boxShadow: '0 0 0 0px rgba(215,255,0,0)', borderColor: '#cfe3c8', duration: .3 }, t + .3)
+        .fromTo(oks[i], { opacity: 0, scale: .7 }, { opacity: 1, scale: 1, duration: .2, ease: 'back.out(2)' }, t + .05)
+        .fromTo(rows[i], { opacity: 0, x: -8 }, { opacity: 1, x: 0, duration: .2 }, t + .05);
+      if (i > 0) tl.fromTo(lit[i - 1], { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: .32, ease: 'power1.inOut' }, t - .32);
     };
-    layout();
-    ScrollTrigger.addEventListener('refreshInit', layout);
-    nodes.forEach((n, i) => {
-      tl.fromTo(n, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: .4, ease: 'back.out(2)' }, i * .75);
-      if (i > 0) tl.fromTo(paths[i - 1], { strokeDashoffset: () => +paths[i - 1].dataset.len }, { strokeDashoffset: 0, duration: .5, ease: 'none' }, i * .75 - .45);
-    });
-    tl.to(nodes[nodes.length - 1], { backgroundColor: '#d7ff00', color: '#0b0d00', boxShadow: '0 0 40px rgba(215,255,0,.45)', duration: .4 }, 3.4)
-      .fromTo(pulses, { opacity: 0 }, { opacity: 1, duration: .3 }, 3.5)
-      .to({}, { duration: .3 });
+    tl.fromTo(browser, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: .4 }, 0)
+      .fromTo(nodes, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .3, stagger: .06 }, .2)
+      .fromTo('.wf-contact', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .3 }, .7)
+      .fromTo(token, { opacity: 0, scale: .4 }, { opacity: 1, scale: 1, duration: .2 }, .75);
+    // 1 something happens
+    hit(0, .85);
+    // 2 the system reacts instantly: goes live, steps 2 and 3 fire
+    tl.to('.wf-switch', { backgroundColor: '#2fbf4a', duration: .2 }, 1.1)
+      .to('.wf-switch i', { x: 20, duration: .2 }, 1.1)
+      .to('.wf-live__off', { opacity: 0, duration: .15 }, 1.1)
+      .to('.wf-live__on', { opacity: 1, duration: .15 }, 1.15);
+    hit(1, 1.6);
+    hit(2, 2.0);
+    // 3 the right follow-up fires
+    hit(3, 2.5);
+    tl.fromTo('.wf-msg', { opacity: 0, y: 12, scale: .96 }, { opacity: 1, y: 0, scale: 1, duration: .3, ease: 'back.out(1.6)' }, 2.6);
+    // 4 nothing falls through: outcome, stage moves, run counted
+    hit(4, 3.2);
+    tl.to('.wf-stage__a', { opacity: 0, duration: .15 }, 3.3)
+      .fromTo('.wf-stage__b', { opacity: 0, scale: .8 }, { opacity: 1, scale: 1, duration: .25, ease: 'back.out(2)' }, 3.3)
+      .fromTo(rows[rows.length - 1], { opacity: 0 }, { opacity: 1, duration: .25 }, 3.45)
+      .fromTo(run, { n: 0 }, { n: 1, duration: .05, onUpdate: () => { runs.textContent = run.n > .5 ? '1,284' : '1,283'; } }, 3.45)
+      .to(token, { opacity: 0, duration: .2 }, 3.6)
+      .to({}, { duration: .35 });
   }
 
   if (type === 'dashboard') {
