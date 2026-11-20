@@ -1,0 +1,1 @@
+import{i as e,t as r}from"./core.D9hPQAzO.js";e();const a=new URLSearchParams(location.search).get("type")==="call"?"call":"enquiry";document.querySelectorAll("[data-msg]").forEach(t=>{t.hidden=t.getAttribute("data-msg")!==a});r("thank_you_view",{lead_type:a});
