@@ -371,13 +371,44 @@ function buildMoment(root) {
   }
 
   if (type === 'ab') {
-    tl.fromTo('.ab__v', { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: .5, stagger: .15 }, 0)
-      .fromTo('.ab__v--b .btnx', { backgroundColor: 'rgba(255,255,255,.15)' }, { backgroundColor: '#d7ff00', duration: .4 }, 1)
-      .fromTo('.ab__v--a .ab__meter span', { scaleX: 0 }, { scaleX: .42, duration: 1.2, ease: 'none' }, 1.6)
-      .fromTo('.ab__v--b .ab__meter span', { scaleX: 0 }, { scaleX: .74, duration: 1.2, ease: 'none' }, 1.6)
-      .fromTo('.ab__win', { scale: 0, rotate: -20 }, { scale: 1, rotate: -6, duration: .4, ease: 'back.out(2.5)' }, 2.9)
-      .to('.ab__v--a', { opacity: .2, scale: .92, filter: 'grayscale(1)', duration: .5 }, 3.2)
-      .to('.ab__v--b', { scale: 1.06, boxShadow: '0 0 0 2px #d7ff00', duration: .5 }, 3.2)
+    // Experiment dashboard laid out at 1000px: funnel drop-off, hypothesis, 50/50 split, winner shipped
+    const browser = $('.browser--xp', v);
+    fitFrame(browser, $('.store-fit', v), $('.xp', v), 1000);
+    const steps = $$('.xp-step', v), drop = $('.xp-step--drop', v), dropTag = $('.xp-drop', v), hyp = $('.xp-hyp', v);
+    const varA = $('.xp-var--a', v), varB = $('.xp-var--b', v), res = $('.xp-res', v), ship = $('.xp-res__ship', v);
+    const status = $('.xp-status', v), statusT = $('.xp-status__t', v), dot = $('.xp-status i', v);
+    const setStatus = (t, c) => () => { statusT.textContent = t; dot.style.background = c; };
+    const count = (el, to, dec, suf, at, dur) => {
+      const o = { n: 0 };
+      tl.fromTo(o, { n: 0 }, { n: to, duration: dur, ease: 'none', onUpdate: () => { el.textContent = (dec ? o.n.toFixed(dec) : Math.round(o.n).toLocaleString('en-IN')) + suf; } }, at);
+    };
+    tl.fromTo(browser, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: .4 }, 0)
+      .fromTo([dropTag, hyp, varA, varB, res, ship], { opacity: 0 }, { opacity: 0, duration: .01 }, 0)
+      // 1 find the drop-off
+      .fromTo(steps, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .3, stagger: .08 }, .2)
+      .fromTo(drop, { scale: 1 }, { scale: 1.04, duration: .2, yoyo: true, repeat: 1 }, .75)
+      .fromTo(dropTag, { opacity: 0, y: -6 }, { opacity: 1, y: 0, duration: .25 }, .8)
+      // 2 form a hypothesis
+      .fromTo(hyp, { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: .4, ease: 'back.out(1.4)' }, 1.2)
+      .fromTo(hyp, { boxShadow: '0 0 0 0 rgba(215,255,0,0)' }, { boxShadow: '0 0 0 3px rgba(215,255,0,1)', duration: .25, yoyo: true, repeat: 1 }, 1.55)
+      // 3 split the traffic: both versions go live, visitors and rates tick up
+      .fromTo([varA, varB], { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: .35, stagger: .1 }, 2.0)
+      .call(() => (tl.time() >= 2.05 ? setStatus('Running', '#2f9e44') : setStatus('Draft', '#9aa1b0'))(), null, 2.05)
+      .fromTo(res, { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: .35 }, 2.3);
+    [varA, varB].forEach((card, i) => {
+      count($('.xp-vis', card), i ? 12514 : 12480, 0, '', 2.3, 1.2);
+      const cr = $('.xp-cr', card); count(cr, +cr.dataset.to, 1, '%', 2.3, 1.2);
+    });
+    count($('.xp-res__lift span', v), 41.9, 1, '', 2.3, 1.2);
+    const prob = $('.xp-res__prob', v), pb = { n: 50 };
+    tl.fromTo(pb, { n: 50 }, { n: 98, duration: 1.2, ease: 'power1.in', onUpdate: () => { prob.textContent = Math.round(pb.n) + '%'; } }, 2.3)
+      .fromTo($('.xp-res__bar i', v), { width: '50%' }, { width: '98%', duration: 1.2, ease: 'power1.in' }, 2.3)
+      // 4 ship the winner (status text follows the playhead in both scroll directions)
+      .call(() => (tl.time() >= 3.6 ? setStatus('Winner: B', '#2f9e44') : setStatus('Running', '#2f9e44'))(), null, 3.6)
+      .to(varA, { opacity: .35, scale: .97, filter: 'grayscale(1)', duration: .4 }, 3.6)
+      .to(varB, { boxShadow: '0 0 0 3px rgba(215,255,0,1)', duration: .3 }, 3.6)
+      .to(status, { backgroundColor: '#d3f9d8', duration: .3 }, 3.6)
+      .fromTo(ship, { opacity: 0, scale: .9 }, { opacity: 1, scale: 1, duration: .35, ease: 'back.out(2)' }, 3.75)
       .to({}, { duration: .3 });
   }
   return tl;

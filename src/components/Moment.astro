@@ -80,6 +80,9 @@ const GSC_Q: [string, string, string, string, string][] = [
 ];
 const gscPath = (ys: number[]) => ys.map((y, i) => `${i ? 'L' : 'M'}${Math.round(i * 916 / (ys.length - 1))} ${y + 8}`).join(' ');
 
+/* "ab" moment: an experiment on Loomline's product page. All figures illustrative. [step, share of visitors] */
+const XP_FUNNEL: [string, string][] = [['Product page', '100%'], ['Add to bag', '3.1%'], ['Checkout', '1.7%'], ['Purchase', '1.1%']];
+
 /* "targeting" moment: LinkedIn Campaign Manager for a made-up B2B brand, Clearpath Analytics.
    Criteria labels come from the service (WordPress); values are matched by label. Audience sizes are illustrative. */
 const TGT: Record<string, string[]> = {
@@ -572,15 +575,63 @@ const products = [
       )}
 
       {type === 'ab' && (
-        <div class="ab">
-          {['A', 'B'].map((v) => (
-            <div class={`ab__v ab__v--${v.toLowerCase()}`}>
-              <span class="mono ab__label">Variant {v}</span>
-              <div class="ab__page"><span class="l1"></span><span class="l2"></span><span class={`btnx ${v === 'B' ? 'btnx--b' : ''}`}></span></div>
-              <div class="ab__meter"><span></span></div>
-              {v === 'B' && <span class="ab__win mono">Ship it</span>}
+        <div class="browser browser--fit browser--xp">
+          <div class="browser__bar"><i></i><i></i><i></i><span class="browser__url"><svg viewBox="0 0 24 24"><path d={IC.lock} /></svg>app.experiments.demo/loomline/pdp-buy-box</span></div>
+          <div class="store-fit">
+            <div class="xp">
+              <div class="xp-top"><b>Experiments</b><span class="xp-crumb">Loomline › Product page: buy box above the fold</span><span class="xp-status"><i></i><em class="xp-status__t">Draft</em></span></div>
+              <div class="xp-funnel">
+                {XP_FUNNEL.map(([label, pct], i) => (
+                  <div class={`xp-step ${i === 1 ? 'xp-step--drop' : ''}`}><span>{label}</span><b>{pct}</b><span class="xp-step__bar"><i style={`width:${pct}`}></i></span></div>
+                ))}
+                <span class="xp-drop">96.9% leave without adding to bag</span>
+              </div>
+              <div class="xp-grid">
+                {['A', 'B'].map((v) => (
+                  <div class={`xp-var xp-var--${v.toLowerCase()}`}>
+                    <div class="xp-var__h"><b>{v === 'A' ? 'A · Control' : 'B · Buy box up top'}</b><span class="xp-split">50%</span></div>
+                    <div class="xp-pdp">
+                      <div class="xp-pdp__nav"><b>Loomline</b><span></span></div>
+                      <div class="xp-pdp__img"><img src="/img/demo-fashion/tote.webp" alt="" width="240" height="240" loading="lazy" decoding="async" />{v === 'B' && <span class="xp-pdp__off">27% off</span>}</div>
+                      <b class="xp-pdp__t">Full-Grain Leather Tote, Cognac</b>
+                      {v === 'A' ? (
+                        <>
+                          <span class="xp-pdp__lines"><i></i><i></i><i></i><i></i></span>
+                          <span class="xp-pdp__fold">fold</span>
+                          <span class="xp-pdp__p">₹3,999</span>
+                        </>
+                      ) : (
+                        <>
+                          <span class="xp-pdp__p"><b>₹3,999</b><s>₹5,499</s><em>★ 4.8 (1,240)</em></span>
+                          <span class="xp-pdp__trust">Delivery by Fri · Free 15-day returns · COD</span>
+                          <span class="xp-pdp__buy">Add to bag · ₹3,999</span>
+                        </>
+                      )}
+                    </div>
+                    <div class="xp-var__stats">
+                      <span>Visitors<b class="xp-vis">0</b></span>
+                      <span>Add to bag<b class="xp-cr" data-to={v === 'A' ? '3.1' : '4.4'}>0.0%</b></span>
+                    </div>
+                  </div>
+                ))}
+                <div class="xp-side">
+                  <div class="xp-card xp-hyp">
+                    <span class="xp-card__k">Hypothesis</span>
+                    <p>On mobile, price, delivery and the button sit below the fold. Moving them up top will lift add-to-bag.</p>
+                    <span class="xp-hyp__m">Primary metric: add-to-bag rate</span>
+                  </div>
+                  <div class="xp-card xp-res">
+                    <span class="xp-card__k">Result</span>
+                    <b class="xp-res__lift">+<span>0.0</span>%</b>
+                    <span class="xp-res__lbl">B vs A, add-to-bag rate</span>
+                    <span class="xp-res__row">Chance B beats A<em class="xp-res__prob">50%</em></span>
+                    <span class="xp-res__bar"><i></i></span>
+                    <span class="xp-res__ship">✓ B shipped to 100% of traffic</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          ))}
+          </div>
         </div>
       )}
     </div>

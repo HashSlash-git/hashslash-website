@@ -697,6 +697,62 @@ a.case:hover .case__img { transform: scale(1.05); }
 .g-prog { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: rgba(255,255,255,.25); }
 .g-prog i { position: absolute; inset: 0; transform-origin: 0 50%; transform: scaleX(0); background: #f00; }
 .g-vid__by { font-size: 13px; color: #70757a; }
+/* ---- A/B experiment dashboard (laid out at 1000px, scaled by --k) ---- */
+.xp { width: 1000px; transform-origin: 0 0; transform: scale(var(--k, .5)); background: #f6f7f9; color: #1d2433; font-family: Inter, "Segoe UI", Arial, sans-serif; font-stretch: 100%; font-size: 14px; padding-bottom: 22px; }
+.xp-top { display: flex; align-items: center; gap: 14px; padding: 14px 24px; background: #fff; border-bottom: 1px solid #e3e6ec; }
+.xp-top > b { font-size: 17px; }
+.xp-crumb { color: #6b7385; }
+.xp-status { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 99px; background: #eef0f4; font-weight: 700; font-size: 13px; }
+.xp-status i { width: 8px; height: 8px; border-radius: 50%; background: #9aa1b0; }
+.xp-status em { font-style: normal; }
+.xp-funnel { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 18px 24px 0; }
+.xp-step { display: grid; gap: 6px; padding: 12px 14px; background: #fff; border: 1px solid #e3e6ec; border-radius: 10px; }
+.xp-step span:first-child { color: #6b7385; font-size: 13px; }
+.xp-step b { font-size: 22px; }
+.xp-step__bar { height: 6px; border-radius: 3px; background: #eef0f4; overflow: hidden; }
+.xp-step__bar i { display: block; height: 100%; min-width: 3px; background: #4c6ef5; border-radius: 3px; }
+.xp-step--drop { border-color: #f03e3e; box-shadow: 0 0 0 3px rgba(240,62,62,.15); }
+.xp-step--drop b { color: #e03131; }
+.xp-drop { position: absolute; left: 25%; top: 100%; margin: 8px 0 0 -60px; padding: 5px 12px; border-radius: 6px; background: #e03131; color: #fff; font-weight: 700; font-size: 12px; white-space: nowrap; }
+.xp-grid { display: grid; grid-template-columns: 1fr 1fr 300px; gap: 16px; margin: 46px 24px 0; align-items: start; }
+.xp-var { position: relative; display: grid; gap: 10px; padding: 12px; background: #fff; border: 1px solid #e3e6ec; border-radius: 12px; }
+.xp-var__h { display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
+.xp-split { padding: 3px 10px; border-radius: 99px; background: #edf2ff; color: #364fc7; font-weight: 700; font-size: 12px; }
+.xp-pdp { position: relative; height: 330px; overflow: hidden; display: grid; align-content: start; gap: 8px; padding: 0 0 10px; border: 1px solid #eef0f4; border-radius: 14px; background: #fff; }
+.xp-pdp__nav { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid #f1f2f5; font-size: 13px; }
+.xp-pdp__nav span { width: 18px; height: 12px; border-top: 2px solid #1d2433; border-bottom: 2px solid #1d2433; }
+.xp-pdp__img { position: relative; height: 128px; overflow: hidden; background: #f4f1ec; }
+.xp-pdp__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.xp-pdp__off { position: absolute; left: 8px; top: 8px; padding: 2px 8px; border-radius: 4px; background: #d7ff00; color: #0b0d00; font-weight: 800; font-size: 11px; }
+.xp-pdp__t { padding: 0 12px; font-size: 14px; line-height: 1.3; }
+.xp-pdp__lines { display: grid; gap: 7px; padding: 4px 12px; }
+.xp-pdp__lines i { height: 7px; border-radius: 4px; background: #eceef2; }
+.xp-pdp__lines i:nth-child(2n) { width: 82%; }
+.xp-pdp__fold { position: relative; margin: 2px 12px 0; height: 0; border-top: 1.5px dashed #f03e3e; color: #e03131; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; text-align: right; line-height: 1.8; }
+.xp-pdp__p { display: flex; align-items: baseline; gap: 8px; padding: 0 12px; font-size: 13px; }
+.xp-pdp__p b { font-size: 18px; }
+.xp-pdp__p s { color: #8a91a1; }
+.xp-pdp__p em { margin-left: auto; font-style: normal; color: #6b7385; font-size: 12px; }
+.xp-pdp__var .xp-pdp__p { padding-top: 18px; }
+.xp-pdp__trust { margin: 0 12px; padding: 7px 10px; border-radius: 8px; background: #ebfbee; color: #2b8a3e; font-size: 12px; font-weight: 600; }
+.xp-pdp__buy { margin: 2px 12px 0; padding: 11px; border-radius: 10px; background: #0b0d00; color: #d7ff00; text-align: center; font-weight: 800; font-size: 14px; }
+.xp-var--a .xp-pdp__p { margin-top: 30px; color: #8a91a1; }
+.xp-var__stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.xp-var__stats span { display: grid; gap: 2px; padding: 8px 10px; border-radius: 8px; background: #f6f7f9; color: #6b7385; font-size: 12px; }
+.xp-var__stats b { color: #1d2433; font-size: 18px; }
+.xp-side { display: grid; gap: 16px; }
+.xp-card { display: grid; gap: 8px; padding: 16px 18px; background: #fff; border: 1px solid #e3e6ec; border-radius: 12px; }
+.xp-card__k { color: #6b7385; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.xp-hyp p { margin: 0; line-height: 1.5; }
+.xp-hyp__m { color: #364fc7; font-size: 12px; font-weight: 600; }
+.xp-res__lift { font-size: 38px; line-height: 1; color: #2b8a3e; }
+.xp-res__lbl { color: #6b7385; font-size: 12px; }
+.xp-res__row { display: flex; justify-content: space-between; margin-top: 6px; }
+.xp-res__row em { font-style: normal; font-weight: 800; }
+.xp-res__bar { height: 8px; border-radius: 4px; background: #eef0f4; overflow: hidden; }
+.xp-res__bar i { display: block; height: 100%; width: 50%; background: #2b8a3e; border-radius: 4px; }
+.xp-res__ship { margin-top: 4px; padding: 9px 12px; border-radius: 8px; background: #d7ff00; color: #0b0d00; font-weight: 800; text-align: center; }
+
 /* ---- Search Console-style SEO report (laid out at 1000px, scaled by --k) ---- */
 .gsc { width: 1000px; transform-origin: 0 0; transform: scale(var(--k, .5)); background: #f8f9fa; color: #202124; font-family: Arial, "Helvetica Neue", sans-serif; font-stretch: 100%; font-size: 14px; padding-bottom: 20px; }
 .gsc-top { display: flex; align-items: center; gap: 18px; padding: 14px 24px; background: #fff; border-bottom: 1px solid #e0e0e0; }
