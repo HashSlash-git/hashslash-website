@@ -160,32 +160,68 @@ function buildMoment(root) {
   }
 
   if (type === 'chat') {
-    const q = $('.mo-q', v);
-    tl.fromTo('.chatwin', { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: .5 }, 0)
-      .fromTo('.bubble--user', { opacity: 0, scale: .9 }, { opacity: 1, scale: 1, duration: .3 }, .2)
-      .add(typer(q).duration(.7), .3)
-      .fromTo('.bubble--ai', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .3 }, 1.1)
-      .fromTo('.bubble--ai .ln', { scaleX: 0 }, { scaleX: 1, duration: .5, stagger: .2, ease: 'none' }, 1.2)
-      .fromTo('.sponsor', { y: 40, opacity: 0, scale: .95 }, { y: 0, opacity: 1, scale: 1, duration: .6, ease: 'back.out(1.6)' }, 2.1)
-      .fromTo('.sources', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .4 }, 3)
-      .fromTo('.src--you', { scale: .8 }, { scale: 1.12, duration: .4, ease: 'back.out(3)' }, 3.3)
+    // ChatGPT-style thread laid out at 760px: ask, answer streams in, sponsored unit, click through
+    const browser = $('.browser--gpt', v), f = fitFrame(browser, $('.store-fit', v), $('.gpt', v), 760);
+    const q = $('.gpt-input .mo-q', v), caret = $('.gpt-input .caret', v), ph = $('.gpt-input__ph', v), send = $('.gpt-input__send', v);
+    const user = $('.gpt-user', v), lines = $$('.gpt-l', v), ad = $('.gpt-ad', v), adBtn = $('.gpt-ad__btn', v), land = $('.gpt-land', v), cursor = $('.st-cursor', v);
+    const at = (el, fx, fy) => f.inFrame(el, fx, fy);
+    tl.fromTo(browser, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: .4 }, 0)
+      .fromTo([user, ...lines, ad, land], { opacity: 0 }, { opacity: 0, duration: .01 }, 0)
+      // 1 a customer asks AI
+      .to(ph, { opacity: 0, duration: .1 }, .25)
+      .add(typer(q).duration(.6), .3)
+      .to(send, { scale: .85, duration: .06, yoyo: true, repeat: 1 }, .95)
+      .to([q, caret], { opacity: 0, duration: .1 }, 1.05)
+      .to(ph, { opacity: 1, duration: .2 }, 1.1)
+      .fromTo(user, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .3 }, 1.05)
+      // 2 the assistant answers, line by line
+      .fromTo(lines, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .22, stagger: .14 }, 1.3)
+      // 3 your brand appears in context
+      .fromTo(ad, { opacity: 0, y: 30, scale: .97 }, { opacity: 1, y: 0, scale: 1, duration: .45, ease: 'back.out(1.5)' }, 2.35)
+      .fromTo($('.gpt-ad__body', v), { boxShadow: '0 0 0 0 rgba(215,255,0,0)' }, { boxShadow: '0 0 0 3px rgba(215,255,0,1)', duration: .3 }, 2.7)
+      // 4 they click through
+      .fromTo(cursor, { opacity: 0, x: () => at(adBtn, .5, .5).x - 120, y: () => at(adBtn, .5, .5).y + 90 }, { opacity: 1, duration: .1 }, 3.0)
+      .to(cursor, { x: () => at(adBtn, .55, .6).x, y: () => at(adBtn, .55, .6).y, duration: .3, ease: 'power2.inOut' }, 3.05)
+      .to(adBtn, { scale: .92, duration: .06, yoyo: true, repeat: 1 }, 3.38)
+      .fromTo(land, { opacity: 0, y: 20, scale: .9 }, { opacity: 1, y: 0, scale: 1, duration: .35, ease: 'back.out(2)' }, 3.5)
+      .to(cursor, { opacity: 0, duration: .2 }, 3.7)
       .to({}, { duration: .3 });
   }
 
   if (type === 'targeting') {
-    const dots = $$('.tgt__dots i', v), chips = $$('.tgt__f', v);
-    const keep = [.62, .38, .2, .1, .05];
-    dots.forEach((d, i) => { d.dataset.r = rand(i + 7).toFixed(3); });
-    tl.fromTo(dots, { scale: 0 }, { scale: 1, duration: .5, stagger: { each: .004, from: 'random' } }, 0);
-    chips.forEach((c, k) => {
-      const t = .6 + k * .6;
-      const gone = dots.filter((d) => +d.dataset.r >= keep[k] && (k === 0 || +d.dataset.r < keep[k - 1]));
-      tl.to(c, { backgroundColor: '#d7ff00', color: '#0b0d00', borderColor: '#d7ff00', duration: .2 }, t)
-        .to(gone, { opacity: .1, scale: .6, duration: .4, stagger: .003 }, t + .1);
+    // LinkedIn Campaign Manager laid out at 900px: criteria narrow the audience, then the ad and Lead Gen Form
+    const browser = $('.browser--li', v), f = fitFrame(browser, $('.store-fit', v), $('.li', v), 900);
+    const crits = $$('.li-crit', v), num = $('.li-fc__n', v), knob = $('.li-fc__meter b', v), leads = $('.li-fc__leads', v);
+    const post = $('.li-post', v), dl = $('.li-post__btn', v), form = $('.li-form', v), fields = $$('.li-field', v), submit = $('.li-form__btn', v), done = $('.li-form__done', v), cursor = $('.st-cursor', v);
+    const at = (el, fx, fy) => f.inFrame(el, fx, fy);
+    const sizes = [24000000, 2100000, 540000, 96000, 38000, 4200], knobs = [92, 74, 58, 44, 34, 24];
+    const fmt = (n) => Math.round(n).toLocaleString('en-US') + (n >= 24000000 ? '+' : '');
+    const o = { n: sizes[0] };
+    tl.fromTo(browser, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: .4 }, 0)
+      .fromTo([...crits, post, form], { opacity: 0 }, { opacity: 0, duration: .01 }, 0)
+      .fromTo(num, { opacity: 0 }, { opacity: 1, duration: .3 }, .3);
+    // 2-3 each criterion lands and the forecast shrinks
+    crits.forEach((c, k) => {
+      const t = .7 + k * .5;
+      tl.fromTo(c, { opacity: 0, y: 14, backgroundColor: '#fffbe0' }, { opacity: 1, y: 0, duration: .25 }, t)
+        .to(c, { backgroundColor: '#ffffff', duration: .4 }, t + .25)
+        .to(o, { n: sizes[Math.min(k + 1, sizes.length - 1)], duration: .45, ease: 'power2.out', onUpdate: () => { num.textContent = fmt(o.n); } }, t + .05)
+        .to(knob, { left: knobs[Math.min(k + 1, knobs.length - 1)] + '%', duration: .45 }, t + .05);
     });
-    const survivors = dots.filter((d) => +d.dataset.r < keep[keep.length - 1]);
-    tl.to(survivors, { backgroundColor: '#d7ff00', scale: 1.8, boxShadow: '0 0 14px #d7ff00', duration: .4 }, 3.6)
-      .fromTo('.leadform', { x: 60, opacity: 0 }, { x: 0, opacity: 1, duration: .5, ease: 'back.out(1.4)' }, 3.7)
+    const tEnd = .7 + crits.length * .5;
+    tl.call(() => { leads.textContent = tl.time() > tEnd ? '40–70' : '–'; }, null, tEnd)
+      // 4 reach the people who sign: sponsored post, Lead Gen Form prefilled, submit
+      .fromTo($('.li-scrim', v), { opacity: 0 }, { opacity: 1, duration: .3 }, tEnd + .05)
+      .fromTo(post, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .4, ease: 'back.out(1.4)' }, tEnd + .1)
+      .fromTo(cursor, { opacity: 0, x: () => at(dl, .5, .5).x - 90, y: () => at(dl, .5, .5).y + 70 }, { opacity: 1, duration: .1 }, tEnd + .45)
+      .to(cursor, { x: () => at(dl, .5, .6).x, y: () => at(dl, .5, .6).y, duration: .25, ease: 'power2.inOut' }, tEnd + .5)
+      .to(dl, { scale: .9, duration: .06, yoyo: true, repeat: 1 }, tEnd + .78)
+      .fromTo(form, { opacity: 0, x: 40, scale: .96 }, { opacity: 1, x: 0, scale: 1, duration: .35 }, tEnd + .9)
+      .fromTo(fields, { backgroundColor: '#ffffff' }, { backgroundColor: '#eef5fd', duration: .15, stagger: .08 }, tEnd + 1.1)
+      .to(cursor, { x: () => at(submit, .5, .6).x, y: () => at(submit, .5, .6).y, duration: .3, ease: 'power2.inOut' }, tEnd + 1.4)
+      .to(submit, { scale: .95, duration: .06, yoyo: true, repeat: 1 }, tEnd + 1.72)
+      .fromTo(done, { opacity: 0, scale: .9 }, { opacity: 1, scale: 1, duration: .3, ease: 'back.out(2)' }, tEnd + 1.85)
+      .to(cursor, { opacity: 0, duration: .2 }, tEnd + 2)
       .to({}, { duration: .3 });
   }
 
