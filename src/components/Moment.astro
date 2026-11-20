@@ -65,6 +65,21 @@ const SERP_PRODUCTS = [
 ];
 const feed = moment.variant === 'feed';
 
+/* "seo" moment: Search Console-style report for Loomline. All figures illustrative.
+   KPI: [colour, label, start, end, decimals, suffix]; queries: [query, intent, clicks, start position, end position] */
+const GSC_KPI: [string, string, string, string, string, string][] = [
+  ['clk', 'Total clicks', '1.2', '18.4', '1', 'K'], ['imp', 'Total impressions', '96', '612', '0', 'K'],
+  ['ctr', 'Average CTR', '1.2', '3.0', '1', '%'], ['pos', 'Average position', '28.4', '3.2', '1', '']
+];
+const GSC_Q: [string, string, string, string, string][] = [
+  ['leather tote bag for women', 'Buy', '4,120', '41', '2'],
+  ['sling bag for women', 'Buy', '3,380', '28', '1'],
+  ['best leather bags under 5000', 'Compare', '2,240', '35', '3'],
+  ['linen shirt men', 'Buy', '1,960', '52', '4'],
+  ['how to care for leather bag', 'Learn', '1,410', '19', '1']
+];
+const gscPath = (ys: number[]) => ys.map((y, i) => `${i ? 'L' : 'M'}${Math.round(i * 916 / (ys.length - 1))} ${y + 8}`).join(' ');
+
 /* "targeting" moment: LinkedIn Campaign Manager for a made-up B2B brand, Clearpath Analytics.
    Criteria labels come from the service (WordPress); values are matched by label. Audience sizes are illustrative. */
 const TGT: Record<string, string[]> = {
@@ -243,18 +258,48 @@ const products = [
       )}
 
       {type === 'seo' && (
-        <div class="browser">
-          <div class="browser__bar"><i></i><i></i><i></i></div>
-          <div class="mo-search"><span class="mo-search__g">G</span><span class="mo-q" data-q={typed}></span><span class="caret"></span></div>
-          {(
-            <div class="seo">
-              <span class="seo__rank mono">Position <b class="seo__num">28</b></span>
-              <div class="seo__list">
-                {[0, 1, 2, 3, 4].map(() => <div class="r r--org"><span class="r__t"></span><span class="r__l"></span></div>)}
-                <div class="r r--org r--you"><span class="r__url">yourbrand.com</span><span class="r__t r__t--you">Your page, matched to intent</span><span class="r__l"></span></div>
+        <div class="browser browser--fit browser--gsc">
+          <div class="browser__bar"><i></i><i></i><i></i><span class="browser__url"><svg viewBox="0 0 24 24"><path d={IC.lock} /></svg>search.google.com/search-console/performance</span></div>
+          <div class="store-fit">
+            <div class="gsc">
+              <div class="gsc-top"><b>Search Console</b><span class="gsc-prop"><i>L</i>loomline.demo</span><span class="gsc-date">Last 6 months</span></div>
+              <div class="gsc-kpis">
+                {GSC_KPI.map(([cls, label, from, to, dec, suf]) => (
+                  <div class={`gsc-kpi gsc-kpi--${cls}`}><span>{label}</span><b data-from={from} data-to={to} data-dec={dec} data-suf={suf}>{from}{suf}</b></div>
+                ))}
+              </div>
+              <div class="gsc-chart">
+                <svg viewBox="0 0 916 170">
+                  {[40, 80, 120].map((y) => <line x1="0" x2="916" y1={y} y2={y} />)}
+                  <path class="gsc-line gsc-line--imp" d={gscPath([130, 128, 129, 125, 122, 112, 100, 88, 74, 62, 50, 40, 32])} />
+                  <path class="gsc-line gsc-line--clk" d={gscPath([150, 148, 149, 146, 147, 140, 132, 120, 104, 86, 64, 42, 24])} />
+                </svg>
+                <div class="gsc-months"><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span></div>
+              </div>
+              <div class="gsc-grid">
+                <div class="gsc-card gsc-q">
+                  <div class="gsc-q__h"><b>Top queries</b><span>Clicks</span><span>Position</span></div>
+                  {GSC_Q.map(([q, intent, clicks, from, to]) => (
+                    <div class="gsc-q__r"><span class="gsc-q__q">{q}<i>{intent}</i></span><span class="gsc-q__c">{clicks}</span><span class="gsc-q__p" data-from={from} data-to={to}>{from}</span></div>
+                  ))}
+                </div>
+                <div class="gsc-side">
+                  <div class="gsc-card gsc-px">
+                    <b>Page experience</b>
+                    <span class="gsc-px__lbl">Good URLs <em class="gsc-px__pct">18%</em></span>
+                    <span class="gsc-px__bar"><i></i></span>
+                    <span class="gsc-px__row">LCP (mobile)<em class="gsc-px__lcp">4.8 s</em></span>
+                    <span class="gsc-px__row">Crawl issues<em class="gsc-px__iss">142</em></span>
+                  </div>
+                  <div class="gsc-card gsc-links">
+                    <b>Links</b>
+                    <span class="gsc-px__row">Referring domains<em class="gsc-links__n">14</em></span>
+                    <span class="gsc-links__chips"><i>fashiondesk.example</i><i>bagreview.example</i><i>stylenotes.example</i><i>giftguide.example</i></span>
+                  </div>
+                </div>
               </div>
             </div>
-          )}
+          </div>
         </div>
       )}
 

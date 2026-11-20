@@ -141,22 +141,42 @@ function buildMoment(root) {
   }
 
   if (type === 'seo') {
-    const q = $('.mo-q', v);
-    tl.fromTo($('.browser', v), { y: 60, opacity: 0, rotateX: 18 }, { y: 0, opacity: 1, rotateX: 0, duration: .6 }, 0)
-      .add(typer(q).duration(.8), .3);
-    {
-      const rows = $$('.seo .r', v), you = $('.r--you', v), others = rows.filter((r) => r !== you);
-      const gap = () => parseFloat(getComputedStyle(you.parentElement).rowGap) || 0;
-      const up = () => -others.reduce((h, r) => h + r.offsetHeight + gap(), 0);   // you climb past every other row
-      const down = () => you.offsetHeight + gap();                                // each other row drops one slot
-      const num = $('.seo__num', v), o = { n: 28 };
-      tl.fromTo(rows, { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: .4, stagger: .05 }, 1)
-        .fromTo(you, { y: 0 }, { y: up, duration: 2, ease: 'power2.inOut' }, 1.5)
-        .fromTo(others, { y: 0 }, { y: down, duration: 2, ease: 'power2.inOut' }, 1.5)
-        .fromTo(o, { n: 28 }, { n: 1, duration: 2, ease: 'power2.inOut', onUpdate: () => { num.textContent = Math.round(o.n); } }, 1.5)
-        .to(you, { boxShadow: '0 0 0 2px #d7ff00, 0 20px 50px -20px rgba(215,255,0,.5)', duration: .4 }, 3.5)
-        .to({}, { duration: .3 });
-    }
+    // Search Console-style report laid out at 1000px
+    const browser = $('.browser--gsc', v);
+    fitFrame(browser, $('.store-fit', v), $('.gsc', v), 1000);
+    const count = (el, from, to, dec, suf, at, dur) => {
+      const o = { n: from };
+      tl.fromTo(o, { n: from }, { n: to, duration: dur, ease: 'power2.inOut', onUpdate: () => { el.textContent = o.n.toFixed(dec) + suf; } }, at);
+    };
+    const px = $('.gsc-px', v), bar = $('.gsc-px__bar i', v), rows = $$('.gsc-q__r', v), links = $('.gsc-links', v), chips = $$('.gsc-links__chips i', v);
+    const lines = $$('.gsc-line', v), pos = $$('.gsc-q__p', v), kpis = $$('.gsc-kpi b', v);
+    lines.forEach((p) => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.dataset.len = L; });
+    tl.fromTo(browser, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: .4 }, 0)
+      .fromTo([...rows, ...chips], { opacity: 0 }, { opacity: 0, duration: .01 }, 0)
+      .fromTo(lines, { strokeDashoffset: (i, p) => +p.dataset.len * .55 }, { strokeDashoffset: (i, p) => +p.dataset.len * .55, duration: .01 }, 0)
+      // 1 fix the technical foundations
+      .fromTo(px, { boxShadow: '0 0 0 0 rgba(215,255,0,0)' }, { boxShadow: '0 0 0 3px rgba(215,255,0,1)', duration: .3 }, .3)
+      .fromTo(bar, { width: '18%' }, { width: '96%', duration: .7, ease: 'power2.inOut' }, .4)
+      .to(px, { boxShadow: '0 0 0 0 rgba(215,255,0,0)', duration: .3 }, 1.25);
+    count($('.gsc-px__pct', v), 18, 96, 0, '%', .4, .7);
+    count($('.gsc-px__lcp', v), 4.8, 1.9, 1, ' s', .4, .7);
+    count($('.gsc-px__iss', v), 142, 3, 0, '', .4, .7);
+    // 2 match what people search for
+    tl.fromTo(rows, { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: .3, stagger: .1 }, 1.35)
+    // 3 earn authority and links
+      .fromTo(links, { boxShadow: '0 0 0 0 rgba(215,255,0,0)' }, { boxShadow: '0 0 0 3px rgba(215,255,0,1)', duration: .3 }, 2.2)
+      .fromTo(chips, { opacity: 0, scale: .7 }, { opacity: 1, scale: 1, duration: .25, stagger: .1, ease: 'back.out(2)' }, 2.3)
+      .to(links, { boxShadow: '0 0 0 0 rgba(215,255,0,0)', duration: .3 }, 3.0);
+    count($('.gsc-links__n', v), 14, 86, 0, '', 2.3, .7);
+    // 4 climb, then hold the spot: the lines finish, totals rise, every query moves up
+    tl.to(lines, { strokeDashoffset: 0, duration: 1.1, ease: 'power1.inOut' }, 3.05);
+    kpis.forEach((b) => count(b, +b.dataset.from, +b.dataset.to, +b.dataset.dec, b.dataset.suf, 3.05, 1.1));
+    pos.forEach((p, i) => {
+      const o = { n: +p.dataset.from };
+      tl.to(o, { n: +p.dataset.to, duration: .9, ease: 'power2.inOut', onUpdate: () => { p.textContent = Math.round(o.n); } }, 3.1 + i * .05)
+        .fromTo(p, { color: '#202124' }, { color: '#137333', duration: .3 }, 3.6 + i * .05);
+    });
+    tl.to({}, { duration: .3 });
   }
 
   if (type === 'chat') {
