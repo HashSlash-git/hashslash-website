@@ -448,8 +448,16 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 }
 .ind:hover, .ind:focus-visible { flex-grow: 2.4; border-color: rgba(215,255,0,.5); }
 .ind:hover::before, .ind:focus-visible::before { opacity: 1; }
+/* photo panels: image under a dark gradient so the name and copy stay readable */
+.ind__img { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; opacity: .72; filter: saturate(.9); transform: scale(1.04); transition: opacity .7s, transform 1.2s var(--ease), filter .7s; }
+.ind--img::before { opacity: 1; z-index: 1; background: linear-gradient(180deg, rgba(8,9,9,.35) 0%, rgba(8,9,9,0) 28%, rgba(8,9,9,.45) 58%, rgba(8,9,9,.86) 82%, rgba(8,9,9,.95) 100%); }
+.ind--img > :not(.ind__img) { z-index: 2; }
+.ind__name { overflow-wrap: normal; hyphens: none; }
+.ind--img:hover .ind__img, .ind--img:focus-visible .ind__img { opacity: .9; filter: saturate(1); transform: scale(1); }
+.ind--img:hover::before, .ind--img:focus-visible::before { opacity: 1; }
+.ind__no { z-index: 1; }
 .ind__no { position: absolute; top: 20px; left: 22px; color: var(--lime); }
-.ind__name { position: relative; font-size: clamp(1.3rem, 2vw, 2.3rem); line-height: .95; }
+.ind__name { position: relative; font-size: clamp(1.2rem, 1.55vw, 2.1rem); line-height: .95; }
 .ind__desc, .ind__cta { position: relative; margin: 0; max-width: 38ch; opacity: 0; transform: translateY(14px); transition: opacity .45s .1s, transform .45s .1s var(--ease); }
 .ind__desc { color: #c3c7c1; font-size: .95rem; }
 .ind__cta { color: var(--lime); }
@@ -651,6 +659,8 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
   .ind { min-height: 200px; }
   .ind__desc, .ind__cta { opacity: 1; transform: none; }
   .ind:hover { flex-grow: 1; }
+  .ind--img::before { background: linear-gradient(90deg, rgba(8,9,9,.88) 0%, rgba(8,9,9,.62) 60%, rgba(8,9,9,.35) 100%); }
+  .ind__img { opacity: .8; transform: none; }
 
   .process, .faq, .contact__inner { grid-template-columns: 1fr; }
   .process__side, .faq .sec-head { position: static; }

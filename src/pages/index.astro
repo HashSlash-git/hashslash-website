@@ -4,6 +4,8 @@ import ContactCTA from '../components/ContactCTA.astro';
 import { disciplines } from '../data/services.js';
 import { getServices, getIndustries, getCaseStudies } from '../lib/content.js';
 const industries = await getIndustries();
+// Industry panel photos in public/img/industries/{slug}.webp, with the focal point kept in view when the panel is narrow
+const IND_IMG: Record<string, string> = { 'ecommerce-d2c': '32% 60%', 'real-estate': '55% 40%', 'hospitality': '68% 70%', 'it-healthcare': '30% 50%' };
 const cases = (await getCaseStudies()).slice(0, 6);
 const services = await getServices();
 const servicesIn = (d) => services.filter((s) => s.d === d);
@@ -168,7 +170,8 @@ const faqLd = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity
     </header>
     <div class="inds">
       {industries.map((ind) => (
-        <a class="ind" href={`/industries/${ind.slug}/`} data-track="cta_click" data-cta={`industry_${ind.slug}`} data-loc="industries">
+        <a class={`ind ${IND_IMG[ind.slug] ? 'ind--img' : ''}`} href={`/industries/${ind.slug}/`} data-track="cta_click" data-cta={`industry_${ind.slug}`} data-loc="industries">
+          {IND_IMG[ind.slug] && <img class="ind__img" src={`/img/industries/${ind.slug}.webp`} alt="" width="1100" height="825" loading="lazy" decoding="async" style={`object-position:${IND_IMG[ind.slug]}`} />}
           <span class="ind__no mono">{ind.no}</span>
           <h3 class="ind__name display">{ind.name}</h3>
           <p class="ind__desc">{ind.tagline}</p>
