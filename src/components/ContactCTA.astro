@@ -61,15 +61,7 @@ const [l2a, ...l2rest] = line2.split(' ');
       </fieldset>
 
       <fieldset class="fstep" data-step="2">
-        <legend>Budget &amp; brief</legend>
-        <div class="pills pills--radio" role="radiogroup" aria-label="Approximate budget">
-          <!-- TODO: confirm currency + ranges with HashSlash -->
-          <label><input type="radio" name="budget" value="Under 2.5k" required /><span>Under 2.5k</span></label>
-          <label><input type="radio" name="budget" value="2.5k - 10k" /><span>2.5k – 10k</span></label>
-          <label><input type="radio" name="budget" value="10k - 25k" /><span>10k – 25k</span></label>
-          <label><input type="radio" name="budget" value="25k+" /><span>25k+</span></label>
-          <label><input type="radio" name="budget" value="Not sure" /><span>Not sure yet</span></label>
-        </div>
+        <legend>Your brief</legend>
         <label class="field">
           <span>Tell us about the project</span>
           <textarea name="description" rows="4" placeholder="Goals, timelines, links, anything useful" required></textarea>

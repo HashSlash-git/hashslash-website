@@ -353,7 +353,6 @@ function enquiry() {
     }
     if (cur === 1) {
       const d = form.description; mark(d, !d.value.trim());
-      if (!fd.get('budget')) return err('Choose an approximate budget.');
       if (!d.value.trim()) return err('A line or two about the project helps us prepare.');
     }
     if (cur === 2) {
@@ -379,7 +378,7 @@ function enquiry() {
     payload.services = fd.getAll('services');
     payload.page = location.pathname;
     submit.disabled = true; submit.textContent = 'Sending…';
-    payload.event_id = track('generate_lead', { services: payload.services.join(', '), industry: payload.industry, budget: payload.budget, location: form.dataset.loc });
+    payload.event_id = track('generate_lead', { services: payload.services.join(', '), industry: payload.industry, location: form.dataset.loc });
     form.page.value = payload.page; form.event_id.value = payload.event_id || '';
     try {
       await sendLead(form, 'enquiry', { services: payload.services.join(', ') });
