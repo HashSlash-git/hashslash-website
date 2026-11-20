@@ -41,18 +41,27 @@ const IC: Record<string, string> = {
   down: 'M6 9l6 6 6-6'
 };
 const STAR = 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z';
-/* "ads" moment: nine Stockroom creatives in a test. Winners = indexes in `winners`. Figures are illustrative.
-   [image, headline, overlay on creative, format, paid metric 1, paid metric 2, organic metric 1, organic metric 2] */
+/* "ads" moment: nine creatives for a made-up fashion label, Loomline, in a test. Winners = indexes in `winners`.
+   Photos (Unsplash licence) in /public/img/demo-fashion/. Prices, ratings and metrics are illustrative.
+   [image, product, badge on creative, format, paid metric 1, paid metric 2, organic metric 1, organic metric 2, price, MRP, rating] */
+const BRAND = 'Loomline';
 const ADS = [
-  ['ad-phones', 'Wave Pro, 40% off', 'Up to 50% off', 'Reel', '1.1%', '₹412', '4.2k', '38'],
-  ['ad-p2', 'FitTrack smartwatch', 'New', 'Static', '3.4%', '₹148', '21.6k', '640'],
-  ['ad-lamp', 'Warm light at night', '', 'Carousel', '0.9%', '₹538', '3.1k', '22'],
-  ['ad-speaker', 'Big sound, small size', '', 'Static', '0.7%', '₹610', '2.7k', '15'],
-  ['ad-p3', 'Pulse: 24h battery', '₹1,899', 'Reel', '1.0%', '₹455', '5.0k', '41'],
-  ['ad-p1', 'Bestseller: Wave Pro', 'Bestseller', 'Reel', '3.1%', '₹162', '18.9k', '512'],
-  ['ad-watch', 'Track every step', '-42%', 'Carousel', '2.9%', '₹171', '16.4k', '488'],
-  ['ad-p4', 'Nordic lamp ₹1,299', '', 'Static', '0.8%', '₹498', '2.9k', '19'],
-  ['ad-p5', 'Cold 24h, hot 12h', '₹899', 'Reel', '0.6%', '₹590', '2.2k', '11']
+  ['shirt', 'Linen Shirt, Sky Blue', '-30%', 'Reel', '1.1%', '₹412', '4.2k', '38', '1,499', '2,149', '4.5'],
+  ['tote', 'Leather Tote, Cognac', 'Bestseller', 'Static', '3.4%', '₹148', '21.6k', '640', '3,999', '5,499', '4.8'],
+  ['denim', 'Washed Denim Jacket', '', 'Carousel', '0.9%', '₹538', '3.1k', '22', '2,799', '3,499', '4.4'],
+  ['sweater', 'Chunky Knit Sweater', '', 'Static', '0.7%', '₹610', '2.7k', '15', '1,899', '2,699', '4.3'],
+  ['shades', 'Polarised Sunglasses', '₹999', 'Reel', '1.0%', '₹455', '5.0k', '41', '999', '1,599', '4.4'],
+  ['satchel', 'The Everyday Satchel', 'New', 'Reel', '3.1%', '₹162', '18.9k', '512', '3,299', '4,499', '4.7'],
+  ['sling', 'Hands-free Sling Bag', '-40%', 'Carousel', '2.9%', '₹171', '16.4k', '488', '1,499', '2,499', '4.6'],
+  ['shades2', 'Gold-frame Sunglasses', '', 'Static', '0.8%', '₹498', '2.9k', '19', '1,299', '1,899', '4.3'],
+  ['bag', 'Tan Leather Messenger', '', 'Reel', '0.6%', '₹590', '2.2k', '11', '4,499', '5,999', '4.5']
+];
+/* "serp" moment: Google results for the same label. [image, product, rating, reviews, price, MRP, % off] */
+const SERP_PRODUCTS = [
+  ['tote', 'Full-Grain Leather Tote Bag, Cognac', '4.8', '1,240', '3,999', '5,499', '27'],
+  ['satchel', 'The Everyday Satchel, Grey', '4.7', '860', '3,299', '4,499', '27'],
+  ['sling', 'Hands-free Sling Bag, Black', '4.6', '2,310', '1,499', '2,499', '40'],
+  ['bag', 'Tan Leather Messenger Bag', '4.5', '540', '4,499', '5,999', '25']
 ];
 const feed = moment.variant === 'feed';
 
@@ -135,21 +144,25 @@ const products = [
 
       {type === 'ads' && (
         <div class={`mo-ads ${feed ? 'mo-ads--feed' : ''}`}>
-          {ADS.map(([img, head, over, fmt, m1, m2, o1, o2], i) => (
+          {ADS.map(([img, head, over, fmt, m1, m2, o1, o2, price, mrp, rate], i) => (
             <div class="adcard" data-win={winners.includes(i) ? '1' : '0'}>
               <div class="adcard__head">
-                <span class="adcard__logo"><svg viewBox="0 0 24 24"><path d={IC.bag} /></svg></span>
-                <span class="adcard__who"><b>{feed ? 'stockroom' : 'Stockroom'}</b><i>{feed ? 'Original audio' : 'Sponsored'}</i></span>
+                <span class="adcard__logo adcard__logo--ll">L</span>
+                <span class="adcard__who"><b>{feed ? BRAND.toLowerCase() : BRAND}</b><i>{feed ? 'Original audio' : 'Sponsored'}</i></span>
                 <span class="adcard__flag adcard__flag--off">{feed ? 'Archived' : 'Paused'}</span>
                 <span class="adcard__flag adcard__flag--on">{feed ? 'Boosting' : 'Scaling ↑'}</span>
               </div>
               <div class="adcard__media">
-                <img src={`/img/demo-store/${img}.webp`} alt="" width="200" height="200" loading="lazy" decoding="async" />
+                <img src={`/img/demo-fashion/${img}.webp`} alt="" width="240" height="240" loading="lazy" decoding="async" />
                 {over && <span class="adcard__over">{over}</span>}
                 <span class="adcard__fmt">{fmt === 'Reel' && <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>}{fmt}</span>
                 <span class="adcard__stats"><span>{feed ? 'Reach' : 'CTR'} <b>{feed ? o1 : m1}</b></span><span>{feed ? 'Saves' : 'CPA'} <b>{feed ? o2 : m2}</b></span></span>
               </div>
-              <div class="adcard__foot"><span class="adcard__t">{head}</span>{!feed && <span class="adcard__cta">Shop now</span>}</div>
+              <div class="adcard__foot">
+                <span class="adcard__t">{head}</span>
+                <span class="adcard__p"><b>₹{price}</b><s>₹{mrp}</s><span class="adcard__r"><svg viewBox="0 0 24 24"><path d={STAR} /></svg>{rate}</span></span>
+              </div>
+              {!feed && <span class="adcard__cta">Shop now<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" /></svg></span>}
             </div>
           ))}
           <span class="mo-ads__scan"></span>
@@ -158,14 +171,14 @@ const products = [
 
       {type === 'serp' && (
         <div class="browser browser--fit browser--serp">
-          <div class="browser__bar"><i></i><i></i><i></i><span class="browser__url"><svg viewBox="0 0 24 24"><path d={IC.lock} /></svg>google.com/search?q=tech+gifts+under+5000</span></div>
+          <div class="browser__bar"><i></i><i></i><i></i><span class="browser__url"><svg viewBox="0 0 24 24"><path d={IC.lock} /></svg>google.com/search?q=leather+bags+for+women</span></div>
           <div class="store-fit">
             <div class="g">
               <div class="g-top">
                 <span class="g-logo" aria-hidden="true"><b>G</b><b>o</b><b>o</b><b>g</b><b>l</b><b>e</b></span>
                 <div class="g-search">
                   <svg viewBox="0 0 24 24"><path d={IC.search} /></svg>
-                  <span class="mo-q" data-q="tech gifts under 5000"></span><span class="caret"></span>
+                  <span class="mo-q" data-q="leather bags for women"></span><span class="caret"></span>
                   <span class="g-search__btn"><svg viewBox="0 0 24 24"><path d={IC.search} /></svg></span>
                 </div>
               </div>
@@ -174,39 +187,40 @@ const products = [
                 <p class="gr g-stats">About 1,24,00,000 results (0.38 seconds)</p>
                 <div class="gr g-ad">
                   <b class="g-spon">Sponsored</b>
-                  <span class="g-site"><span class="g-fav"><svg viewBox="0 0 24 24"><path d={IC.bag} /></svg></span><span><b>Stockroom</b><i>https://www.stockroom.demo › tech-gifts</i></span></span>
-                  <span class="g-title">Tech Gifts Under ₹5,000 | Up to 50% Off | Shop Stockroom</span>
-                  <span class="g-desc">Headphones, smartwatches and speakers from top brands. Free shipping over ₹999 · Easy 7-day returns · Pay with UPI.</span>
-                  <span class="g-rate"><span class="st-stars">{[0, 1, 2, 3, 4].map(() => <svg viewBox="0 0 24 24"><path d={STAR} /></svg>)}</span>Rating for stockroom.demo: 4.8 (4,200)</span>
-                  <span class="g-links"><span>Headphones</span><span>Smartwatches</span><span>Speakers</span><span>Today's Deals</span></span>
+                  <span class="g-site"><span class="g-fav g-fav--ll">L</span><span><b>{BRAND}</b><i>https://www.loomline.demo › bags › women</i></span></span>
+                  <span class="g-title">Leather Bags for Women | Up to 40% Off | Shop {BRAND}</span>
+                  <span class="g-desc">Full-grain leather totes, satchels and sling bags, handmade in small batches. Free delivery over ₹999 · Easy 15-day returns · Pay with UPI.</span>
+                  <span class="g-rate"><span class="st-stars">{[0, 1, 2, 3, 4].map(() => <svg viewBox="0 0 24 24"><path d={STAR} /></svg>)}</span>Rating for loomline.demo: 4.8 (3,100)</span>
+                  <span class="g-links"><span>Tote Bags</span><span>Satchels</span><span>Sling Bags</span><span>Winter Sale</span></span>
                 </div>
                 <div class="gr g-shop">
-                  <b class="g-spon">Sponsored · Products for "tech gifts under 5000"</b>
+                  <b class="g-spon">Sponsored · Products for "leather bags for women"</b>
                   <div class="g-shop__row">
-                    {products.slice(0, 4).map(([img, name, r, n, price, mrp]) => (
+                    {SERP_PRODUCTS.map(([img, name, r, n, price, mrp, off]) => (
                       <div class="g-pc">
-                        <div class="g-pc__img"><img src={`/img/demo-store/${img}.webp`} alt="" width="258" height="156" loading="lazy" decoding="async" /></div>
+                        <div class="g-pc__img"><img src={`/img/demo-fashion/${img}.webp`} alt="" width="240" height="240" loading="lazy" decoding="async" /><span class="g-pc__sale">{off}% off</span></div>
                         <span class="g-pc__t">{name}</span>
                         <span class="g-pc__p"><b>₹{price}</b><s>₹{mrp}</s></span>
-                        <span class="g-pc__s">Stockroom</span>
-                        <span class="g-pc__r"><svg viewBox="0 0 24 24"><path d={STAR} /></svg>{r} ({n}) · Free delivery</span>
+                        <span class="g-pc__s">{BRAND}</span>
+                        <span class="g-pc__r"><svg viewBox="0 0 24 24"><path d={STAR} /></svg>{r} ({n})</span>
+                        <span class="g-pc__del">Free delivery</span>
                       </div>
                     ))}
                   </div>
                 </div>
                 <div class="gr g-org">
-                  <span class="g-site"><span class="g-fav g-fav--grey">G</span><span><b>Gadget Guide</b><i>https://gadgetguide.example › gift-ideas</i></span></span>
-                  <span class="g-title g-title--org">25 Best Tech Gifts Under ₹5,000 in 2026</span>
-                  <span class="g-desc">From earbuds to smart lamps, we tested the most popular budget tech gifts so you don't have to…</span>
+                  <span class="g-site"><span class="g-fav g-fav--grey">S</span><span><b>Style Notes</b><i>https://stylenotes.example › bags</i></span></span>
+                  <span class="g-title g-title--org">15 Best Leather Bags for Women Under ₹5,000 (2026)</span>
+                  <span class="g-desc">Totes, satchels and crossbody bags we carried for a month, ranked for quality, comfort and value…</span>
                 </div>
                 <div class="gr g-vid">
                   <b class="g-h">Videos</b>
                   <div class="g-vid__row">
-                    <div class="g-thumb"><img src="/img/demo-store/hero.webp" alt="" width="840" height="372" loading="lazy" decoding="async" /><span class="g-play"></span><span class="g-dur">0:15</span><span class="g-prog"><i></i></span></div>
+                    <div class="g-thumb"><img src="/img/demo-fashion/hero.webp" alt="" width="840" height="372" loading="lazy" decoding="async" /><span class="g-play"></span><span class="g-dur">0:15</span><span class="g-prog"><i></i></span></div>
                     <div class="g-vid__meta">
-                      <span class="g-title">Stockroom Seasonal Sale: up to 50% off tech gifts</span>
-                      <span class="g-vid__by">YouTube · Stockroom · 3 days ago</span>
-                      <span class="g-desc">Headphones, smartwatches and speakers, delivered free over ₹999.</span>
+                      <span class="g-title">{BRAND} Winter Edit: up to 40% off leather bags</span>
+                      <span class="g-vid__by">YouTube · {BRAND} · 3 days ago</span>
+                      <span class="g-desc">Totes, satchels and slings in full-grain leather, delivered free over ₹999.</span>
                     </div>
                   </div>
                 </div>

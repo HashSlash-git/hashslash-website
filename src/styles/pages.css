@@ -162,7 +162,7 @@
 .moment__illus { position: absolute; right: 0; top: -6px; color: var(--muted); font-size: .62rem; border: 1px solid var(--line-2); padding: 3px 8px; border-radius: 99px; z-index: 5; }
 
 /* ---- ads wall ---- */
-.mo-ads { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(8px, 1.1vw, 14px); width: min(100%, calc(min(70vh, 620px) * .74)); }
+.mo-ads { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(8px, 1.1vw, 14px); width: min(100%, calc(min(70vh, 620px) * .62)); }
 /* Meta / Instagram ad cards (dark mode). Sizes use cqw so text scales with the card. */
 .adcard { position: relative; container-type: inline-size; display: flex; flex-direction: column; border-radius: 10px; background: #121212; color: #f5f5f5; border: 1px solid #262626; overflow: hidden; box-shadow: 0 0 0 0 rgba(215,255,0,0); font-family: var(--f-body); font-stretch: 100%; }
 .adcard__head { display: flex; align-items: center; gap: 3.5cqw; padding: 3.5cqw 4.5cqw; }
@@ -181,10 +181,18 @@
 .adcard__fmt svg { width: 5.4cqw; height: 5.4cqw; fill: #fff; }
 .adcard__stats { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; padding: 8cqw 4.5cqw 3.5cqw; background: linear-gradient(transparent, rgba(0,0,0,.85)); font-size: 6cqw; color: #cfcfcf; opacity: 0; }
 .adcard__stats b { color: #fff; }
-.adcard__foot { display: flex; align-items: center; gap: 3cqw; padding: 3.5cqw 4.5cqw; }
-.adcard__t { flex: 1; min-width: 0; font-size: 6cqw; font-weight: 600; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.adcard__cta { flex: none; font-size: 5.6cqw; font-weight: 700; background: #262626; padding: 1.8cqw 3.2cqw; border-radius: 2cqw; }
-.mo-ads__scan { position: absolute; left: -4%; right: -4%; height: 2px; background: var(--lime); opacity: 0; top: 0; }
+.adcard__logo--ll { font-weight: 800; font-size: 6.4cqw; font-family: var(--f-display, inherit); }
+.adcard__over { box-shadow: 0 1cqw 3cqw rgba(0,0,0,.35); }
+/* product strip under the creative: name, price vs MRP, rating, then the shop bar */
+.adcard__foot { display: grid; gap: 1.2cqw; padding: 3.4cqw 4.5cqw 3cqw; }
+.adcard__t { min-width: 0; font-size: 6cqw; font-weight: 600; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.adcard__p { display: flex; align-items: baseline; gap: 2.2cqw; font-size: 5.4cqw; white-space: nowrap; }
+.adcard__p b { font-size: 6.6cqw; font-weight: 800; color: #fff; }
+.adcard__p s { color: #8a8a8a; }
+.adcard__r { margin-left: auto; display: inline-flex; align-items: center; gap: .8cqw; color: #cfcfcf; }
+.adcard__r svg { width: 5cqw; height: 5cqw; fill: #fbbc04; }
+.adcard__cta { display: flex; align-items: center; justify-content: space-between; margin: 0 4.5cqw 4.5cqw; padding: 2.6cqw 3.6cqw; border-radius: 2.4cqw; background: #262626; color: #fff; font-size: 5.8cqw; font-weight: 700; transition: background .3s, color .3s; }
+.adcard__cta svg { width: 5.4cqw; height: 5.4cqw; fill: none; stroke: currentColor; stroke-width: 2.6; }.mo-ads__scan { position: absolute; left: -4%; right: -4%; height: 2px; background: var(--lime); opacity: 0; top: 0; }
 
 /* ---- browser / serp / seo ---- */
 .browser { width: min(100%, 620px); background: var(--bg-2); border: 1px solid var(--line-2); border-radius: 12px; padding: 0 0 18px; box-shadow: 0 40px 80px -40px #000; transform-style: preserve-3d; }
@@ -665,7 +673,10 @@ a.case:hover .case__img { transform: scale(1.05); }
 .g-shop { display: grid; gap: 10px; }
 .g-shop__row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 .g-pc { display: grid; gap: 4px; padding: 10px; border: 1px solid #dadce0; border-radius: 12px; background: #fff; font-size: 13px; box-shadow: 0 0 0 0 rgba(215,255,0,0); }
-.g-pc__img { aspect-ratio: 258 / 156; border-radius: 8px; overflow: hidden; background: #f1f3f4; margin-bottom: 4px; }
+.g-pc__img { position: relative; aspect-ratio: 4 / 3; border-radius: 8px; overflow: hidden; background: #f1f3f4; margin-bottom: 4px; }
+.g-pc__sale { position: absolute; left: 6px; top: 6px; background: #fff; color: #137333; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,.18); }
+.g-pc__del { color: #137333; font-size: 12px; }
+.g-fav--ll { font-weight: 800; font-size: 14px; }
 .g-pc__img img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .g-pc__t { color: #202124; font-size: 14px; line-height: 1.3; min-height: 36px; }
 .g-pc__p { display: flex; gap: 8px; align-items: baseline; }

@@ -106,6 +106,7 @@ function buildMoment(root) {
       // 4 scale the winners
       .to(win, { scale: 1.06, zIndex: 2, boxShadow: '0 0 0 2px rgba(215,255,0,1)', duration: .6, stagger: .08 }, 3)
       .fromTo(win.map((c) => $('.adcard__flag--on', c)), { opacity: 0, scale: .8 }, { opacity: 1, scale: 1, duration: .4, stagger: .08, ease: 'back.out(2)' }, 3.15)
+      .fromTo(win.map((c) => $('.adcard__cta', c)).filter(Boolean), { backgroundColor: '#262626', color: '#ffffff' }, { backgroundColor: '#d7ff00', color: '#0b0d00', duration: .4, stagger: .08 }, 3.2)
       .to({}, { duration: .4 });
   }
 
