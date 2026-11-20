@@ -11,7 +11,7 @@
 .mega-trigger span { display: inline-block; margin-left: 2px; color: var(--lime); transition: transform .3s var(--ease); }
 .mega-wrap:hover .mega-trigger span, .mega-wrap:focus-within .mega-trigger span { transform: rotate(45deg); }
 .mega {
-  position: fixed; left: 0; right: 0; top: var(--nav-h);
+  position: fixed; left: 0; right: 0; top: calc(var(--nav-h) + 8px);
   padding: 0 var(--gutter);
   opacity: 0; visibility: hidden; transform: translateY(-8px);
   transition: opacity .3s var(--ease), transform .4s var(--ease), visibility .3s;
@@ -20,9 +20,10 @@
 .mega-wrap:hover .mega, .mega-wrap:focus-within .mega { opacity: 1; visibility: visible; transform: none; }
 .mega__inner {
   display: grid; grid-template-columns: repeat(3, 1fr) minmax(220px, .8fr); gap: 0;
-  background: rgba(10, 12, 12, .96); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--line-2); border-radius: 6px; overflow: hidden;
-  box-shadow: 0 40px 80px -30px #000;
+  background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.015) 40%), rgba(12, 14, 13, .9);
+  -webkit-backdrop-filter: blur(30px) saturate(160%); backdrop-filter: blur(30px) saturate(160%); /* dense enough that the hero headline never fights the links */
+  border: 1px solid rgba(255,255,255,.12); border-radius: 24px; overflow: hidden;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 40px 80px -30px #000;
 }
 .mega__col { padding: 26px 24px; border-right: 1px solid var(--line); }
 .mega__head { display: flex; gap: 10px; align-items: baseline; margin-bottom: 14px; }

@@ -140,6 +140,14 @@ function nav() {
     });
   }, { passive: true });
 
+  // glass sheen follows the pointer across the header
+  if (matchMedia('(hover: hover)').matches) {
+    navEl.addEventListener('pointermove', (e) => {
+      const r = navEl.getBoundingClientRect();
+      navEl.style.setProperty('--gx', `${((e.clientX - r.left) / r.width) * 100}%`);
+    });
+  }
+
   const wrap = $('.mega-wrap'), trig = $('.mega-trigger');
   if (wrap) {
     const set = (v) => trig.setAttribute('aria-expanded', String(v));

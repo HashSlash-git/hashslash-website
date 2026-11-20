@@ -119,16 +119,38 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 /* ==========================================================
    NAV
    ========================================================== */
+/* Floating "liquid glass" pill. The glass is drawn on ::before (not the header itself) so the
+   position:fixed mega menu inside isn't trapped by backdrop-filter. ::after is a light reflection
+   that follows the pointer (--gx, set in core.js). */
 .nav {
-  position: fixed; inset: 0 0 auto; z-index: 50;
-  height: var(--nav-h);
+  --gx: 30%;
+  position: fixed; z-index: 50;
+  top: 12px; left: var(--gutter); right: var(--gutter);
+  height: calc(var(--nav-h) - 12px);
   display: flex; align-items: center; justify-content: space-between; gap: 20px;
-  padding: 0 var(--gutter);
-  transition: transform .5s var(--ease), background .3s, border-color .3s;
-  border-bottom: 1px solid transparent;
+  padding: 0 10px 0 12px;
+  border-radius: 999px; isolation: isolate;
+  transition: transform .5s var(--ease), top .4s var(--ease), height .4s var(--ease);
 }
-.nav.is-scrolled { background: rgba(8, 9, 9, .78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-color: var(--line); }
-.nav.is-hidden { transform: translateY(-100%); }
+.nav::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.02) 55%, rgba(255,255,255,.05)), rgba(16, 18, 17, .34);
+  -webkit-backdrop-filter: blur(20px) saturate(170%); backdrop-filter: blur(20px) saturate(170%);
+  border: 1px solid rgba(255,255,255,.13);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.24), inset 0 -1px 0 rgba(255,255,255,.05), 0 14px 40px -16px rgba(0,0,0,.75);
+  transition: background .4s;
+}
+.nav::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(200px 64px at var(--gx) 0%, rgba(255,255,255,.18), transparent 70%);
+  mix-blend-mode: screen;
+}
+.nav.is-scrolled { top: 8px; height: calc(var(--nav-h) - 18px); }
+.nav.is-scrolled::before { background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.02) 55%, rgba(255,255,255,.05)), rgba(12, 14, 13, .62); }
+.nav.is-hidden { transform: translateY(calc(-100% - 24px)); }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .nav::before { background: rgba(14, 16, 15, .94); }
+}
 .nav__logo { display: flex; align-items: center; gap: 10px; }
 .logo-mark {
   display: grid; place-items: center;
@@ -137,13 +159,11 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
   font-family: var(--f-display); font-weight: 900; font-style: italic; font-size: 13px; letter-spacing: -.04em;
 }
 .nav__word { font-family: var(--f-display); font-stretch: 125%; font-weight: 800; letter-spacing: .02em; font-size: .95rem; }
-.nav__links { display: flex; gap: clamp(16px, 2.2vw, 36px); }
-.nav__links a { font-size: .9rem; color: var(--muted); position: relative; transition: color .25s; }
-.nav__links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px; background: var(--lime); transform: scaleX(0); transform-origin: right; transition: transform .4s var(--ease); }
-.nav__links a:hover { color: var(--text); }
-.nav__links a:hover::after { transform: scaleX(1); transform-origin: left; }
+.nav__links { display: flex; gap: 2px; }
+.nav__links > a, .nav__links > .mega-wrap > a { font-size: .9rem; color: #c3c7c0; position: relative; display: inline-block; padding: 9px 15px; border-radius: 999px; transition: color .25s, background .25s; } /* top-level links only, not the mega menu */
+.nav__links > a:hover, .nav__links > .mega-wrap:hover > a, .nav__links > .mega-wrap:focus-within > a { color: var(--text); background: rgba(255,255,255,.09); box-shadow: inset 0 1px 0 rgba(255,255,255,.08); }
 .nav__actions { display: flex; align-items: center; gap: 10px; }
-.nav__burger { display: none; width: 44px; height: 44px; border: 1px solid var(--line-2); border-radius: 50%; background: none; position: relative; }
+.nav__burger { display: none; width: 42px; height: 42px; border: 1px solid rgba(255,255,255,.14); border-radius: 50%; background: rgba(255,255,255,.06); position: relative; }
 .nav__burger span { position: absolute; left: 13px; right: 13px; height: 1.5px; background: var(--text); transition: transform .35s var(--ease); }
 .nav__burger span:first-child { top: 18px; }
 .nav__burger span:last-child { top: 25px; }
@@ -595,6 +615,8 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 @media (max-width: 768px) {
   :root { --nav-h: 64px; }
   .nav__project, .nav__actions > .btn--lime { display: none; }
+  .nav { top: 10px; left: 12px; right: 12px; padding: 0 6px 0 8px; }
+  .nav.is-scrolled { top: 8px; }
   .hero { align-items: flex-end; }
   .hero__title { font-size: clamp(2.2rem, 11.4vw, 5rem); font-stretch: 112%; }
   .hero__line--2 { padding-left: 0; }
