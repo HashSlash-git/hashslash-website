@@ -80,6 +80,10 @@ const GSC_Q: [string, string, string, string, string][] = [
 ];
 const gscPath = (ys: number[]) => ys.map((y, i) => `${i ? 'L' : 'M'}${Math.round(i * 916 / (ys.length - 1))} ${y + 8}`).join(' ');
 
+/* "phone" moment: the Loomline shopping app, wireframe to shipped. All figures illustrative. */
+const APP_FLOW = ['Browse', 'Product', 'Bag', 'Checkout', 'Track order'];
+const APP_GRID: [string, string, string][] = [['satchel', 'Everyday Satchel', '3,299'], ['sling', 'Sling Bag', '1,499'], ['shirt', 'Linen Shirt', '1,499'], ['shades', 'Polarised Shades', '999']];
+
 /* "ab" moment: an experiment on Loomline's product page. All figures illustrative. [step, share of visitors] */
 const XP_FUNNEL: [string, string][] = [['Product page', '100%'], ['Add to bag', '3.1%'], ['Checkout', '1.7%'], ['Purchase', '1.1%']];
 
@@ -456,14 +460,65 @@ const products = [
       )}
 
       {type === 'phone' && (
-        <div class="phone">
-          <div class="phone__notch"></div>
-          <div class="phone__screens">
-            <div class="scr"><span class="scr__h"></span><span class="scr__card"></span><span class="scr__card"></span><span class="scr__card scr__card--s"></span></div>
-            <div class="scr"><span class="scr__img"></span><span class="scr__h"></span><span class="scr__l"></span><span class="scr__btn"></span></div>
-            <div class="scr"><span class="scr__check">✓</span><span class="scr__h"></span><span class="scr__l"></span></div>
+        <div class="browser--fit appx">
+          <div class="store-fit">
+            <div class="app">
+              <div class="app-side">
+                <div class="app-card app-flow">
+                  <span class="app-card__k">Core flows</span>
+                  {APP_FLOW.map((s, i) => <span class="app-flow__s"><i>{i + 1}</i>{s}</span>)}
+                </div>
+                <div class="app-stores">
+                  {[['App Store', 'iOS 17+', '4.8'], ['Google Play', 'Android 10+', '4.7']].map(([n, os, r]) => (
+                    <div class="app-card app-store"><span class="app-store__ic">{n === 'App Store' ? 'A' : '▶'}</span><span class="app-store__t"><b>{n}</b><i>{os}</i></span><span class="app-store__st"><em class="app-store__rev">In review</em><em class="app-store__live">Live · ★ {r}</em></span></div>
+                  ))}
+                </div>
+                <div class="app-card app-ret">
+                  <span class="app-card__k">Bring them back</span>
+                  <span class="app-ret__row">Push opened<b data-to="31">0%</b></span>
+                  <span class="app-ret__row">Push → purchase<b data-to="6.2">0%</b></span>
+                  <span class="app-ret__row">30-day retention<b data-to="38">0%</b></span>
+                </div>
+              </div>
+              <div class="app-phone">
+                <span class="app-phone__island"></span>
+                <div class="app-scr app-scr--wire">
+                  <span class="w w--bar"></span><span class="w w--search"></span><span class="w w--hero"></span>
+                  <span class="w-row"><span class="w w--chip"></span><span class="w w--chip"></span><span class="w w--chip"></span></span>
+                  <span class="w-grid"><span class="w w--card"></span><span class="w w--card"></span><span class="w w--card"></span><span class="w w--card"></span></span>
+                  <span class="w w--tab"></span>
+                </div>
+                <div class="app-scr app-scr--home">
+                  <div class="a-top"><b>Loomline</b><span class="a-ic"><svg viewBox="0 0 24 24"><path d={IC.bag} /></svg><i>2</i></span></div>
+                  <span class="a-search"><svg viewBox="0 0 24 24"><path d={IC.search} /></svg>Search bags, shirts, shades</span>
+                  <div class="a-hero"><img src="/img/demo-fashion/hero.webp" alt="" width="840" height="372" loading="lazy" decoding="async" /><span><em>Winter Edit</em><b>Up to 40% off</b></span></div>
+                  <div class="a-chips"><span class="is-on">All</span><span>Bags</span><span>Shirts</span><span>Shades</span></div>
+                  <div class="a-grid">
+                    {APP_GRID.map(([img, name, price]) => (
+                      <div class="a-card"><div class="a-card__img"><img src={`/img/demo-fashion/${img}.webp`} alt="" width="240" height="240" loading="lazy" decoding="async" /></div><span>{name}</span><b>₹{price}</b></div>
+                    ))}
+                  </div>
+                  <div class="a-tabs"><i class="is-on"></i><i></i><i></i><i></i></div>
+                </div>
+                <div class="app-scr app-scr--pdp">
+                  <div class="a-pdp__img"><img src="/img/demo-fashion/tote.webp" alt="" width="240" height="240" loading="lazy" decoding="async" /><span class="a-back">‹</span><span class="a-pdp__badge">Back in stock</span></div>
+                  <div class="a-pdp__body">
+                    <b>Full-Grain Leather Tote, Cognac</b>
+                    <span class="a-pdp__p"><b>₹3,999</b><s>₹5,499</s><em>★ 4.8</em></span>
+                    <span class="a-pdp__sw"><i></i><i></i><i></i></span>
+                    <span class="a-pdp__trust">Delivery by Fri · Free returns</span>
+                  </div>
+                  <span class="a-pdp__buy">Add to bag</span>
+                  <span class="a-toast">✓ Added to bag</span>
+                </div>
+                <div class="app-scr app-scr--lock">
+                  <span class="a-lock__t">10:24</span><span class="a-lock__d">Friday, 21 November</span>
+                  <div class="a-push"><span class="a-push__ic">L</span><span class="a-push__b"><b>Loomline <i>now</i></b><span>The Cognac tote you saved is back in stock. 15% off for the next 24 hours.</span></span></div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="push"><b>#/.</b><span><strong>Your app</strong> Your order is on its way</span></div>
+          <svg class="st-cursor" viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-3 6z" /></svg>
         </div>
       )}
 

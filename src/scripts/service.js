@@ -280,11 +280,50 @@ function buildMoment(root) {
   }
 
   if (type === 'phone') {
-    tl.fromTo('.phone', { y: 120, rotate: -12, opacity: 0 }, { y: 0, rotate: 0, opacity: 1, duration: .8, ease: 'expo.out' }, 0)
-      .to('.phone__screens', { xPercent: -100 / 3, duration: .7, ease: 'power3.inOut' }, 1.1)
-      .to('.phone__screens', { xPercent: -200 / 3, duration: .7, ease: 'power3.inOut' }, 2.1)
-      .fromTo('.push', { y: -80, opacity: 0 }, { y: 0, opacity: 1, duration: .5, ease: 'back.out(1.6)' }, 3.1)
-      .to({}, { duration: .4 });
+    // Loomline app laid out at 760px: flows mapped, wireframe to designed screens, both stores live, a push brings the user back
+    const appx = $('.appx', v), f = fitFrame(appx, $('.store-fit', v), $('.app', v), 760);
+    const flow = $$('.app-flow__s', v), home = $('.app-scr--home', v), pdp = $('.app-scr--pdp', v), lock = $('.app-scr--lock', v);
+    const hero = $('.a-hero', v), buy = $('.a-pdp__buy', v), toast = $('.a-toast', v), badge = $('.a-pdp__badge', v), bagN = $('.a-ic i', v);
+    const stores = $$('.app-store', v), live = $$('.app-store__live', v), rev = $$('.app-store__rev', v);
+    const push = $('.a-push', v), rets = $$('.app-ret__row b', v), cursor = $('.st-cursor', v);
+    const at = (el, fx, fy) => f.inFrame(el, fx, fy);
+    tl.fromTo(appx, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: .4 }, 0)
+      .fromTo([home, pdp, lock, badge, push], { opacity: 0 }, { opacity: 0, duration: .01 }, 0)
+      .fromTo(pdp, { xPercent: 100 }, { xPercent: 100, duration: .01 }, 0)
+      // 1 map the core flows: each step lights up while the wireframe sits on the phone
+      .fromTo(flow, { opacity: .35 }, { opacity: 1, duration: .2, stagger: .16 }, .25)
+      .fromTo(flow.map((s) => $('i', s)), { backgroundColor: '#2a2f2c', color: '#cfd3cc' }, { backgroundColor: '#d7ff00', color: '#0b0d00', duration: .2, stagger: .16 }, .25)
+      // 2 design every screen: the real home screen replaces the wireframe, tap into a product, add to bag
+      .fromTo(home, { opacity: 0, scale: 1.03 }, { opacity: 1, scale: 1, duration: .45 }, 1.15)
+      .fromTo(cursor, { opacity: 0, x: () => at(hero, .6, .5).x + 60, y: () => at(hero, .6, .5).y + 80 }, { opacity: 1, duration: .1 }, 1.55)
+      .to(cursor, { x: () => at(hero, .6, .5).x, y: () => at(hero, .6, .5).y, duration: .22, ease: 'power2.inOut' }, 1.6)
+      .to(hero, { scale: .97, duration: .06, yoyo: true, repeat: 1 }, 1.82)
+      .to(pdp, { opacity: 1, xPercent: 0, duration: .35, ease: 'power3.out' }, 1.9)
+      .to(cursor, { x: () => at(buy, .5, .5).x, y: () => at(buy, .5, .5).y, duration: .25, ease: 'power2.inOut' }, 2.1)
+      .to(buy, { scale: .95, duration: .06, yoyo: true, repeat: 1 }, 2.36)
+      .fromTo(toast, { opacity: 0, y: -8 }, { opacity: 1, y: 0, duration: .2 }, 2.42)
+      .call(() => { bagN.textContent = tl.time() >= 2.42 ? '3' : '2'; }, null, 2.42)
+      .to(cursor, { opacity: 0, duration: .15 }, 2.55)
+      // 3 ship to both stores
+      .fromTo(stores, { boxShadow: '0 0 0 0 rgba(215,255,0,0)' }, { boxShadow: '0 0 0 2px rgba(215,255,0,1)', duration: .25, stagger: .15 }, 2.7)
+      .to(rev, { opacity: 0, duration: .15, stagger: .15 }, 2.85)
+      .fromTo(live, { opacity: 0, scale: .8 }, { opacity: 1, scale: 1, duration: .25, stagger: .15, ease: 'back.out(2)' }, 2.85)
+      .to(stores, { boxShadow: '0 0 0 0 rgba(215,255,0,0)', duration: .3 }, 3.3)
+      // 4 bring users back: lock screen, push arrives, tap reopens the product
+      .to(toast, { opacity: 0, duration: .15 }, 3.3)
+      .fromTo(lock, { opacity: 0 }, { opacity: 1, duration: .35 }, 3.35)
+      .fromTo(push, { opacity: 0, y: -30, scale: .96 }, { opacity: 1, y: 0, scale: 1, duration: .35, ease: 'back.out(1.6)' }, 3.6)
+      .fromTo(cursor, { opacity: 0, x: () => at(push, .6, .5).x + 50, y: () => at(push, .6, .5).y + 70 }, { opacity: 1, duration: .1 }, 3.85)
+      .to(cursor, { x: () => at(push, .6, .5).x, y: () => at(push, .6, .5).y, duration: .22, ease: 'power2.inOut' }, 3.9)
+      .to(push, { scale: .97, duration: .06, yoyo: true, repeat: 1 }, 4.12)
+      .to(lock, { opacity: 0, scale: 1.04, duration: .3 }, 4.2)
+      .fromTo(badge, { opacity: 0, scale: .8 }, { opacity: 1, scale: 1, duration: .25, ease: 'back.out(2)' }, 4.35)
+      .to(cursor, { opacity: 0, duration: .15 }, 4.3);
+    rets.forEach((b, i) => {
+      const to = +b.dataset.to, o = { n: 0 };
+      tl.fromTo(o, { n: 0 }, { n: to, duration: .7, ease: 'power2.out', onUpdate: () => { b.textContent = (to % 1 ? o.n.toFixed(1) : Math.round(o.n)) + '%'; } }, 3.7 + i * .12);
+    });
+    tl.to({}, { duration: .3 });
   }
 
   if (type === 'flow') {
