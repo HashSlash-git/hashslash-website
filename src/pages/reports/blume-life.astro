@@ -1,0 +1,144 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const audit = [
+  ['AP | GUT | TOF | 010725', '₹1.58L', '1.83x', 'Reported spend and ROAS'],
+  ['AP | TOF | IBS_V2 | 060626', '—', '2.19x', 'Approx. ₹457 cost per purchase'],
+  ['AP | Page Test | 290726', '—', '2.32x', 'Approx. ₹391 cost per purchase'],
+  ['AP | CC | 11.11.26', '—', '6.1', 'Reported frequency; review fatigue']
+];
+const phases = [
+  {day:'01—30',title:'Audit, restructure & test',focus:'Improve campaign efficiency and establish a stronger foundation for scaling.',items:['Complete Meta Ads and tracking audit','Identify high- and under-performing campaigns','Restructure campaigns and refine budget allocation','Develop and launch 10–12 fresh creative variations','Begin structured audience and creative testing','Audit website conversion journey','Establish baseline reporting and profitability metrics']},
+  {day:'31—60',title:'Optimisation & revenue improvement',focus:'Improve conversion efficiency, reduce acquisition costs, and increase revenue per order.',items:['Scale validated creative and audience combinations','Optimise campaigns based on purchase performance','Implement website and product-page recommendations','Test bundles, multipacks, and AOV improvement strategies','Strengthen retargeting campaigns','Launch or optimise Google Search and Shopping','Review product-level profitability and acquisition costs']},
+  {day:'61—90',title:'Controlled scaling',focus:'Build a repeatable and sustainable customer acquisition engine.',items:['Gradually increase budgets on consistently performing campaigns','Expand winning creative concepts into new variations','Scale validated audiences and acquisition channels','Strengthen repeat-purchase and retention campaigns','Reallocate budgets based on channel and product profitability','Review overall revenue contribution and marketing efficiency','Build the next-quarter growth and scaling roadmap']}
+];
+const pillars = [
+ {n:'01',title:'Initial performance audit',objective:'Identify where advertising investment is being lost and where existing campaigns can deliver better returns.',items:['Audit Meta campaigns, ad sets, creatives, audiences and budgets','Identify high-spending campaigns with below-average ROAS and CPA','Evaluate AP TOF IBS V2 and AP Page Test for further testing and scaling','Review audience overlap, frequency, placements and campaign structures','Audit pixel, Conversions API, purchase events and attribution settings','Compare Meta-reported purchases and revenue with Shopify orders and realised revenue','Establish baseline metrics and product-level profitability']},
+ {n:'02',title:'Creative strategy & testing',objective:'Improve engagement, attract higher-intent audiences and reduce acquisition costs through a stronger creative pipeline.',items:['Develop 10–12 fresh creative variations every month','Introduce UGC and genuine customer-experience videos','Create product demonstrations and ingredient-focused creatives','Explore founder-led videos and educational content','Test hooks, formats, messaging angles and calls to action','Build product-specific creative strategies for Clear Gut, IBS EaseGut and Sukoon','Test problem-awareness, product education, customer trust and differentiation angles','Refresh fatigued creatives; iterate winning concepts']},
+ {n:'03',title:'Meta Ads restructuring',objective:'Improve the efficiency of existing campaigns before increasing advertising investment.',items:['Structure campaigns by funnel stage and objective','Separate prospecting, retargeting and creative testing','Optimise purchase campaigns against actual sales performance','Test broad, interest-based and other relevant audiences','Reduce inefficient budget allocation','Structure creative and audience testing','Optimise placements, bids, budgets and targeting','Gradually scale campaigns with consistent purchase performance','Monitor CPA, ROAS, CTR, CPC, CPM and frequency']},
+ {n:'04',title:'Website & conversion optimisation',objective:'Convert a higher percentage of existing website traffic into paying customers.',items:['Audit the journey from ad click to purchase','Improve homepage product visibility and navigation','Improve product pages with clearer benefits, ingredients, usage information and FAQs','Strengthen trust with reviews, testimonials and product information','Improve mobile shopping usability','Review checkout and payment drop-offs','Improve product discovery and purchase confidence','Recommend offers, bundles and product combinations','Track conversion rate and checkout completion']},
+ {n:'05',title:'AOV & revenue optimisation',objective:'Generate higher revenue from every acquired customer.',items:['Evaluate product combinations and bundle opportunities','Introduce quantity-based offers and multipack strategies','Test cross-selling and product recommendations','Promote relevant combinations across campaigns and landing pages','Test prepaid incentives and suitable promotional offers','Monitor average order value and revenue per customer','Improve purchase value without compromising margins']},
+ {n:'06',title:'Retargeting & retention',objective:'Re-engage interested users and increase repeat purchases.',items:['Build audiences for website visitors and product viewers','Separate add-to-cart and checkout retargeting','Personalise messaging by browsing and purchase behaviour','Run repeat-purchase campaigns for existing customers','Coordinate abandoned-cart email and WhatsApp, subject to customer consent','Segment by product interest and purchase history','Monitor returning-customer revenue and repeat-purchase rates']},
+ {n:'07',title:'Google Ads & high-intent acquisition',objective:'Expand beyond Meta and capture customers actively searching for relevant wellness products.',items:['Audit Google Ads and conversion tracking','Research relevant product and category keywords','Launch and optimise high-intent Search campaigns','Optimise Shopping and Performance Max where suitable','Improve product feed quality and categorisation','Implement relevant Google remarketing','Compare attributed purchase value with backend sales','Evaluate channel contribution and profitability']},
+ {n:'08',title:'Performance tracking & reporting',objective:'Establish clear visibility into campaign efficiency, revenue contribution and business profitability.',items:['Weekly campaign performance reviews','Monthly performance and growth reports','Product-level sales and advertising analysis','Monitor ROAS, CPA, AOV, CAC, CTR, CPC and conversion rate','Analyse new versus returning customer contribution','Recommend budget allocation and scaling','Track actual revenue, refunds, cancellations and order quality where available','Create action plans based on trends and business priorities']}
+];
+const support = ['Regular supply of UGC, product demonstration videos and creative assets','Product information, ingredient details and approved marketing claims','Product cost, margin, shipping and fulfilment data','Access to Meta Business Manager, Google Ads, GA4 and Shopify','Timely approvals for creatives, offers and campaign changes','Website development support for conversion improvements','Backend order, revenue, cancellation and customer data','Approval and budget allocation for advertising and promotional activities'];
+---
+
+<Base title="Blume Life | Performance Marketing Strategy & Action Plan" description="Proposed performance marketing strategy and 90-day action plan prepared by HashSlash for Blume Life." bodyClass="report-page">
+  <div class="report-progress" aria-hidden="true"><span></span></div>
+  <section class="rp-hero" id="top">
+    <div class="rp-grid" aria-hidden="true"></div>
+    <div class="rp-hero__meta mono"><span>HASHSLASH / STRATEGY REPORT</span><span>BLUME LIFE · 2026</span></div>
+    <p class="rp-kicker mono reveal">Performance marketing / Action plan</p>
+    <h1 class="display rp-title"><span class="rp-line">Make every</span><span class="rp-line">click <em>count.</em></span></h1>
+    <div class="rp-hero__bottom">
+      <p class="rp-intro">A performance-led growth plan to improve campaign efficiency, strengthen the purchase journey and scale sustainable revenue.</p>
+      <a class="btn btn--lime btn--lg" href="#overview">Explore the strategy <span class="arr">↓</span></a>
+    </div>
+    <div class="rp-stamp mono">PROPOSED<br/>STRATEGY <b>↘</b></div>
+  </section>
+
+  <section class="rp-section rp-overview" id="overview">
+    <header class="rp-head reveal"><p class="mono rp-index">00 / THE MANDATE</p><h2 class="display">Efficiency <span class="rp-outline">before</span><br/>expansion.</h2></header>
+    <div class="rp-overview__grid">
+      <p class="rp-large reveal">Blume Life already has an established purchase funnel and campaigns generating sales. The next stage is to identify what is working, address inefficiencies and improve the conversion journey across the entire customer lifecycle.</p>
+      <div class="rp-note reveal"><span class="mono">THE HASHSLASH APPROACH</span><p>Prioritise campaign efficiency, creative performance and website conversion before aggressive budget expansion.</p><span class="rp-note__mark">#/.</span></div>
+    </div>
+    <div class="rp-statrow">
+      <div class="rp-stat reveal"><b>1.90<span>x</span></b><small>Reported current baseline ROAS</small></div>
+      <div class="rp-stat reveal"><b>2.50<span>x</span></b><small>Interim improvement target</small></div>
+      <div class="rp-stat reveal"><b>3.00<span>x</span></b><small>Near-term growth target</small></div>
+      <div class="rp-stat reveal"><b>3–4<span>x</span></b><small>Further scaling ambition</small></div>
+    </div>
+    <p class="rp-footnote mono">Targets are directional milestones from the proposed plan, not guaranteed outcomes.</p>
+  </section>
+
+  <section class="rp-section rp-audit" id="audit">
+    <header class="rp-head reveal"><p class="mono rp-index">01 / INITIAL CAMPAIGN OBSERVATIONS</p><h2 class="display">Find the <em>leaks.</em><br/>Protect the spend.</h2><p class="rp-sub">Initial observations from the supplied campaign report. These figures are reported values and require validation against Shopify backend orders and realised revenue.</p></header>
+    <div class="rp-audit-table">
+      {audit.map((a,i)=><article class="rp-audit-row reveal"><span class="mono">0{i+1}</span><div><h3>{a[0]}</h3><small>{a[3]}</small></div><b>{a[1]}</b><strong>{a[2]}<small>{i===3?'frequency':'ROAS'}</small></strong></article>)}
+    </div>
+    <div class="rp-callout reveal"><span class="mono">AUDIT PRIORITIES</span><p>Review the 6.1 frequency campaign for creative fatigue and audience saturation. Standardise attribution settings across campaign exports, and reconcile Meta purchases with Shopify orders before scaling.</p></div>
+  </section>
+
+  <section class="rp-section" id="pillars">
+    <header class="rp-head reveal"><p class="mono rp-index">02 / THE GROWTH SYSTEM</p><h2 class="display">Eight levers.<br/><em>One engine.</em></h2><p class="rp-sub">A connected operating plan across acquisition, creative, conversion, retention and measurement.</p></header>
+    <div class="rp-pillar-grid">
+      {pillars.map((p,i)=><article class="rp-pillar reveal"><div class="rp-pillar__top"><span class="mono">{p.n} / 08</span><span class="rp-plus">↗</span></div><h3 class="display">{p.title}</h3><p>{p.objective}</p><ul>{p.items.map(item=><li>{item}</li>)}</ul></article>)}
+    </div>
+  </section>
+
+  <section class="rp-section rp-roadmap" id="roadmap">
+    <header class="rp-head reveal"><p class="mono rp-index">03 / EXECUTION ROADMAP</p><h2 class="display">90 days to<br/><em>momentum.</em></h2><p class="rp-sub">A phased plan: establish the baseline, improve revenue efficiency, then scale validated performance.</p></header>
+    <div class="rp-roadmap__track">
+      {phases.map((p,i)=><article class="rp-phase reveal"><div class="rp-phase__number mono">PHASE 0{i+1}<span>{p.day} DAYS</span></div><div class="rp-phase__body"><h3 class="display">{p.title}</h3><p class="rp-phase__focus">{p.focus}</p><ul>{p.items.map(item=><li>{item}</li>)}</ul></div></article>)}
+    </div>
+  </section>
+
+  <section class="rp-section rp-targets" id="targets">
+    <header class="rp-head reveal"><p class="mono rp-index">04 / PERFORMANCE DIRECTION</p><h2 class="display">Progress, <em>not promises.</em></h2></header>
+    <div class="rp-targets__visual reveal">
+      <div class="rp-targets__top"><span class="mono">ROAS MILESTONES</span><span class="mono">DIRECTIONAL TARGETS</span></div>
+      <div class="rp-target"><span>Current reported baseline</span><b>1.90x</b><i style="--w:47.5%"></i></div>
+      <div class="rp-target"><span>Interim improvement target</span><b>2.50x</b><i style="--w:62.5%"></i></div>
+      <div class="rp-target"><span>Near-term growth target</span><b>3.00x</b><i style="--w:75%"></i></div>
+      <div class="rp-target"><span>Further scaling ambition</span><b>3–4x</b><i style="--w:100%"></i></div>
+    </div>
+    <p class="rp-sub rp-targets__note">Targets will be pursued through continuous optimisation, not simply by increasing advertising budgets. Progress will be assessed through blended and campaign ROAS, CAC, conversion rate, AOV, repeat-customer contribution and sustainable revenue after product and fulfilment costs.</p>
+  </section>
+
+  <section class="rp-section rp-support" id="support">
+    <header class="rp-head reveal"><p class="mono rp-index">05 / CLIENT ENABLEMENT</p><h2 class="display">Good growth<br/>is a <em>team sport.</em></h2><p class="rp-sub">Support required from Blume Life for effective execution.</p></header>
+    <div class="rp-support__list">{support.map((s,i)=><div class="rp-support__item reveal"><span class="mono">0{i+1}</span><p>{s}</p><b>↗</b></div>)}</div>
+  </section>
+
+  <section class="rp-closing">
+    <p class="mono rp-index reveal">HASHSLASH / THE RECOMMENDATION</p>
+    <h2 class="display reveal">From <span class="rp-outline">1.9x</span><br/>towards <em>2.5x.</em><br/>Then scale.</h2>
+    <p class="rp-closing__text reveal">The immediate objective is to improve efficiency, establish consistency and build a performance marketing engine that acquires customers more efficiently, increases order value and drives sustainable revenue growth.</p>
+    <div class="rp-closing__foot mono"><span>BLUME LIFE × HASHSLASH</span><a href="#top">BACK TO TOP ↑</a></div>
+  </section>
+</Base>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const bar = document.querySelector('.report-progress span');
+  if (!reduce) {
+    gsap.to(bar, {scaleX:1, ease:'none', scrollTrigger:{trigger:document.documentElement,start:'top top',end:'bottom bottom',scrub:0.25}});
+    gsap.from('.rp-line', {yPercent:115, opacity:0, stagger:0.14, duration:1.05, ease:'power4.out', delay:0.15});
+    gsap.utils.toArray('.reveal').forEach((el) => gsap.from(el,{y:42,opacity:0,duration:0.85,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%',once:true}}));
+    gsap.utils.toArray('.rp-pillar').forEach((el,i)=>gsap.from(el,{y:55,opacity:0,duration:0.8,delay:(i%2)*0.08,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%',once:true}}));
+    gsap.utils.toArray('.rp-target i').forEach(el=>gsap.fromTo(el,{scaleX:0},{scaleX:1,duration:1.1,ease:'power3.out',transformOrigin:'left',scrollTrigger:{trigger:el,start:'top 90%',once:true}}));
+    gsap.utils.toArray('.rp-phase').forEach((el,i)=>gsap.from(el,{x:i%2===0?-38:38,opacity:0,duration:0.9,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 86%',once:true}}));
+    ScrollTrigger.refresh();
+  }
+</script>
+
+<style>
+  :global(.report-page){background:#080909;color:#f2f3ed}
+  .report-progress{position:fixed;z-index:100;top:0;left:0;width:100%;height:2px;background:#ffffff12;pointer-events:none}.report-progress span{display:block;width:100%;height:100%;background:#d7ff00;transform:scaleX(0);transform-origin:left}
+  .rp-hero{min-height:88svh;position:relative;overflow:hidden;padding:clamp(110px,15vh,180px) max(5vw,24px) 70px;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid #ffffff20}
+  .rp-grid{position:absolute;inset:0;opacity:.16;background-image:linear-gradient(#ffffff12 1px,transparent 1px),linear-gradient(90deg,#ffffff12 1px,transparent 1px);background-size:70px 70px;mask-image:linear-gradient(90deg,black,transparent 90%)}
+  .rp-hero__meta{position:absolute;top:34px;left:5vw;right:5vw;display:flex;justify-content:space-between;color:#929994;font-size:10px;letter-spacing:.12em}
+  .rp-kicker,.rp-index{color:#d7ff00;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+  .rp-title{font-size:clamp(64px,12.5vw,190px);line-height:.82;letter-spacing:-.075em;text-transform:uppercase;max-width:1100px;margin:35px 0 55px;overflow:hidden}
+  .rp-line{display:block;overflow:hidden}.rp-title em,.rp-head h2 em,.rp-closing h2 em{font-style:normal;color:#d7ff00}
+  .rp-hero__bottom{display:flex;align-items:end;justify-content:space-between;gap:35px;max-width:1050px}.rp-intro{max-width:470px;color:#b6bdb7;font-size:clamp(16px,2vw,21px);line-height:1.5}
+  .rp-stamp{position:absolute;right:8%;top:38%;border:1px solid #d7ff00;border-radius:50%;width:110px;height:110px;display:grid;place-content:center;text-align:center;color:#d7ff00;font-size:10px;line-height:1.5;transform:rotate(12deg)}.rp-stamp b{font-size:20px}
+  .rp-section{padding:clamp(90px,12vw,170px) max(5vw,24px);border-bottom:1px solid #ffffff1b}
+  .rp-head{max-width:1100px;margin-bottom:65px}.rp-head h2,.rp-closing h2{font-size:clamp(48px,8vw,112px);line-height:.9;letter-spacing:-.065em;text-transform:uppercase;margin:28px 0}.rp-outline{color:transparent;-webkit-text-stroke:1px #f2f3ed}
+  .rp-sub{color:#9ca59e;max-width:650px;line-height:1.65;font-size:16px}.rp-overview__grid{display:grid;grid-template-columns:1.2fr .8fr;gap:8vw;align-items:center}.rp-large{font-size:clamp(23px,3vw,42px);line-height:1.24;letter-spacing:-.035em;max-width:780px}.rp-note{position:relative;border:1px solid #ffffff2b;padding:30px;min-height:190px;background:#101313;overflow:hidden}.rp-note>span{font-size:10px;color:#d7ff00;letter-spacing:.12em}.rp-note p{font-size:18px;line-height:1.5;max-width:380px}.rp-note__mark{position:absolute;right:15px;bottom:-40px;font-size:100px!important;opacity:.12}
+  .rp-statrow{display:grid;grid-template-columns:repeat(4,1fr);margin-top:90px;border-top:1px solid #ffffff2a;border-bottom:1px solid #ffffff2a}.rp-stat{padding:28px 20px 28px 0;border-right:1px solid #ffffff22}.rp-stat+ .rp-stat{padding-left:25px}.rp-stat:last-child{border:0}.rp-stat b{font-size:clamp(40px,5vw,68px);letter-spacing:-.07em}.rp-stat b span{color:#d7ff00;font-size:.5em}.rp-stat small{display:block;color:#9ca59e;font-size:12px;margin-top:10px}.rp-footnote{font-size:10px;color:#778079;margin-top:15px}
+  .rp-audit-table{border-top:1px solid #ffffff30}.rp-audit-row{display:grid;grid-template-columns:55px 1fr 120px 110px;gap:18px;align-items:center;padding:24px 8px;border-bottom:1px solid #ffffff24}.rp-audit-row>span{color:#d7ff00;font-size:11px}.rp-audit-row h3{font-size:16px;margin:0 0 5px}.rp-audit-row small{display:block;color:#929994;font-size:11px}.rp-audit-row>b{font-size:15px;font-weight:500;color:#b9c0ba}.rp-audit-row>strong{font-size:25px;color:#d7ff00}.rp-audit-row>strong small{font-size:9px;text-transform:uppercase;letter-spacing:.12em;font-weight:400}.rp-callout{margin-top:30px;padding:26px 30px;border-left:2px solid #d7ff00;background:#121613}.rp-callout span{font-size:10px;color:#d7ff00;letter-spacing:.12em}.rp-callout p{max-width:850px;line-height:1.6;color:#c3c9c3}
+  .rp-pillar-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.rp-pillar{border:1px solid #ffffff25;background:#0e1110;padding:clamp(24px,3vw,40px);min-height:400px}.rp-pillar__top{display:flex;justify-content:space-between;color:#d7ff00;font-size:10px;letter-spacing:.12em}.rp-plus{font-size:20px}.rp-pillar h3{font-size:clamp(27px,3vw,42px);line-height:1;letter-spacing:-.045em;text-transform:uppercase;margin:45px 0 16px;max-width:480px}.rp-pillar>p{color:#aab2ab;line-height:1.5;max-width:530px}.rp-pillar ul,.rp-phase ul{list-style:none;padding:0;margin:25px 0 0}.rp-pillar li,.rp-phase li{position:relative;padding:9px 0 9px 18px;border-top:1px solid #ffffff16;color:#c0c6c0;font-size:13px;line-height:1.45}.rp-pillar li:before,.rp-phase li:before{content:'+';position:absolute;left:0;color:#d7ff00}
+  .rp-roadmap{background:#0b0d0c}.rp-roadmap__track{position:relative;border-top:1px solid #ffffff30}.rp-phase{display:grid;grid-template-columns:.42fr 1fr;gap:5vw;padding:55px 0;border-bottom:1px solid #ffffff30}.rp-phase__number{font-size:12px;color:#d7ff00;letter-spacing:.1em}.rp-phase__number span{display:block;color:#737d75;margin-top:12px;font-size:10px}.rp-phase h3{font-size:clamp(32px,4.5vw,58px);line-height:.98;letter-spacing:-.05em;text-transform:uppercase;margin:0 0 18px}.rp-phase__focus{color:#d7ff00;max-width:650px;line-height:1.5}.rp-phase ul{display:grid;grid-template-columns:repeat(2,1fr);gap:0 25px}
+  .rp-targets__visual{border:1px solid #ffffff30;padding:clamp(22px,4vw,50px);background:#0e1110}.rp-targets__top{display:flex;justify-content:space-between;color:#d7ff00;font-size:10px;letter-spacing:.12em;margin-bottom:40px}.rp-target{display:grid;grid-template-columns:1fr 70px;gap:8px;position:relative;padding:18px 0 24px;border-bottom:1px solid #ffffff1b;color:#b9c0ba;font-size:13px}.rp-target b{text-align:right;color:#f2f3ed;font-size:18px}.rp-target i{position:absolute;bottom:0;left:0;width:100%;height:3px;background:#ffffff18;transform-origin:left}.rp-target i:after{content:'';display:block;width:var(--w);height:100%;background:#d7ff00}.rp-targets__note{margin-top:25px}
+  .rp-support__list{border-top:1px solid #ffffff30}.rp-support__item{display:grid;grid-template-columns:70px 1fr 30px;align-items:center;gap:20px;border-bottom:1px solid #ffffff25;padding:19px 5px}.rp-support__item span{color:#d7ff00;font-size:11px}.rp-support__item p{margin:0;color:#d4d9d3}.rp-support__item b{color:#d7ff00;font-weight:400}
+  .rp-closing{padding:clamp(100px,16vw,220px) max(5vw,24px) 35px;background:#d7ff00;color:#080909}.rp-closing .rp-index{color:#080909}.rp-closing h2{font-size:clamp(60px,11vw,155px);max-width:1100px}.rp-closing h2 em{color:#080909}.rp-closing .rp-outline{-webkit-text-stroke-color:#080909}.rp-closing__text{max-width:620px;font-size:clamp(17px,2vw,23px);line-height:1.5;margin:50px 0 100px}.rp-closing__foot{display:flex;justify-content:space-between;border-top:1px solid #08090955;padding-top:20px;font-size:10px;letter-spacing:.12em}.rp-closing__foot a{color:#080909;text-decoration:none}
+  @media(max-width:760px){.rp-hero{min-height:78svh;padding-top:130px}.rp-hero__meta{font-size:8px}.rp-title{font-size:clamp(58px,16vw,100px)}.rp-stamp{width:75px;height:75px;font-size:8px;right:7%;top:23%}.rp-hero__bottom{align-items:flex-start;flex-direction:column}.rp-overview__grid{grid-template-columns:1fr;gap:25px}.rp-statrow{grid-template-columns:repeat(2,1fr);margin-top:55px}.rp-stat{padding:20px 10px 20px 0}.rp-stat+.rp-stat{padding-left:15px}.rp-stat:nth-child(2){border-right:0}.rp-stat:nth-child(n+3){border-top:1px solid #ffffff22}.rp-audit-row{grid-template-columns:28px 1fr 65px 65px;gap:8px;padding:19px 0}.rp-audit-row h3{font-size:12px;overflow-wrap:anywhere}.rp-audit-row>b{font-size:12px}.rp-audit-row>strong{font-size:19px}.rp-pillar-grid{grid-template-columns:1fr}.rp-pillar{min-height:0}.rp-phase{grid-template-columns:1fr;gap:22px;padding:35px 0}.rp-phase ul{grid-template-columns:1fr}.rp-targets__top{font-size:8px}.rp-support__item{grid-template-columns:35px 1fr 20px;gap:10px}.rp-support__item p{font-size:13px}.rp-closing__foot{font-size:8px}}
+  @media(prefers-reduced-motion:reduce){.rp-line,.reveal{opacity:1!important;transform:none!important}}
+</style>
