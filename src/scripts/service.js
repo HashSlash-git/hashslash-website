@@ -40,14 +40,17 @@ export function initService() {
     const steps = $$('.moment__steps li', moment);
     const bar = $('.moment__bar span', moment);
     tl.paused(false);
-    ScrollTrigger.create({
-      trigger: moment, start: 'top top', end: () => '+=' + Math.round(innerHeight * 2.2),
-      pin: true, scrub: 1, animation: tl, invalidateOnRefresh: true, anticipatePin: 1,
-      onUpdate: (self) => {
-        const i = Math.min(steps.length - 1, Math.floor(self.progress * steps.length * 0.999));
-        steps.forEach((s, k) => { s.classList.toggle('is-on', k <= i); s.classList.toggle('is-current', k === i); });
-        bar.style.transform = `scaleX(${self.progress})`;
-      }
+    const onUpdate = (self) => {
+      const i = Math.min(steps.length - 1, Math.floor(self.progress * steps.length * 0.999));
+      steps.forEach((s, k) => { s.classList.toggle('is-on', k <= i); s.classList.toggle('is-current', k === i); });
+      bar.style.transform = `scaleX(${self.progress})`;
+    };
+    gsap.matchMedia().add({ phone: '(max-width: 768px)', wide: '(min-width: 769px)' }, (ctx) => {
+      // Desktop: pinned for 2.2 screens. Phones: no pin (it left long empty-looking stretches);
+      // the demo plays while the section scrolls through the screen instead.
+      ScrollTrigger.create(ctx.conditions.phone
+        ? { trigger: moment, start: 'top 70%', end: 'bottom 60%', scrub: 1, animation: tl, invalidateOnRefresh: true, onUpdate }
+        : { trigger: moment, start: 'top top', end: () => '+=' + Math.round(innerHeight * 2.2), pin: true, scrub: 1, animation: tl, invalidateOnRefresh: true, anticipatePin: 1, onUpdate });
     });
   }
 

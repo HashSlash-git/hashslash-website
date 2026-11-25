@@ -1091,3 +1091,25 @@ a.case:hover .case__img { transform: scale(1.05); }
 .thx__more { margin: 0; color: var(--muted); }
 .thx__more a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
 @media (max-width: 768px) { .thx__steps { grid-template-columns: 1fr; } }
+
+/* ==========================================================
+   PHONES: tighter section rhythm. The desktop clamp()s stack two ~110-160px paddings
+   between every section, which reads as empty screens on a 375px phone.
+   ========================================================== */
+@media (max-width: 768px) {
+  .services, .industries, .faq, .contact, .process, .quote,
+  .signs, .pkgs, .pairs, .hub-others, .prose-wrap, .ca { padding-top: 56px; padding-bottom: 56px; }
+  .incl { padding-top: 56px; padding-bottom: 24px; }
+  .stack, .svc-list { padding-bottom: 56px; }
+  .svc-list--tight { padding-bottom: 0; }
+  .svc-block { padding-top: 48px; }
+  .process--svc { margin-top: 0; }
+  .footer { padding-top: 56px; }
+  .sec-head { margin-bottom: 28px; }
+  .pairs__title { margin-bottom: 32px; }
+  .hub-hero { min-height: auto; padding-top: calc(var(--nav-h) + 28px); padding-bottom: 40px; justify-content: flex-start; }
+  .svc-hero { padding-bottom: 40px; }
+  /* the demo plays as it scrolls past (see service.js), so it no longer needs a full screen */
+  .moment__stage { height: auto; min-height: 0; padding-top: 56px; padding-bottom: 40px; }
+  .moment__visual { height: auto; min-height: 0; max-height: none; }
+}
