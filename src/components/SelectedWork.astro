@@ -1,0 +1,437 @@
+---
+// "Selected work": homepage section between Industries and Process.
+// Every class is prefixed sw- so nothing collides with the homepage's own .work, .chip, .line or .reveal code.
+import { brands, esc, pad, brandStyle, realHTML } from '../lib/selected-work';
+const first = brands[0];
+---
+<section class="sw" id="selected-work" aria-labelledby="sw-title">
+  <div class="sw-head">
+    <p class="mono sw-kicker">( Selected work )</p>
+    <h2 class="display sw-title" id="sw-title">
+      <span class="sw-line"><span class="sw-line__in">The company</span></span>
+      <span class="sw-line sw-l2"><span class="sw-line__in"><span class="outline">We keep</span><span class="lime">.</span></span></span>
+    </h2>
+    <div class="sw-meta">
+      <p class="sw-lede">From Indian favourites to global names, across fashion, beauty, home, food and music.</p>
+      <a class="btn sw-cta" href="#contact" data-track="cta_click" data-cta="selected_work" data-loc="selected-work">Start a project <span aria-hidden="true">&rarr;</span></a>
+    </div>
+  </div>
+
+  <div class="sw-wall" aria-hidden="true"></div>
+
+  <div class="sw-explore">
+    <div>
+      <p class="mono sw-index__label">The index</p>
+      <ol class="sw-index" role="tablist" aria-label="Brands" aria-orientation="vertical">
+        {brands.map((b, i) => (
+          <li role="presentation">
+            <button class={`sw-ix${i === 0 ? ' is-on' : ''}`} type="button" role="tab" id={`sw-tab-${i}`} aria-controls="sw-stage" aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-i={i}>
+              <span class="mono sw-ix__no">{pad(i + 1)}</span>
+              <span class="sw-ix__slash" aria-hidden="true">/</span>
+              <span class="sw-ix__name">{b.name}</span>
+              <span class="mono sw-ix__mkt">{b.market}</span>
+              <span class="sw-ix__bar" aria-hidden="true"></span>
+            </button>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="sw-stage" id="sw-stage" role="tabpanel" aria-labelledby="sw-tab-0">
+      <div class="sw-stage__view"><div class="sw-layer" style={brandStyle(first)} set:html={realHTML(first, 'wide')} /></div>
+      <div class="sw-stage__wipe" aria-hidden="true"></div>
+      <div class="sw-stage__meta">
+        <div class="sw-stage__id">
+          <p class="sw-stage__name"><span>{first.name}</span></p>
+          <p class="mono sw-stage__mkt"><span>{first.market}</span></p>
+        </div>
+        <button class="btn btn--ghost btn--sm sw-stage__play" type="button" aria-pressed="false">Pause</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sw-deck-wrap">
+    <ul class="sw-chips" aria-label="Jump to a brand">
+      {brands.map((b, i) => <li><button class="sw-chip" type="button" data-i={i} aria-current={i === 0 ? 'true' : 'false'}>{b.name}</button></li>)}
+    </ul>
+    <ul class="sw-deck" aria-label="Brands, swipe to browse">
+      {brands.map((b, i) => (
+        <li class="sw-card" data-i={i} style={brandStyle(b)} aria-label={`${i + 1} of ${brands.length}: ${b.name}`}>
+          <div class="sw-card__art" set:html={realHTML(b, 'tall')} />
+          <div class="sw-card__meta"><p class="sw-card__name">{b.name}</p><p class="mono sw-card__mkt">{b.market}</p></div>
+        </li>
+      ))}
+    </ul>
+    <div class="sw-deck__foot"><span class="sw-deck__track" aria-hidden="true"><span class="sw-deck__bar"></span></span></div>
+  </div>
+</section>
+
+<style is:global>
+.sw{--sw-soft:#b9bdb7;--sw-expo:cubic-bezier(.16,1,.3,1);position:relative;overflow-x:clip;padding:clamp(80px,14vh,160px) 0;border-top:1px solid var(--line)}
+.sw-head,.sw-explore,.sw-deck__foot{padding-inline:var(--gutter)}
+.sw-kicker{color:var(--lime);margin:0 0 22px}
+.sw-title{font-size:clamp(2.1rem,7.2vw,7.6rem)}
+.sw-line{display:block;overflow:hidden;padding-bottom:.04em}
+.sw-line__in{display:inline-block}
+.sw-l2{padding-left:9vw}
+.sw-meta{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:20px 48px;margin-top:clamp(24px,4vh,40px);padding-top:22px;border-top:1px solid var(--line)}
+.sw-lede{margin:0;max-width:52ch;color:var(--sw-soft);font-size:clamp(1rem,1.2vw,1.15rem)}
+.sw-cta{background:var(--lime);color:var(--lime-ink)}
+
+/* the wall: two rows drifting in opposite directions */
+.sw-wall{margin-top:clamp(40px,7vh,72px);display:grid;gap:12px;contain:layout paint}
+.sw-wall__row{overflow:hidden}
+.sw-wall__track{display:flex;width:max-content;will-change:transform}
+.sw-wall__set{display:flex;gap:12px;padding-right:12px}
+.sw-tile{--h:clamp(120px,11vw,180px);position:relative;flex:none;height:var(--h);overflow:hidden;background:var(--bg-2);cursor:pointer}
+.sw-tile--wide{aspect-ratio:16/10}
+.sw-tile--tall{aspect-ratio:4/5}
+.sw-tile--square,.sw-tile--poster{aspect-ratio:1}
+.sw-tile .sw-real::after{background:linear-gradient(180deg,transparent 45%,rgba(8,9,9,.8))}
+.sw-tile::before{content:"";position:absolute;inset:0;z-index:2;border:1px solid transparent;transition:border-color .3s var(--ease);pointer-events:none}
+.sw-tile:hover::before{border-color:var(--lime)}
+.sw-tile__go{position:absolute;z-index:2;right:10px;top:10px;background:var(--lime);color:var(--lime-ink);padding:4px 8px;border-radius:999px;font-size:.6rem}
+@media (hover:none){.sw-tile__go{display:none}}
+@media (hover:hover){
+  .sw-tile__go{opacity:0;transform:translateY(-6px);transition:opacity .3s var(--ease),transform .4s var(--sw-expo)}
+  .sw-tile:hover .sw-tile__go{opacity:1;transform:none}
+}
+html:not(.motion) .sw-wall__row{overflow-x:auto;scrollbar-width:none}
+html:not(.motion) .sw-wall__set+.sw-wall__set{display:none}
+
+/* real imagery: photo, top and bottom shade, logo knocked out to white */
+.sw-real{position:absolute;inset:0;margin:0;overflow:hidden}
+.sw-real__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sw-real::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,9,9,.6) 0%,rgba(8,9,9,.18) 22%,transparent 34%,transparent 52%,rgba(8,9,9,.88) 100%)}
+.sw-real__logo{position:absolute;z-index:1;width:auto;max-width:46%;object-fit:contain;object-position:right center;filter:brightness(0) invert(1) drop-shadow(0 1px 10px rgba(0,0,0,.55))}
+.sw-real__logo--raw{filter:drop-shadow(0 1px 10px rgba(0,0,0,.45))}
+.sw-stage .sw-real__logo{top:22px;right:24px;height:calc(clamp(22px,2.2vw,32px) * var(--ls,1))}
+.sw-card .sw-real__logo{top:14px;right:14px;height:calc(22px * var(--ls,1))}
+.sw-tile .sw-real__logo{left:12px;bottom:11px;object-position:left center;height:calc(clamp(14px,1.3vw,20px) * var(--ls,1))}
+
+/* the index + stage (desktop) */
+.sw-explore{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,4vw,72px);align-items:stretch;margin-top:clamp(48px,8vh,88px)}
+.sw-index__label{color:var(--muted);margin:0 0 12px}
+.sw-index{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.sw-ix{all:unset;box-sizing:border-box;position:relative;display:grid;grid-template-columns:2.4em 1em minmax(0,1fr) auto;align-items:baseline;gap:6px;width:100%;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer;color:var(--muted);transition:color .3s var(--ease)}
+.sw-ix__no{font-size:.66rem;color:var(--muted);transition:color .3s}
+.sw-ix__slash{color:var(--lime);font-weight:800;opacity:0;transform:translateX(-8px);transition:opacity .3s,transform .45s var(--sw-expo)}
+.sw-ix__name{font-family:var(--f-display);font-stretch:112%;font-weight:780;text-transform:uppercase;font-size:clamp(.95rem,1.25vw,1.3rem);line-height:1.1;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sw-ix__mkt{font-size:.6rem;color:var(--muted);white-space:nowrap}
+.sw-ix__bar{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--lime);transform:scaleX(0);transform-origin:0 50%;pointer-events:none}
+.sw-ix:hover,.sw-ix.is-on{color:var(--text)}
+.sw-ix.is-on .sw-ix__no{color:var(--lime)}
+.sw-ix.is-on .sw-ix__slash{opacity:1;transform:none}
+.sw-ix:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
+@media (max-width:1199px){.sw-ix__mkt{display:none}.sw-ix{grid-template-columns:2.4em 1em minmax(0,1fr)}}
+
+.sw-stage{--p:1;position:relative;min-height:30rem;border:1px solid var(--line);background:var(--bg-2);overflow:hidden;isolation:isolate}
+.sw-stage__view{position:absolute;inset:0}
+.sw-layer{position:absolute;inset:0;background:var(--bg-2)}
+.sw-layer.is-in{clip-path:polygon(0 0,calc(var(--p)*137% - 7%) 0,calc(var(--p)*137% - 37%) 100%,0 100%)}
+.sw-stage__wipe{position:absolute;inset:0;z-index:3;pointer-events:none;background:var(--lime);clip-path:polygon(calc(var(--p)*137% - 7%) 0,calc(var(--p)*137%) 0,calc(var(--p)*137% - 30%) 100%,calc(var(--p)*137% - 37%) 100%)}
+.sw-stage__meta{position:absolute;z-index:4;left:0;right:0;bottom:0;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:clamp(16px,2vw,26px)}
+.sw-stage__id{min-width:0}
+.sw-stage__name,.sw-stage__mkt{margin:0;overflow:hidden}
+.sw-stage__name span,.sw-stage__mkt span{display:inline-block}
+.sw-stage__name{font-family:var(--f-display);font-stretch:112%;font-weight:800;text-transform:uppercase;font-size:clamp(1.3rem,2.1vw,2.2rem);line-height:1.05;letter-spacing:-.01em}
+.sw-stage__mkt{color:var(--sw-soft);margin-top:6px}
+.sw-stage__play{flex:none}
+html:not(.motion) .sw-stage__play{display:none}
+
+/* the swipe deck (mobile) */
+.sw-deck-wrap{display:none}
+.sw-chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;list-style:none;margin:0 0 14px;padding:2px var(--gutter)}
+.sw-chips::-webkit-scrollbar,.sw-deck::-webkit-scrollbar{display:none}
+.sw-chip{flex:none;padding:8px 12px;border:1px solid var(--line-2);border-radius:999px;background:none;color:var(--sw-soft);font:600 .78rem/1 var(--f-body);white-space:nowrap;cursor:pointer}
+.sw-chip[aria-current="true"]{border-color:var(--lime);color:var(--lime)}
+.sw-deck{display:flex;gap:12px;list-style:none;margin:0;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain;padding:0 var(--gutter);scroll-padding-inline:var(--gutter)}
+.sw-card{position:relative;flex:none;width:min(82%,420px);scroll-snap-align:start;border:1px solid var(--line);background:var(--bg-2)}
+.sw-card__art{position:relative;aspect-ratio:1/1.02}
+.sw-card__meta{padding:14px 16px 16px;border-top:1px solid var(--line)}
+.sw-card__name{margin:0;font-family:var(--f-display);font-stretch:112%;font-weight:800;text-transform:uppercase;font-size:1.25rem;line-height:1.05}
+.sw-card__mkt{margin:6px 0 0;color:var(--sw-soft)}
+.sw-deck__foot{display:flex;padding-top:16px}
+.sw-deck__track{position:relative;flex:1;height:2px;background:var(--line-2)}
+.sw-deck__bar{position:absolute;inset:0;background:var(--lime);transform-origin:0 50%;transform:scaleX(.0625);transition:transform .45s var(--ease)}
+
+@media (max-width:899px){
+  .sw-explore{display:none}
+  .sw-deck-wrap{display:block;margin-top:36px}
+  .sw-meta{grid-template-columns:minmax(0,1fr)}
+  .sw-tile{--h:104px}
+}
+@media (max-width:768px){
+  .sw-l2{padding-left:0}
+  .sw-cta{white-space:normal;text-align:center;justify-content:center;line-height:1.25}
+}
+@media (max-width:600px){
+  .sw .outline{color:var(--muted);-webkit-text-stroke:0}
+}
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { brands, esc, brandStyle, realHTML } from '../lib/selected-work';
+
+  const root = document.querySelector<HTMLElement>('.sw');
+  if (root) init(root);
+
+  function init(root: HTMLElement) {
+    gsap.registerPlugin(ScrollTrigger);
+    const $ = <T extends Element = HTMLElement>(s: string, r: ParentNode = root) => r.querySelector(s) as T;
+    const $$ = <T extends Element = HTMLElement>(s: string, r: ParentNode = root) => [...r.querySelectorAll(s)] as T[];
+    const total = brands.length;
+    const N_AUTO = 4.5;
+    const html = document.documentElement;
+    const reducedMQ = matchMedia('(prefers-reduced-motion: reduce)');
+    const deskMQ = matchMedia('(min-width: 900px)');
+
+    /* ---------- index + stage (desktop) ---------- */
+    const index = $('.sw-index'), stage = $('.sw-stage'), view = $('.sw-stage__view');
+    const sName = $('.sw-stage__name span'), sMkt = $('.sw-stage__mkt span'), playBtn = $('.sw-stage__play');
+    const tabs = $$<HTMLButtonElement>('.sw-ix', index);
+    const bars = tabs.map(t => $('.sw-ix__bar', t));
+    const explore = $('.sw-explore');
+
+    let cur = 0, swap: gsap.core.Timeline | null = null, bar: gsap.core.Tween | null = null;
+    let motion = false, desk = false;
+    const ap = { userPaused: false, pinned: false, hover: false, focus: false, inView: false };
+    const running = () => desk && motion && !ap.userPaused && !ap.pinned && !ap.hover && !ap.focus && ap.inView && !document.hidden;
+    const sync = () => {
+      const stopped = ap.userPaused || ap.pinned;
+      playBtn.textContent = stopped ? 'Play' : 'Pause';
+      playBtn.setAttribute('aria-pressed', String(stopped));
+      if (bar) running() ? bar.play() : bar.pause();
+    };
+    const schedule = () => {
+      if (bar) bar.kill();
+      gsap.set(bars, { scaleX: 0 });
+      bar = null;
+      if (!(desk && motion)) return;
+      bar = gsap.fromTo(bars[cur], { scaleX: 0 }, { scaleX: 1, duration: N_AUTO, ease: 'none', paused: true, onComplete: () => select((cur + 1) % total, { auto: true }) });
+      sync();
+    };
+
+    /* warm the next stage image so the wipe never reveals a half-loaded photo */
+    const warmed = new Set<string>();
+    const preload = (i: number) => {
+      const src = brands[i].assets.wide;
+      if (!desk || warmed.has(src)) return;
+      warmed.add(src);
+      const im = new Image(); im.decoding = 'async'; im.src = src;
+    };
+    const layer = (i: number) => {
+      const el = document.createElement('div');
+      el.className = 'sw-layer';
+      el.setAttribute('style', brandStyle(brands[i]));
+      el.innerHTML = realHTML(brands[i], 'wide', { eager: true });
+      return el;
+    };
+    const renderStage = (i: number, instant: boolean) => {
+      if (swap) swap.progress(1);
+      const next = layer(i);
+      const olds = [...view.children];
+      view.appendChild(next);
+      if (instant || !motion) { olds.forEach(o => o.remove()); stage.style.setProperty('--p', '1'); return; }
+      next.classList.add('is-in');
+      swap = gsap.timeline({ onComplete: () => { olds.forEach(o => o.remove()); next.classList.remove('is-in'); swap = null; } })
+        .fromTo(stage, { '--p': 0 }, { '--p': 1, duration: .85, ease: 'expo.inOut' }, 0)
+        .fromTo($('.sw-real__img', next), { scale: 1.07 }, { scale: 1, duration: 1.1, ease: 'expo.out' }, .12)
+        .to(olds.map(o => $('.sw-real', o)), { xPercent: -5, opacity: .4, duration: .85, ease: 'expo.inOut' }, 0);
+    };
+    const roll = (el: HTMLElement, text: string) => {
+      el.textContent = text;
+      if (motion) gsap.fromTo(el, { yPercent: 110 }, { yPercent: 0, duration: .6, ease: 'expo.out', overwrite: true });
+    };
+
+    function select(i: number, { instant = false, focus = false } = {} as { auto?: boolean; instant?: boolean; focus?: boolean }) {
+      if (i === cur && !instant) return;
+      cur = i;
+      tabs.forEach((t, j) => {
+        const on = j === i;
+        t.classList.toggle('is-on', on);
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+      });
+      if (focus) tabs[i].focus();
+      stage.setAttribute('aria-labelledby', tabs[i].id);
+      if (desk) {
+        renderStage(i, instant);
+        roll(sName, brands[i].name);
+        roll(sMkt, brands[i].market);
+      }
+      schedule();
+      preload((i + 1) % total);
+      deckSync(i, !desk);
+    }
+
+    let hoverTimer = 0;
+    index.addEventListener('pointerover', e => {
+      const t = (e.target as Element).closest<HTMLElement>('.sw-ix');
+      if (!t || e.pointerType !== 'mouse') return;
+      clearTimeout(hoverTimer);
+      hoverTimer = window.setTimeout(() => select(+t.dataset.i!), 90);
+    });
+    index.addEventListener('pointerleave', () => clearTimeout(hoverTimer));
+    index.addEventListener('click', e => {
+      const t = (e.target as Element).closest<HTMLElement>('.sw-ix');
+      if (!t) return;
+      clearTimeout(hoverTimer);
+      ap.pinned = true;
+      select(+t.dataset.i!);
+      sync();
+    });
+    index.addEventListener('keydown', e => {
+      const k = ({ ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 } as Record<string, number>)[e.key];
+      let n: number | null = null;
+      if (k) n = (cur + k + total) % total;
+      if (e.key === 'Home') n = 0;
+      if (e.key === 'End') n = total - 1;
+      if (n === null) return;
+      e.preventDefault();
+      ap.pinned = true;
+      select(n, { focus: true });
+      sync();
+    });
+    playBtn.addEventListener('click', () => {
+      const stopped = ap.userPaused || ap.pinned;
+      ap.userPaused = !stopped;
+      ap.pinned = false;
+      if (stopped && bar && bar.progress() >= 1) schedule();
+      sync();
+    });
+    explore.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { ap.hover = true; sync(); } });
+    explore.addEventListener('pointerleave', () => { ap.hover = false; sync(); });
+    explore.addEventListener('focusin', () => { ap.focus = true; sync(); });
+    explore.addEventListener('focusout', e => { if (!explore.contains(e.relatedTarget as Node)) { ap.focus = false; sync(); } });
+    document.addEventListener('visibilitychange', sync);
+    new IntersectionObserver(([en]) => { ap.inView = en.intersectionRatio >= .4; sync(); }, { threshold: [0, .4, .8] }).observe(stage);
+
+    /* ---------- swipe deck (mobile) ---------- */
+    const deck = $('.sw-deck'), chips = $('.sw-chips'), deckBar = $('.sw-deck__bar');
+    const chipEls = $$('.sw-chip', chips);
+    let deckCur = 0;
+    function deckSync(i: number, scrollDeck: boolean) {
+      if (i === deckCur && !scrollDeck) return;
+      deckCur = i;
+      deckBar.style.transform = `scaleX(${(i + 1) / total})`;
+      chipEls.forEach((c, j) => c.setAttribute('aria-current', String(j === i)));
+      if (desk) return;
+      const c = chipEls[i];
+      chips.scrollTo({ left: c.offsetLeft - chips.clientWidth / 2 + c.offsetWidth / 2, behavior: motion ? 'smooth' : 'auto' });
+      if (scrollDeck) {
+        const card = deck.children[i] as HTMLElement;
+        const padL = parseFloat(getComputedStyle(deck).paddingLeft) || 0;
+        deck.scrollTo({ left: card.offsetLeft - padL, behavior: motion ? 'smooth' : 'auto' });
+      }
+    }
+    let deckTick = false;
+    deck.addEventListener('scroll', () => {
+      if (deckTick) return;
+      deckTick = true;
+      requestAnimationFrame(() => {
+        deckTick = false;
+        const first = deck.children[0] as HTMLElement;
+        const step = first.offsetWidth + (parseFloat(getComputedStyle(deck).columnGap) || 12);
+        deckSync(Math.max(0, Math.min(total - 1, Math.round(deck.scrollLeft / step))), false);
+      });
+    }, { passive: true });
+    chips.addEventListener('click', e => {
+      const c = (e.target as Element).closest<HTMLElement>('.sw-chip');
+      if (c) deckSync(+c.dataset.i!, true);
+    });
+
+    /* ---------- the wall (decorative; built on the client because its rows differ by layout) ---------- */
+    const wall = $('.sw-wall');
+    const SHAPES = {
+      a: ['wide', 'tall', 'square', 'wide', 'wide', 'tall', 'square', 'square'],
+      b: ['tall', 'wide', 'square', 'square', 'tall', 'wide', 'square', 'wide'],
+      m: ['wide', 'tall', 'square', 'square']
+    } as const;
+    const tile = (i: number, shape: string) =>
+      `<div class="sw-tile sw-tile--${shape}" data-i="${i}" style="${brandStyle(brands[i])}">${realHTML(brands[i], shape === 'wide' ? 'thumb' : 'square', { decorative: true })}<span class="mono sw-tile__go">View</span></div>`;
+    const renderWall = () => {
+      const all = brands.map((_, i) => i);
+      const rows = desk
+        ? [{ dir: -1, items: all.filter(i => i % 2 === 0), shapes: SHAPES.a }, { dir: 1, items: all.filter(i => i % 2 === 1), shapes: SHAPES.b }]
+        : [{ dir: -1, items: all, shapes: SHAPES.m }];
+      wall.innerHTML = rows.map(r => {
+        const set = r.items.map((i, k) => tile(i, r.shapes[k % r.shapes.length])).join('');
+        return `<div class="sw-wall__row" data-dir="${r.dir}"><div class="sw-wall__track"><div class="sw-wall__set">${set}</div><div class="sw-wall__set">${set}</div></div></div>`;
+      }).join('');
+    };
+    wall.addEventListener('click', e => {
+      const t = (e.target as Element).closest<HTMLElement>('.sw-tile');
+      if (!t) return;
+      const i = +t.dataset.i!;
+      const target = desk ? explore : $('.sw-deck-wrap');
+      if (desk) { ap.pinned = true; select(i); sync(); } else deckSync(i, true);
+      scrollTo({ top: target.getBoundingClientRect().top + scrollY - 24, behavior: motion ? 'smooth' : 'auto' });
+    });
+
+    /* ---------- motion: same easings and reveals as the rest of the homepage ---------- */
+    let ctx: gsap.Context | null = null;
+    function build() {
+      ctx?.revert();
+      motion = !reducedMQ.matches && html.classList.contains('motion');
+      desk = deskMQ.matches;
+      renderWall();
+      if (swap) swap.progress(1);
+      schedule();
+
+      ctx = gsap.context(() => {
+        if (!motion) return;
+        const once = (trigger: Element | string) => ({ trigger, start: 'top 85%', once: true });
+        gsap.fromTo('.sw-title .sw-line__in', { yPercent: 110 }, { yPercent: 0, duration: 1.1, stagger: .1, ease: 'expo.out', scrollTrigger: once('.sw-title') });
+        gsap.fromTo('.sw-kicker, .sw-meta > *', { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: .1, ease: 'expo.out', scrollTrigger: once('.sw-title') });
+
+        /* rows slide in from opposite sides, then loop only while on screen; scroll speed boosts them */
+        const loops: (gsap.core.Tween & { hovered?: boolean })[] = [];
+        $$('.sw-wall__row', wall).forEach(row => {
+          const dir = +row.dataset.dir!, track = $('.sw-wall__track', row);
+          gsap.fromTo(row, { xPercent: dir * -8, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 1.4, ease: 'expo.out', scrollTrigger: once(wall) });
+          const loop: gsap.core.Tween & { hovered?: boolean } = gsap.fromTo(track, { xPercent: dir < 0 ? 0 : -50 }, { xPercent: dir < 0 ? -50 : 0, duration: desk ? 64 : 80, ease: 'none', repeat: -1, paused: true });
+          loops.push(loop);
+          row.addEventListener('pointerenter', e => { if (e.pointerType !== 'mouse') return; loop.hovered = true; gsap.to(loop, { timeScale: .12, duration: .6, overwrite: true }); });
+          row.addEventListener('pointerleave', () => { loop.hovered = false; gsap.to(loop, { timeScale: 1, duration: .9, overwrite: true }); });
+        });
+        ScrollTrigger.create({
+          trigger: wall, start: 'top bottom', end: 'bottom top',
+          onToggle: s => loops.forEach(l => s.isActive ? l.play() : l.pause()),
+          onUpdate: s => {
+            const k = gsap.utils.clamp(1, 5, 1 + Math.abs(s.getVelocity()) / 380);
+            loops.forEach(l => { if (!l.hovered) gsap.to(l, { timeScale: k, duration: .15, overwrite: true, onComplete: () => { gsap.to(l, { timeScale: 1, duration: 1.2, ease: 'power2.out' }); } }); });
+          }
+        });
+
+        if (desk) {
+          gsap.fromTo(tabs, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: .7, stagger: .04, ease: 'power3.out', scrollTrigger: once(index) });
+          gsap.fromTo(stage, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: 'expo.out', scrollTrigger: once(stage), onComplete: () => { gsap.set(stage, { clearProps: 'clipPath' }); } });
+        } else {
+          gsap.fromTo('.sw-deck-wrap', { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: 'expo.out', scrollTrigger: once('.sw-deck-wrap') });
+        }
+      }, root);
+      ScrollTrigger.refresh();
+    }
+
+    /* the stage photo drifts toward the pointer (fine pointers only) */
+    if (matchMedia('(pointer: fine)').matches) {
+      const qx = gsap.quickTo(view, 'x', { duration: .8, ease: 'power3' }), qy = gsap.quickTo(view, 'y', { duration: .8, ease: 'power3' });
+      stage.addEventListener('pointermove', e => {
+        if (!motion) return;
+        const r = stage.getBoundingClientRect();
+        qx(((e.clientX - r.left) / r.width - .5) * 18);
+        qy(((e.clientY - r.top) / r.height - .5) * 14);
+      });
+      stage.addEventListener('pointerleave', () => { qx(0); qy(0); });
+    }
+
+    const rebuild = () => { build(); select(cur, { instant: true }); deckSync(deckCur, true); };
+    deskMQ.addEventListener('change', rebuild);
+    reducedMQ.addEventListener('change', rebuild);
+    build();
+    schedule();
+    preload(1);
+  }
+</script>

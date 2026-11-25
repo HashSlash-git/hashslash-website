@@ -1,0 +1,215 @@
+[
+  {
+    "name": "Levi's",
+    "market": "Denim & apparel",
+    "color": "#c8102e",
+    "assets": {
+      "logo": "/img/clients/levis/logo.webp",
+      "logoRaw": true,
+      "wide": "/img/clients/levis/wide.webp",
+      "thumb": "/img/clients/levis/thumb.webp",
+      "tall": "/img/clients/levis/tall.webp",
+      "square": "/img/clients/levis/square.webp",
+      "alt": "Levi's India campaign: models in denim and layered shirts"
+    }
+  },
+  {
+    "name": "BAJAAO",
+    "market": "Musical instruments",
+    "color": "#f0782a",
+    "assets": {
+      "logo": "/img/clients/bajaao/logo.webp",
+      "wide": "/img/clients/bajaao/wide.webp",
+      "thumb": "/img/clients/bajaao/thumb.webp",
+      "tall": "/img/clients/bajaao/tall.webp",
+      "square": "/img/clients/bajaao/square.webp",
+      "alt": "BAJAAO electric guitars against a burst of red and purple smoke"
+    }
+  },
+  {
+    "name": "Dermalogica",
+    "market": "Skincare",
+    "color": "#8e9aa6",
+    "assets": {
+      "logo": "/img/clients/dermalogica/logo.webp",
+      "pos": "center 30%",
+      "wide": "/img/clients/dermalogica/wide.webp",
+      "thumb": "/img/clients/dermalogica/thumb.webp",
+      "tall": "/img/clients/dermalogica/tall.webp",
+      "square": "/img/clients/dermalogica/square.webp",
+      "alt": "Dermalogica vitamin C campaign: a model applying serum"
+    }
+  },
+  {
+    "name": "SuperKicks",
+    "market": "Sneakers & streetwear",
+    "color": "#7b5cff",
+    "assets": {
+      "logo": "/img/clients/superkicks/logo.webp",
+      "wide": "/img/clients/superkicks/wide.webp",
+      "thumb": "/img/clients/superkicks/thumb.webp",
+      "tall": "/img/clients/superkicks/tall.webp",
+      "square": "/img/clients/superkicks/square.webp",
+      "alt": "SuperKicks New Balance 983 campaign: a crew seated on studio stools"
+    }
+  },
+  {
+    "name": "Birkenstock",
+    "market": "Footwear",
+    "color": "#b07a4a",
+    "assets": {
+      "logo": "/img/clients/birkenstock/logo.webp",
+      "logoScale": 1.9,
+      "wide": "/img/clients/birkenstock/wide.webp",
+      "thumb": "/img/clients/birkenstock/thumb.webp",
+      "tall": "/img/clients/birkenstock/tall.webp",
+      "square": "/img/clients/birkenstock/square.webp",
+      "alt": "Birkenstock flat lay: clogs, socks, cap and denim"
+    }
+  },
+  {
+    "name": "BOROSIL",
+    "market": "Kitchen & glassware",
+    "color": "#2a6fdb",
+    "assets": {
+      "logo": "/img/clients/borosil/logo.webp",
+      "wide": "/img/clients/borosil/wide.webp",
+      "thumb": "/img/clients/borosil/thumb.webp",
+      "tall": "/img/clients/borosil/tall.webp",
+      "square": "/img/clients/borosil/square.webp",
+      "alt": "Borosil glassware: champagne flutes on a gold tray"
+    }
+  },
+  {
+    "name": "Chamberlain Coffee",
+    "market": "Coffee",
+    "color": "#f2a7c3",
+    "assets": {
+      "logo": "/img/clients/chamberlain/logo.svg",
+      "wide": "/img/clients/chamberlain/wide.webp",
+      "thumb": "/img/clients/chamberlain/thumb.webp",
+      "tall": "/img/clients/chamberlain/tall.webp",
+      "square": "/img/clients/chamberlain/square.webp",
+      "alt": "Chamberlain Coffee on a breakfast table with strawberries"
+    }
+  },
+  {
+    "name": "Chumbak",
+    "market": "Lifestyle & décor",
+    "color": "#e2336b",
+    "assets": {
+      "logo": "/img/clients/chumbak/logo.webp",
+      "wide": "/img/clients/chumbak/wide.webp",
+      "thumb": "/img/clients/chumbak/thumb.webp",
+      "tall": "/img/clients/chumbak/tall.webp",
+      "square": "/img/clients/chumbak/square.webp",
+      "alt": "Chumbak festive campaign: hand-painted bowls and textiles"
+    }
+  },
+  {
+    "name": "Humanrace",
+    "market": "Skincare & wellness",
+    "color": "#cdbb9f",
+    "assets": {
+      "logo": "/img/clients/humanrace/logo.webp",
+      "pos": "center 72%",
+      "wide": "/img/clients/humanrace/wide.webp",
+      "thumb": "/img/clients/humanrace/thumb.webp",
+      "tall": "/img/clients/humanrace/tall.webp",
+      "square": "/img/clients/humanrace/square.webp",
+      "alt": "Humanrace products on dark volcanic rock"
+    }
+  },
+  {
+    "name": "My Trident",
+    "market": "Home textiles",
+    "color": "#1f8a8a",
+    "assets": {
+      "logo": "/img/clients/mytrident/logo.webp",
+      "wide": "/img/clients/mytrident/wide.webp",
+      "thumb": "/img/clients/mytrident/thumb.webp",
+      "tall": "/img/clients/mytrident/tall.webp",
+      "square": "/img/clients/mytrident/square.webp",
+      "alt": "myTrident printed bedding in a styled bedroom"
+    }
+  },
+  {
+    "name": "Harry's",
+    "market": "Men's grooming",
+    "color": "#4466ee",
+    "assets": {
+      "logo": "/img/clients/harrys/logo.svg",
+      "wide": "/img/clients/harrys/wide.webp",
+      "thumb": "/img/clients/harrys/thumb.webp",
+      "tall": "/img/clients/harrys/tall.webp",
+      "square": "/img/clients/harrys/square.webp",
+      "alt": "Harry's razor and body wash on a tiled shelf"
+    }
+  },
+  {
+    "name": "YOHO LIFE",
+    "market": "Comfort footwear",
+    "color": "#b97a0a",
+    "assets": {
+      "logo": "/img/clients/yoho/logo.webp",
+      "wide": "/img/clients/yoho/wide.webp",
+      "thumb": "/img/clients/yoho/thumb.webp",
+      "tall": "/img/clients/yoho/tall.webp",
+      "square": "/img/clients/yoho/square.webp",
+      "alt": "YOHO campaign: leather Chelsea boots and knee-high boots on a warm studio backdrop"
+    }
+  },
+  {
+    "name": "Blueland",
+    "market": "Eco cleaning",
+    "color": "#3ea6ff",
+    "assets": {
+      "logo": "/img/clients/blueland/logo.svg",
+      "wide": "/img/clients/blueland/wide.webp",
+      "thumb": "/img/clients/blueland/thumb.webp",
+      "tall": "/img/clients/blueland/tall.webp",
+      "square": "/img/clients/blueland/square.webp",
+      "alt": "Blueland campaign: a family relaxing on a gingham picnic blanket"
+    }
+  },
+  {
+    "name": "Nécessaire",
+    "market": "Body care",
+    "color": "#d9c7b0",
+    "assets": {
+      "logo": "/img/clients/necessaire/logo.webp",
+      "wide": "/img/clients/necessaire/wide.webp",
+      "thumb": "/img/clients/necessaire/thumb.webp",
+      "tall": "/img/clients/necessaire/tall.webp",
+      "square": "/img/clients/necessaire/square.webp",
+      "alt": "Nécessaire The Body Wash bottle on a pale grey background"
+    }
+  },
+  {
+    "name": "Good Ranchers",
+    "market": "Meat & food",
+    "color": "#8b1e1e",
+    "assets": {
+      "logo": "/img/clients/goodranchers/logo.svg",
+      "wide": "/img/clients/goodranchers/wide.webp",
+      "thumb": "/img/clients/goodranchers/thumb.webp",
+      "tall": "/img/clients/goodranchers/tall.webp",
+      "square": "/img/clients/goodranchers/square.webp",
+      "alt": "Good Ranchers box: steaks, chicken and pork with fresh herbs"
+    }
+  },
+  {
+    "name": "Quip",
+    "market": "Oral care",
+    "color": "#f4b183",
+    "assets": {
+      "logo": "/img/clients/quip/logo.svg",
+      "pos": "center 88%",
+      "wide": "/img/clients/quip/wide.webp",
+      "thumb": "/img/clients/quip/thumb.webp",
+      "tall": "/img/clients/quip/tall.webp",
+      "square": "/img/clients/quip/square.webp",
+      "alt": "quip electric toothbrushes on a wooden shelf"
+    }
+  }
+]
